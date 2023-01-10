@@ -1,11 +1,13 @@
 {
   "name": "nlon",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [],
   "author": "Tamas Galffy",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "nanoid": "^4.0.0"
+  }
 }
