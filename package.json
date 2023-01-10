@@ -1,10 +1,10 @@
 {
   "name": "nlon",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "doc": "jsdoc -c .jsdoc.js -d jsdoc -r lib",
+    "doc": "jsdoc -c .jsdoc.js -d jsdoc -R README.md -r lib",
     "lint": "eslint lib"
   },
   "keywords": [],
