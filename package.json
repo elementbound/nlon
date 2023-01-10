@@ -1,13 +1,18 @@
 {
   "name": "nlon",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "doc": "jsdoc -c .jsdoc.js -d jsdoc -r lib"
+  },
   "keywords": [],
   "author": "Tamas Galffy",
   "license": "MIT",
   "dependencies": {
     "nanoid": "^4.0.0"
+  },
+  "devDependencies": {
+    "jsdoc": "^4.0.0"
   }
 }
