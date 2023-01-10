@@ -1,0 +1,11 @@
+{
+  "name": "nlon",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  },
+  "keywords": [],
+  "author": "Tamas Galffy",
+  "license": "MIT"
+}
