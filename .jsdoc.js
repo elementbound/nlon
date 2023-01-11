@@ -11,5 +11,16 @@ module.exports = {
 
   plugins: [
     "plugins/markdown"
-  ]
+  ],
+
+  opts: {
+    template: './node_modules/clean-jsdoc-theme',
+    theme_opts: {
+      default_theme: 'light'
+    }
+  },
+
+  markdown: {
+    idInHeadings: false // important for clean-jsdoc-theme
+  }
 }
