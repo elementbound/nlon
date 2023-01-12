@@ -6,7 +6,7 @@
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -d jsdoc -R README.md -r lib",
     "lint": "eslint lib",
-    "test": "node --test test/ | untap"
+    "test": "node --test test/ | tap-arc"
   },
   "keywords": [],
   "author": "Tamas Galffy",
@@ -23,6 +23,7 @@
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "jsdoc": "^4.0.0",
+    "tap-arc": "^0.3.5",
     "untap": "^1.0.1"
   }
 }
