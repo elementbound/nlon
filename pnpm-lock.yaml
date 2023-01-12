@@ -10,6 +10,7 @@ specifiers:
   jsdoc: ^4.0.0
   nanoid: ^4.0.0
   ndjson: ^2.0.0
+  untap: ^1.0.1
 
 dependencies:
   nanoid: 4.0.0
@@ -23,6 +24,7 @@ devDependencies:
   eslint-plugin-n: 15.6.0_eslint@8.31.0
   eslint-plugin-promise: 6.1.1_eslint@8.31.0
   jsdoc: 4.0.0
+  untap: 1.0.1
 
 packages:
 
@@ -1606,6 +1608,11 @@ packages:
   /universalify/2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
+    dev: true
+
+  /untap/1.0.1:
+    resolution: {integrity: sha512-Kpc+2BfImzHkCIcmf8Z3iHOnE/nGXsanM7EltQgAhMAd9BGjRjIaIZodibFpH+w05WzButd41I91MorpHduA0A==}
+    hasBin: true
     dev: true
 
   /upper-case/1.1.3:

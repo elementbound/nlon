@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -d jsdoc -R README.md -r lib",
-    "lint": "eslint lib"
+    "lint": "eslint lib",
+    "test": "node --test test/ | untap"
   },
   "keywords": [],
   "author": "Tamas Galffy",
@@ -21,6 +22,7 @@
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
-    "jsdoc": "^4.0.0"
+    "jsdoc": "^4.0.0",
+    "untap": "^1.0.1"
   }
 }
