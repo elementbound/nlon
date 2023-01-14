@@ -35,6 +35,14 @@ export class InspectableStream extends stream.Duplex {
     return extracted
   }
 
+  toString () {
+    return this.extract().toString()
+  }
+
+  fromJSON () {
+    return JSON.parse(this.toString())
+  }
+
   get available () {
     return this.#writeBuffer.length
   }
