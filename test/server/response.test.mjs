@@ -1,8 +1,8 @@
-import { describe, it, beforeEach, mock } from 'node:test'
+import { describe, it, beforeEach } from 'node:test'
 import assert from 'node:assert'
 import { InspectableStream } from '../inspectable.stream.mjs'
 import { Response } from '../../lib/server/response.mjs'
-import { Message, MessageError, MessageTypes } from '../../lib/protocol.mjs'
+import { MessageError, MessageTypes } from '../../lib/protocol.mjs'
 
 describe('Response', () => {
   /** @type {InspectableStream} */
