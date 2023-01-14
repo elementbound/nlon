@@ -3,6 +3,7 @@ import assert from 'node:assert'
 import { Server } from '../lib/server/server.mjs'
 import { InspectableStream } from './inspectable.stream.mjs'
 import { Message, MessageHeader } from '../lib/protocol.mjs'
+import { StreamingError, InvalidMessageError } from '../lib/server/error.mjs'
 
 const invalidMessages = [
   {}, // missing header
@@ -12,11 +13,14 @@ const invalidMessages = [
 ]
 
 function send (stream, message) {
-  console.log('Sending message', JSON.stringify(message) + '\n')
-  stream.inject(JSON.stringify(message) + '\n')
+  if (typeof message === 'string') {
+    stream.inject(message + '\n')
+  } else {
+    stream.inject(JSON.stringify(message) + '\n')
+  }
 }
 
-describe('Server', { only: true }, () => {
+describe('Server', () => {
   /** @type {Server} */
   let server
 
@@ -224,7 +228,61 @@ describe('Server', { only: true }, () => {
     // Then fail if handled
   })
 
-  it('should reject invalid message', () => {
-    assert.fail('todo')
+  it('should reject malformed message', () => {
+    // Given
+    const handler = mock.fn()
+    const invalidJson = '{ "header": {'
+
+    server.on('error', handler)
+
+    // When
+    send(stream, invalidJson)
+
+    // Then
+    const calls = handler.mock.calls
+    assert.equal(calls.length, 1, 'No error was emitted?')
+    assert(calls[0]?.arguments?.[0] instanceof StreamingError,
+      'Wrong error emitted!')
+  })
+
+  for (const message of invalidMessages) {
+    it('should reject invalid message', () => {
+      // Given
+      const handler = mock.fn()
+      server.on('error', handler)
+
+      // When
+      send(stream, message)
+
+      // Then
+      const calls = handler.mock.calls
+      assert.equal(calls.length, 1, 'No error was emitted?')
+      assert(calls[0]?.arguments?.[0] instanceof InvalidMessageError,
+        'Wrong error emitted!')
+    })
+  }
+
+  it('should emit on connect', () => {
+    // Given
+    const handler = mock.fn()
+    server.on('connect', handler)
+
+    // When
+    server.connect(new InspectableStream())
+
+    // Then
+    assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
+  })
+
+  it('should emit on disconnect', () => {
+    // Given
+    const handler = mock.fn()
+    server.on('disconnect', handler)
+
+    // When
+    server.disconnect(stream)
+
+    // Then
+    assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
   })
 })
