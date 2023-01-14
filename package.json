@@ -7,14 +7,15 @@
     "doc": "jsdoc -c .jsdoc.js -d jsdoc -R README.md -r lib",
     "lint": "eslint lib",
     "test:dump": "node --test test/",
-    "test": "node --test test/ | tap-arc"
+    "test": "node --test test/ | utap"
   },
   "keywords": [],
   "author": "Tamas Galffy",
   "license": "MIT",
   "dependencies": {
     "nanoid": "^4.0.0",
-    "ndjson": "^2.0.0"
+    "ndjson": "^2.0.0",
+    "pino": "^8.8.0"
   },
   "devDependencies": {
     "clean-jsdoc-theme": "^4.2.2",
@@ -25,14 +26,6 @@
     "eslint-plugin-promise": "^6.0.0",
     "faucet": "^0.0.3",
     "jsdoc": "^4.0.0",
-    "tap-arc": "^0.3.5",
-    "tap-colorize": "^1.2.0",
-    "tap-dapper": "^0.0.1",
-    "tap-diff": "^0.1.1",
-    "tap-mocha-reporter": "^5.0.3",
-    "tap-spec": "^5.0.0",
-    "tap-summary": "^4.0.0",
-    "tape": "^5.6.1",
-    "untap": "^1.0.1"
+    "utap": "^0.1.3"
   }
 }
