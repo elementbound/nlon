@@ -285,4 +285,6 @@ describe('Server', () => {
     // Then
     assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
   })
+
+  // TODO: should disconnect on close
 })
