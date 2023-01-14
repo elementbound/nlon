@@ -1,15 +1,15 @@
 import { describe, it, beforeEach, mock } from 'node:test'
 import assert from 'node:assert'
-import { Server } from '../lib/server/server.mjs'
-import { InspectableStream } from './inspectable.stream.mjs'
-import { Message, MessageHeader } from '../lib/protocol.mjs'
-import { StreamingError, InvalidMessageError } from '../lib/server/error.mjs'
+import { Server } from '../../lib/server/server.mjs'
+import { InspectableStream } from '../inspectable.stream.mjs'
+import { Message, MessageHeader } from '../../lib/protocol.mjs'
+import { StreamingError, InvalidMessageError } from '../../lib/server/error.mjs'
 
 const invalidMessages = [
-  {}, // missing header
-  { header: {} }, // missing correspondenceId
-  { header: { correspondenceId: '' } }, // empty correspondenceId
-  { header: { subject: '' } } // empty subject
+  [{}, 'missing header'],
+  [{ header: {} }, 'empty header'],
+  [{ header: { correspondenceId: '' } }, 'empty correspondenceId'],
+  [{ header: { correspondenceId: 'test', subject: '' } }, 'empty subject']
 ]
 
 function send (stream, message) {
@@ -245,8 +245,8 @@ describe('Server', () => {
       'Wrong error emitted!')
   })
 
-  for (const message of invalidMessages) {
-    it('should reject invalid message', () => {
+  for (const [message, name] of invalidMessages) {
+    it(`should reject invalid message - ${name}`, () => {
       // Given
       const handler = mock.fn()
       server.on('error', handler)
@@ -286,5 +286,15 @@ describe('Server', () => {
     assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
   })
 
-  // TODO: should disconnect on close
+  it('should disconnect on close', () => {
+    // Given
+    const handler = mock.fn()
+    server.on('disconnect', handler)
+
+    // When
+    stream.emit('close')
+
+    // Then
+    assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
+  })
 })
