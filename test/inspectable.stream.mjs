@@ -24,6 +24,7 @@ export class InspectableStream extends stream.Duplex {
     }
 
     this.#readBuffer = Buffer.concat([this.#readBuffer, data])
+    this.emit('data', data)
   }
 
   extract (size) {

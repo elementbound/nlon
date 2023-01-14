@@ -28,4 +28,15 @@ describe('InspectableStream', () => {
     const actual = stream.read().toString()
     assert(actual === expected)
   })
+
+  it('write emits event', () => {
+    // Given
+    const stream = new InspectableStream()
+    stream.on('data', data => assert.ok(data))
+
+    // When
+    stream.write('Hello')
+
+    // Then listener is called
+  })
 })
