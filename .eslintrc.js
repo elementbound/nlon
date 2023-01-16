@@ -7,7 +7,7 @@ module.exports = {
   extends: 'standard',
   overrides: [
     {
-      files: [ 'lib/*.mjs' ],
+      files: ['lib/*.mjs', 'lib/**/*.mjs'],
       rules: {}
     }
   ],

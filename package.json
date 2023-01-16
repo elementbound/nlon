@@ -1,17 +1,21 @@
 {
   "name": "nlon",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -d jsdoc -R README.md -r lib",
-    "lint": "eslint lib"
+    "lint": "eslint lib",
+    "test:pretty": "find test -type f -name \"*.mjs\" -exec echo \\# utap-src:{} \\; -exec node {} \\; | utap",
+    "test": "node --test test/"
   },
   "keywords": [],
   "author": "Tamas Galffy",
   "license": "MIT",
   "dependencies": {
-    "nanoid": "^4.0.0"
+    "nanoid": "^4.0.0",
+    "ndjson": "^2.0.0",
+    "pino": "^8.8.0"
   },
   "devDependencies": {
     "clean-jsdoc-theme": "^4.2.2",
@@ -20,6 +24,7 @@
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
-    "jsdoc": "^4.0.0"
+    "jsdoc": "^4.0.0",
+    "utap": "^0.1.3"
   }
 }
