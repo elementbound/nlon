@@ -39,7 +39,7 @@ describe('Server', () => {
     const handlers = [
       mock.fn(),
       mock.fn(),
-      mock.fn()
+      mock.fn((_request, response, _context) => response.finish())
     ]
 
     server.handle('test', ...handlers)
@@ -82,6 +82,7 @@ describe('Server', () => {
     assert.equal(handlers[2].mock.callCount(), 0,
       'Third handler was called!')
   })
+
   it('should stop handlers after response is errored', () => {
     // Given
     const handlers = [
@@ -108,11 +109,34 @@ describe('Server', () => {
       'Third handler was called!')
   })
 
+  it('should emit error on unfinished response', () => {
+    // Given
+    const handlers = [
+      mock.fn(),
+      mock.fn()
+    ]
+
+    const errorListener = mock.fn()
+
+    server.handle('test-unfinished', ...handlers)
+    server.on('error', errorListener)
+
+    // When
+    send(stream, new Message({
+      header: new MessageHeader({
+        subject: 'test-unfinished'
+      })
+    }))
+
+    // Then
+    assert(errorListener.mock.callCount(), 'No error was emitted!')
+  })
+
   it('should call default handlers', () => {
     // Given
     const defaultHandlers = [
       mock.fn(),
-      mock.fn()
+      mock.fn((_request, response, _context) => response.finish())
     ]
 
     server.defaultHandlers(...defaultHandlers)
@@ -134,7 +158,7 @@ describe('Server', () => {
   it('should call exception handlers', () => {
     // Given
     const exceptionHandlers = [
-      mock.fn(),
+      mock.fn((_request, response, _context) => response.finish()),
       mock.fn()
     ]
 
