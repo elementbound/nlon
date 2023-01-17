@@ -5,6 +5,7 @@ import { InspectableStream } from '../inspectable.stream.mjs'
 import { Message, MessageHeader } from '../../lib/protocol.mjs'
 import { StreamingError, InvalidMessageError } from '../../lib/server/error.mjs'
 
+// Move to protocol tests
 const invalidMessages = [
   [{}, 'missing header'],
   [{ header: {} }, 'empty header'],
