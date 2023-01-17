@@ -4,22 +4,7 @@ import { Server } from '../../lib/server/server.mjs'
 import { InspectableStream } from '../inspectable.stream.mjs'
 import { Message, MessageHeader } from '../../lib/protocol.mjs'
 import { StreamingError, InvalidMessageError } from '../../lib/server/error.mjs'
-
-// Move to protocol tests
-const invalidMessages = [
-  [{}, 'missing header'],
-  [{ header: {} }, 'empty header'],
-  [{ header: { correspondenceId: '' } }, 'empty correspondenceId'],
-  [{ header: { correspondenceId: 'test', subject: '' } }, 'empty subject']
-]
-
-function send (stream, message) {
-  if (typeof message === 'string') {
-    stream.inject(message + '\n')
-  } else {
-    stream.inject(JSON.stringify(message) + '\n')
-  }
-}
+import { send } from '../utils.mjs'
 
 describe('Server', () => {
   /** @type {Server} */
@@ -270,22 +255,21 @@ describe('Server', () => {
       'Wrong error emitted!')
   })
 
-  for (const [message, name] of invalidMessages) {
-    it(`should reject invalid message - ${name}`, () => {
-      // Given
-      const handler = mock.fn()
-      server.on('error', handler)
+  it('should reject invalid message', () => {
+    // Given
+    const handler = mock.fn()
+    server.on('error', handler)
+    const invalidMessage = {}
 
-      // When
-      send(stream, message)
+    // When
+    send(stream, invalidMessage)
 
-      // Then
-      const calls = handler.mock.calls
-      assert.equal(calls.length, 1, 'No error was emitted?')
-      assert(calls[0]?.arguments?.[0] instanceof InvalidMessageError,
-        'Wrong error emitted!')
-    })
-  }
+    // Then
+    const calls = handler.mock.calls
+    assert.equal(calls.length, 1, 'No error was emitted?')
+    assert(calls[0]?.arguments?.[0] instanceof InvalidMessageError,
+      'Wrong error emitted!')
+  })
 
   it('should emit on connect', () => {
     // Given
