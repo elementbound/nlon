@@ -8,8 +8,12 @@ describe('IncomingCorrespondence', () => {
   /** @type {IncomingCorrespondence} */
   let correspondence
 
+  /** @type {MessageHeader} */
+  let header
+
   beforeEach(() => {
-    correspondence = new IncomingCorrespondence(new stream.PassThrough())
+    header = new MessageHeader()
+    correspondence = new IncomingCorrespondence(new stream.PassThrough(), header)
   })
 
   it('should emit data', () => {
