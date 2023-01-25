@@ -141,13 +141,25 @@ describe('Client', () => {
     assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
   })
 
-  it('should emit close', () => {
+  it('should emit disconnect on stream close', () => {
     // Given
     const handler = mock.fn()
-    client.on('close', handler)
+    client.on('disconnect', handler)
 
     // When
     stream.emit('close')
+
+    // Then
+    assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
+  })
+
+  it('should emit disconnect', () => {
+    // Given
+    const handler = mock.fn()
+    client.on('disconnect', handler)
+
+    // When
+    client.disconnect()
 
     // Then
     assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
