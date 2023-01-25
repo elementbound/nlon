@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import { Server } from '../../lib/server/server.mjs'
 import { InspectableStream } from '../inspectable.stream.mjs'
 import { Message, MessageHeader } from '../../lib/protocol.mjs'
-import { StreamingError, InvalidMessageError } from '../../lib/server/error.mjs'
+import { StreamingError, InvalidMessageError } from '../../lib/error.mjs'
 import { send } from '../utils.mjs'
 
 describe('Server', () => {

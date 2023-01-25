@@ -3,6 +3,7 @@ import assert from 'node:assert'
 import stream from 'node:stream'
 import { IncomingCorrespondence } from '../../lib/client/correspondence.mjs'
 import { Message, MessageError, MessageHeader, MessageTypes } from '../../lib/protocol.mjs'
+import { CorrespondenceError } from '../../lib/error.mjs'
 
 describe('IncomingCorrespondence', () => {
   /** @type {IncomingCorrespondence} */
@@ -96,6 +97,7 @@ describe('IncomingCorrespondence', () => {
     correspondence.on('error', handler)
 
     const error = new MessageError({ type: 'TestError', message: 'test' })
+    const expected = new CorrespondenceError(error)
 
     // When
     correspondence.handle(new Message({
@@ -109,7 +111,7 @@ describe('IncomingCorrespondence', () => {
 
     // Then
     assert.equal(handler.mock.callCount(), 1, 'No error event was emitted!')
-    assert.deepStrictEqual(handler.mock.calls[0].arguments, [error])
+    assert.deepStrictEqual(handler.mock.calls[0].arguments, [expected])
   })
 
   it('should gather', () => {
