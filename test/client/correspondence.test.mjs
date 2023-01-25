@@ -192,6 +192,21 @@ describe('IncomingCorrespondence', () => {
     assert.equal(await promise, expected, 'Wrong chunk returned!')
   })
 
+  it('should return on promiseSingle without data', async () => {
+    // Given
+    const promise = correspondence.promiseSingle()
+    const expected = undefined
+
+    // When
+    correspondence.handle(new Message({
+      header: new MessageHeader({ subject: 'test' }),
+      type: MessageTypes.Finish
+    }))
+
+    // Then
+    assert.equal(await promise, expected, 'Wrong chunk returned!')
+  })
+
   it('should throw on promiseSingle', async () => {
     // Given
     const promise = correspondence.promiseSingle()
