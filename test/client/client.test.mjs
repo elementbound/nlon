@@ -63,6 +63,17 @@ describe('Client', () => {
       'Correspondence called with wrong data!')
   })
 
+  it('should throw on send after disconnect', () => {
+    // Given
+    const message = new Message({
+      header: new MessageHeader({ subject: 'test' })
+    })
+    client.disconnect()
+
+    // When + then
+    assert.throws(() => client.send(message))
+  })
+
   it('should receive new', async () => {
     // Given
     const expected = new Message({
@@ -79,6 +90,14 @@ describe('Client', () => {
     const actual = await promise
     assert.deepStrictEqual(objectify(actual.header), objectify(expected.header),
       'Wrong message received!')
+  })
+
+  it('should throw on receive after disconnect', () => {
+    // Given
+    client.disconnect()
+
+    // When + then
+    assert.throws(() => client.receive())
   })
 
   it('should emit on unknown correspondence', () => {
