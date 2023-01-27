@@ -2,7 +2,7 @@ import { describe, it, beforeEach, mock } from 'node:test'
 import assert from 'node:assert'
 import { Server } from '../../lib/server/server.mjs'
 import { InspectableStream } from '../inspectable.stream.mjs'
-import { Message, MessageHeader } from '../../lib/protocol.mjs'
+import { Message, MessageError, MessageHeader } from '../../lib/protocol.mjs'
 import { StreamingError, InvalidMessageError } from '../../lib/error.mjs'
 import { send } from '../utils.mjs'
 
@@ -73,7 +73,8 @@ describe('Server', () => {
     // Given
     const handlers = [
       mock.fn(),
-      mock.fn((_request, response, _context) => response.error('test', 'test')),
+      mock.fn((_request, response, _context) =>
+        response.error(new MessageError({ type: 'test', message: 'test' }))),
       mock.fn()
     ]
 
@@ -192,7 +193,8 @@ describe('Server', () => {
     // Given
     const exceptionHandlers = [
       mock.fn(),
-      mock.fn((_request, response) => response.error('test', 'test'))
+      mock.fn((_request, response) =>
+        response.error(new MessageError({ type: 'test', message: 'test' })))
     ]
 
     server.handleException(...exceptionHandlers)
