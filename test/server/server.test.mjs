@@ -2,9 +2,9 @@ import { describe, it, beforeEach, mock } from 'node:test'
 import assert from 'node:assert'
 import { Server } from '../../lib/server/server.mjs'
 import { InspectableStream } from '../inspectable.stream.mjs'
-import { Message, MessageError, MessageHeader } from '../../lib/protocol.mjs'
+import { Message, MessageError, MessageHeader, MessageTypes } from '../../lib/protocol.mjs'
 import { StreamingError, InvalidMessageError } from '../../lib/error.mjs'
-import { send } from '../utils.mjs'
+import { objectify, send, sleep } from '../utils.mjs'
 
 describe('Server', () => {
   /** @type {Server} */
@@ -20,7 +20,7 @@ describe('Server', () => {
     server.connect(stream)
   })
 
-  it('should call all handlers', () => {
+  it('should call all handlers', async () => {
     // Given
     const handlers = [
       mock.fn(),
@@ -31,7 +31,7 @@ describe('Server', () => {
     server.handle('test', ...handlers)
 
     // When
-    send(stream, new Message({
+    await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test'
       })
@@ -43,7 +43,63 @@ describe('Server', () => {
     )
   })
 
-  it('should stop handlers after response is finished', () => {
+  it('should await async handlers', async () => {
+    // Given
+    const delay = 50
+    const correspondenceId = 'test-id'
+    const subject = 'test-ASnc'
+
+    const asyncHandler = async (_request, response) => {
+      await sleep(delay)
+      response.write('Hello')
+    }
+
+    const syncHandler = (_request, response) => {
+      response.finish('world!')
+    }
+
+    const expected = [
+      new Message({
+        header: {
+          subject,
+          correspondenceId
+        },
+
+        type: MessageTypes.Data,
+        body: 'Hello'
+      }),
+      new Message({
+        header: {
+          subject,
+          correspondenceId
+        },
+
+        type: MessageTypes.Finish,
+        body: 'world!'
+      })
+    ]
+
+    server.handle(subject, asyncHandler, syncHandler)
+
+    // When
+    send(stream, new Message({
+      header: new MessageHeader({
+        subject,
+        correspondenceId
+      })
+    }))
+    await sleep(delay + 10)
+
+    // Then
+    const actual = stream.multiJSON()
+
+    assert.deepStrictEqual(
+      actual.map(objectify),
+      expected.map(objectify),
+      'Responses don\'t match expected order or content!')
+  })
+
+  it('should stop handlers after response is finished', async () => {
     // Given
     const handlers = [
       mock.fn(),
@@ -54,7 +110,7 @@ describe('Server', () => {
     server.handle('test-finish', ...handlers)
 
     // When
-    send(stream, new Message({
+    await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test-finish'
       })
@@ -69,7 +125,7 @@ describe('Server', () => {
       'Third handler was called!')
   })
 
-  it('should stop handlers after response is errored', () => {
+  it('should stop handlers after response is errored', async () => {
     // Given
     const handlers = [
       mock.fn(),
@@ -81,7 +137,7 @@ describe('Server', () => {
     server.handle('test-error', ...handlers)
 
     // When
-    send(stream, new Message({
+    await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test-error'
       })
@@ -96,7 +152,7 @@ describe('Server', () => {
       'Third handler was called!')
   })
 
-  it('should emit error on unfinished response', () => {
+  it('should emit error on unfinished response', async () => {
     // Given
     const handlers = [
       mock.fn(),
@@ -109,7 +165,7 @@ describe('Server', () => {
     server.on('error', errorListener)
 
     // When
-    send(stream, new Message({
+    await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test-unfinished'
       })
@@ -119,7 +175,7 @@ describe('Server', () => {
     assert(errorListener.mock.callCount(), 'No error was emitted!')
   })
 
-  it('should call default handlers', () => {
+  it('should call default handlers', async () => {
     // Given
     const defaultHandlers = [
       mock.fn(),
@@ -129,7 +185,7 @@ describe('Server', () => {
     server.defaultHandlers(...defaultHandlers)
 
     // When
-    send(stream, new Message({
+    await send(stream, new Message({
       header: new MessageHeader({
         subject: 'unknown'
       })
@@ -142,7 +198,7 @@ describe('Server', () => {
       ))
   })
 
-  it('should call exception handlers', () => {
+  it('should call exception handlers', async () => {
     // Given
     const exceptionHandlers = [
       mock.fn((_request, response, _context) => response.finish()),
@@ -153,7 +209,7 @@ describe('Server', () => {
     server.handle('test-exception', () => { throw new Error('test') })
 
     // When
-    send(stream, new Message({
+    await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test-exception'
       })
@@ -165,7 +221,7 @@ describe('Server', () => {
     assert(exceptionHandlers[1].mock.callCount(),
       'Second exception handler not called!')
   })
-  it('should stop exception handlers after response is finished', () => {
+  it('should stop exception handlers after response is finished', async () => {
     // Given
     const exceptionHandlers = [
       mock.fn(),
@@ -176,7 +232,7 @@ describe('Server', () => {
     server.handle('test-exception', () => { throw new Error('test') })
 
     // When
-    send(stream, new Message({
+    await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test-exception'
       })
@@ -189,7 +245,7 @@ describe('Server', () => {
       'Second exception handler not called!')
   })
 
-  it('should stop exception handlers after response is error', () => {
+  it('should stop exception handlers after response is error', async () => {
     // Given
     const exceptionHandlers = [
       mock.fn(),
@@ -201,7 +257,7 @@ describe('Server', () => {
     server.handle('test-exception', () => { throw new Error('test') })
 
     // When
-    send(stream, new Message({
+    await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test-exception'
       })
@@ -225,13 +281,13 @@ describe('Server', () => {
     assert.equal(configurer.mock.callCount(), 1, 'Configurer was not called!')
   })
 
-  it('should not listen after disconnect', () => {
+  it('should not listen after disconnect', async () => {
     // Given
     server.defaultHandlers(() => assert.fail('Handler was called!'))
     server.disconnect(stream)
 
     // When
-    send(stream, new Message({
+    await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test'
       })
@@ -240,7 +296,7 @@ describe('Server', () => {
     // Then fail if handled
   })
 
-  it('should reject malformed message', () => {
+  it('should reject malformed message', async () => {
     // Given
     const handler = mock.fn()
     const invalidJson = '{ "header": {'
@@ -248,7 +304,7 @@ describe('Server', () => {
     server.on('error', handler)
 
     // When
-    send(stream, invalidJson)
+    await send(stream, invalidJson)
 
     // Then
     const calls = handler.mock.calls
@@ -257,14 +313,14 @@ describe('Server', () => {
       'Wrong error emitted!')
   })
 
-  it('should reject invalid message', () => {
+  it('should reject invalid message', async () => {
     // Given
     const handler = mock.fn()
     server.on('error', handler)
     const invalidMessage = {}
 
     // When
-    send(stream, invalidMessage)
+    await send(stream, invalidMessage)
 
     // Then
     const calls = handler.mock.calls

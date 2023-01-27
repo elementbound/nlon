@@ -1,12 +1,26 @@
 import stream from 'node:stream'
+import { safeParse } from './utils.mjs'
 
 export class InspectableStream extends stream.Duplex {
   #writeBuffer = Buffer.alloc(0)
   #readBuffer = Buffer.alloc(0)
 
-  _write (chunk, encoding, next) {
+  #emitOnInject = false
+
+  /**
+  * @param {object} [options]
+  * @param {boolean} [options.emitOnInject=false]
+  */
+  constructor (options) {
+    super(options)
+
+    this.#emitOnInject = !!options?.emitOnInject
+  }
+
+  _write (chunk, _encoding, next) {
     // NOTE: This is not very fast
     this.#writeBuffer = Buffer.concat([this.#writeBuffer, chunk])
+
     next()
   }
 
@@ -24,7 +38,16 @@ export class InspectableStream extends stream.Duplex {
     }
 
     this.#readBuffer = Buffer.concat([this.#readBuffer, data])
-    this.emit('data', data)
+
+    if (this.#emitOnInject) {
+      // This needs to be configurable because in the Server tests, *somehow*
+      // _read is called apparently, because data is pulled and emitted as
+      // 'data' events.
+      //
+      // However, in the Client tests, if the event is not manually emitted, the
+      // Client doesn't know about it and the correspondences are not updated.
+      this.emit('data', data)
+    }
   }
 
   extract (size) {
@@ -41,6 +64,13 @@ export class InspectableStream extends stream.Duplex {
 
   fromJSON () {
     return JSON.parse(this.toString())
+  }
+
+  multiJSON () {
+    return this.toString()
+      .split('\n')
+      .filter(line => !!(line.trim()))
+      .map(safeParse)
   }
 
   get available () {
