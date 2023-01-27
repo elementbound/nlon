@@ -221,6 +221,34 @@ describe('Server', () => {
     assert(exceptionHandlers[1].mock.callCount(),
       'Second exception handler not called!')
   })
+  it('should await exception handlers', async () => {
+    // Given
+    const delay = 50
+    const exceptionHandlers = [
+      mock.fn(),
+      mock.fn(async (_request, response) => {
+        await sleep(delay)
+        response.finish()
+      })
+    ]
+
+    server.handleException(...exceptionHandlers)
+    server.handle('test-exception', () => { throw new Error('test') })
+
+    // When
+    await send(stream, new Message({
+      header: new MessageHeader({
+        subject: 'test-exception'
+      })
+    }))
+    await sleep(delay + 10)
+
+    // Then
+    assert(!exceptionHandlers[0].mock.callCount(),
+      'First exception handler called!')
+    assert(exceptionHandlers[1].mock.callCount(),
+      'Second exception handler not called!')
+  })
   it('should stop exception handlers after response is finished', async () => {
     // Given
     const exceptionHandlers = [
