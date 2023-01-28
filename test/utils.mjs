@@ -4,12 +4,14 @@
 * @param {string|object} message Message
 * @private
 */
-export function send (stream, message) {
+export async function send (stream, message) {
   if (typeof message === 'string') {
     stream.inject(message + '\n')
   } else {
     stream.inject(JSON.stringify(message) + '\n')
   }
+
+  await sleep()
 }
 
 /**
@@ -22,4 +24,22 @@ export function send (stream, message) {
 */
 export function objectify (value) {
   return JSON.parse(JSON.stringify(value))
+}
+
+/**
+* Sleep for duration.
+*
+* @param {number} [timeInMs=0]
+* @returns {Promise<void>}
+*/
+export function sleep (timeInMs) {
+  return new Promise(resolve => setTimeout(resolve, timeInMs ?? 0))
+}
+
+export function safeParse (value) {
+  try {
+    return JSON.parse(value)
+  } catch (ex) {
+    return value
+  }
 }

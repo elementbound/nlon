@@ -13,7 +13,7 @@ describe('Client', () => {
   let client
 
   beforeEach(() => {
-    stream = new InspectableStream()
+    stream = new InspectableStream({ emitOnInject: true })
     client = new Client(stream)
   })
 
