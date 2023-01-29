@@ -14,6 +14,7 @@ module.exports = {
   ],
 
   opts: {
+    tutorials: 'doc/tutorials',
     template: './node_modules/clean-jsdoc-theme',
     theme_opts: {
       default_theme: 'light'
