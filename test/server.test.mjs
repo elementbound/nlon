@@ -1,10 +1,10 @@
 import { describe, it, beforeEach, mock } from 'node:test'
 import assert from 'node:assert'
-import { Server } from '../../lib/server/server.mjs'
-import { InspectableStream } from '../inspectable.stream.mjs'
-import { Message, MessageError, MessageHeader, MessageTypes } from '../../lib/protocol.mjs'
-import { StreamingError, InvalidMessageError } from '../../lib/error.mjs'
-import { objectify, send, sleep } from '../utils.mjs'
+import { Server } from '../lib/server.mjs'
+import { InspectableStream } from './inspectable.stream.mjs'
+import { Message, MessageError, MessageHeader, MessageTypes } from '../lib/protocol.mjs'
+import { StreamingError, InvalidMessageError } from '../lib/error.mjs'
+import { objectify, send, sleep } from './utils.mjs'
 
 describe('Server', () => {
   /** @type {Server} */
