@@ -53,11 +53,10 @@ done with the `MessageHeader`.
 > is provided.
 
 The next step is to simply send the message. In return, we get a correspondence
-that we can use to grab the response. The easiest way would be to use the
-`.promise()` set of methods:
+that we can use to grab the response. You can use `.next()` to do that:
 
 ```js
-const response = await correspondence.promiseSingle()
+const response = await correspondence.next()
 
 console.log(response) // 'Hello world!'
 ```
@@ -73,39 +72,40 @@ because it's a large amount of data, there's two options.
 The first would be to subscribe to the correspondence's data events:
 
 ```js
-correspondence.on('data', chunk => doSomething(chunk))
+correspondence.on('data', (chunk, isFinish) => doSomething(chunk))
 ```
 
 > If the finish message arrives with a piece of data attached, first a `data`,
 > then a `finish` message is emitted, so the `data` event handlers run for every
-> single piece of data.
+> single piece of data. In that case, the `isFinish` parameter will be true for
+> the callback, otherwise it's always false.
 
 Alternatively, you can loop over the incoming messages like so:
 
 ```js
-while (!correspondence.isFinished) {
-  const chunk = await correspondence.promiseSingle()
+while (!correspondence.readable) {
+  const chunk = await correspondence.next()
 
   // We've received a `finish` message without data
-  if (!chunk)
+  if (chunk === Correspondence.End)
     break
 
   doSomething(chunk)
 }
 ```
 
-Lastly, if it's safe to save all the incoming chunks into memory, the following
-is also an option:
+Coincidentally, this is exactly what `.all()` does, but more conveniently:
 
 ```js
-const chunks = await correspondence.promiseAll()
-chunks.forEach(chunk => doSomething(chunk))
+for await (const chunk of correspondence.all()) {
+  doSomething(chunk)
+}
 ```
 
 ### Error handling
 
-Using any of the `.promise*()` methods will reject with an error if an error
-message is received during the correspondence.
+Using `.next()` or `.all()` will reject with an error if an error message is
+received during the correspondence.
 
 ## Incoming correspondences
 
@@ -135,14 +135,14 @@ const loginCorrespondence = client.send(new Message({
 }))
 
 try {
-  const loginResponse = await loginCorrespondence.promise()
+  const loginResponse = await loginCorrespondence.next()
 } catch (e) {
   console.error('Login failed!')
   return
 }
 
 const welcomeCorrespondence = await client.receive()
-const welcomeMessage = await welcomeCorrespondence.promiseSingle()
+const welcomeMessage = await welcomeCorrespondence.next()
 
 console.log('Server welcome message:', welcomeMessage)
 ```
