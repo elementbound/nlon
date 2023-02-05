@@ -37,44 +37,57 @@ receive incoming messages.
 > duplex stream - i.e. it emits `data` events and can be written to with `write`
 > and can be piped.
 
-## Handling requests
+## Handling messages
+
+When any of the connected clients sends a message, first its ID is looked up. If
+it is a new correspondence, a Correspondence instance is created for it and
+passed to the appropriate correspondence handler.
 
 Each message has a *subject* in its header. This is used to route the message to
 the appropriate request handler for processing, for example:
 
 ```js
-nlonServer.handle('echo', (request, response) => {
-  response.write(request.body)
+nlonServer.handle('echo', async (correspondence) => {
+  for async (const message of correspondence.all()) {
+    correspondence.write(request.body)
+  }
 })
 ```
 
 This will simply echo any incoming data back at the sender. However, using this
-as-is would result in an `UnfinishedResponseError`. This happens because the
-response, in fact, was not finished. Finishing a response signifies to the
-recipient that the correspondence is finished and no more data should be
-expected on it. To fix that, simply call `.finish()`:
+as-is would result in an `UnfinishedCorrespondenceError`. This happens because
+the correspondence, in fact, was not finished. Finishing a correspondence
+signifies to the recipient that no more data should be expected on it. To fix
+that, simply call `.finish()`:
 
 ```js
-nlonServer.handle('echo', (request, response) => {
-  response.write(request.body)
-  response.finish()
+nlonServer.handle('echo', async (correspondence) => {
+  for async (const message of correspondence.all()) {
+    correspondence.write(request.body)
+  }
+
+  correspondence.finish()
 })
 ```
 
-Note that NLON correspondences can also be finished with a piece of data, so the
-above is practically equal to the following:
+Note that NLON correspondences can also be finished with a piece of data, in
+case you'd like to add some parting message:
 
 ```js
-nlonServer.handle('echo', (request, response) => {
-  response.finish(request.body)
+nlonServer.handle('echo', async (correspondence) => {
+  for async (const message of correspondence.all()) {
+    correspondence.write(request.body)
+  }
+
+  correspondence.finish('Bye!')
 })
 ```
 
-> The difference between the two snippets is that the latter sends a
-> single message with a piece of data, while the former sends a data message and
-> then a finish message without data.
+> Finishing a correpsondence with data results in a single finish message
+> written to the stream, same as finishing without data. This means that
+> finishing with data does not write a data AND a finish message to the stream.
 
-## Composing handlers
+## Composing functionality
 
 Let's say you have some additional aspect you want to take care of, but don't
 want to pollute your original handler code with it. Maybe it's something that
@@ -89,7 +102,9 @@ Take the following example, where you want to write a handler that:
 Naively, this could be done like so:
 
 ```js
-nlonServer.handle('friends', (request, response) => {
+nlonServer.handle('friends', async (correspondence) => {
+  const request = await correspondence.next()
+
   // Check if auth header present
   if (!request.header.authorization) {
     response.error(new MessageError({
@@ -110,8 +125,8 @@ nlonServer.handle('friends', (request, response) => {
   }
 
   // Reply with friends
-  user.friends.forEach(friend => response.write(friend.name))
-  response.finish()
+  user.friends.forEach(friend => correspondence.write(friend.name))
+  correspondence.finish()
 })
 ```
 
@@ -121,9 +136,9 @@ it up into multiple handlers instead:
 
 ```js
 function requireAuth() {
-  return (request, response, context) => {
-    if (!request.header.authorization) {
-      response.error(new MessageError({
+  return (data, header, context) => {
+    if (!header.authorization) {
+      throw new CorrespondenceError(new MessageError({
         type: 'Unauthorized',
         message: 'Authorization header missing!'
       }))
@@ -132,10 +147,10 @@ function requireAuth() {
 }
 
 function requireUser() {
-  return (request, response, context) => {
-    const user = userRepository.findByAuth(request.header.authorization)
+  return (data, header, context) => {
+    const user = userRepository.findByAuth(header.authorization)
     if (!user) {
-      response.error(new MessageError({
+      throw new CorrespondenceError(new MessageError({
         type: 'Unauthorized',
         message: 'Unknown user!'
       }))
@@ -145,34 +160,36 @@ function requireUser() {
   }
 }
 
-nlonServer.handle('friends',
-  requireAuth(),
-  requireUser(),
-  (request, response, context) => {
-    const user = context.user
+nlonServer.handle('friends', async (correspondence) => {
+  const request = await correspondence.next(
+    requireAuth(),
+    requireUser()
+  )
 
-    // Reply with friends
-    user.friends.forEach(friend => response.write(friend.name))
-    response.finish()
-  }
-)
+  const { user } = correspondence.context
+
+  // Reply with friends
+  user.friends.forEach(friend => correspondence.write(friend.name))
+  correspondence.finish()
+})
 ```
 
 Let's take a look at what happened. 
 
-First, the reusable parts were moved to separate functions, returning request
+First, the reusable parts were moved to separate functions, returning read
 handlers. This is analogous with Express middlewares. It is convention to return
 functions, since these 'middlewares' can be parameterized for each subject.
 
 Another addition was a `context` parameter - this starts as an empty object and
 can be freely populated by the handlers. This context object is tied to a single
-correspondence. In the above example, we can store our resolved user in it for
-further use.
+read operation - i.e. `.next()` or each iteration of `.all()`. In the above
+example, we can store our resolved user in it for further use.
 
-Lastly, we just register multiple handlers to the same subject. When a message
-comes in, each handler is called in order of registration. If any of the
-handlers finish the response either by calling `.finish()` or `.error()`, the
-subsequent handlers will not be called.
+Lastly, we just pass multiple read handlers to our read operation - `.next()` in
+this case. When a message comes in, each handler is called in order of
+registration. If any of the handlers throw, the exception will be passed to the
+exception handlers. The default exception handler will process it and write an
+error response to the stream.
 
 ## Grouping handlers
 
@@ -215,17 +232,18 @@ function requireUser() {
 }
 
 export function friendsHandlers(server) {
-  server.handle('friends',
-    requireAuth(),
-    requireUser(),
-    (request, response, context) => {
-      const user = context.user
+  nlonServer.handle('friends', async (correspondence) => {
+    const request = await correspondence.next(
+      requireAuth(),
+      requireUser()
+    )
 
-      // Reply with friends
-      user.friends.forEach(friend => response.write(friend.name))
-      response.finish()
-    }
-  )
+    const { user } = correspondence.context
+
+    // Reply with friends
+    user.friends.forEach(friend => correspondence.write(friend.name))
+    correspondence.finish()
+  })
 }
 ```
 
