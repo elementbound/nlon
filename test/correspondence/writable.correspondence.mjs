@@ -27,6 +27,7 @@ describe('WritableCorrespondence', () => {
     })
   })
 
+  // {{{ write
   it('should write data', () => {
     // Given
     const expected = {
@@ -99,7 +100,9 @@ describe('WritableCorrespondence', () => {
     assert.deepStrictEqual(objectify(actual), objectify(expected))
     assert(!correspondence.writable)
   })
+  // }}}
 
+  // {{{ throw
   it('should throw on finished write', () => {
     // Given
     correspondence.finish()
@@ -131,4 +134,19 @@ describe('WritableCorrespondence', () => {
     // When + Then
     assert.throws(() => correspondence.finish('test'))
   })
+  // }}}
+
+  // {{{ wrap
+  it('should finish when wrap proxy is finished', () => {
+    // Given
+    const writable = WritableCorrespondence.wrap(correspondence)
+
+    // When
+    writable.finish()
+
+    // Then
+    assert(!writable.writable, 'Proxy still writable!')
+    assert(!correspondence.writable, 'Correspondence still writable!')
+  })
+  // }}}
 })

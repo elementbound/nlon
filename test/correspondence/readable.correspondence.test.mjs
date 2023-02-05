@@ -330,4 +330,18 @@ describe('ReadableCorrespondence', () => {
     assert.rejects(promise)
   })
   // }}}
+
+  // {{{ wrap
+  it('should finish when wrap proxy is finished', () => {
+    // Given
+    const readable = ReadableCorrespondence.wrap(correspondence)
+
+    // When
+    readable.handle(new MessageHeader({ header, type: MessageTypes.Finish }))
+
+    // Then
+    assert(!readable.readable, 'Proxy still readable!')
+    assert(!correspondence.readable, 'Correspondence still readable!')
+  })
+  // }}}
 })
