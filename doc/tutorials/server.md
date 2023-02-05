@@ -41,10 +41,12 @@ receive incoming messages.
 
 When any of the connected clients sends a message, first its ID is looked up. If
 it is a new correspondence, a Correspondence instance is created for it and
-passed to the appropriate correspondence handler.
+passed to the appropriate correspondence handler. The initial  message's
+*subject* header is used to route the correspondence to the right correspondence
+handler.
 
-Each message has a *subject* in its header. This is used to route the message to
-the appropriate request handler for processing, for example:
+From there, the handler is free to stream incoming data and send replies
+accordingly, for example:
 
 ```js
 nlonServer.handle('echo', async (correspondence) => {
@@ -85,7 +87,8 @@ nlonServer.handle('echo', async (correspondence) => {
 
 > Finishing a correpsondence with data results in a single finish message
 > written to the stream, same as finishing without data. This means that
-> finishing with data does not write a data AND a finish message to the stream.
+> finishing with data does *not* write a data *and* a finish message to the
+> stream.
 
 ## Composing functionality
 
@@ -107,7 +110,7 @@ nlonServer.handle('friends', async (correspondence) => {
 
   // Check if auth header present
   if (!request.header.authorization) {
-    response.error(new MessageError({
+    correspondence.error(new MessageError({
       type: 'Unauthorized',
       message: 'Authorization header missing!'
     }))
@@ -117,7 +120,7 @@ nlonServer.handle('friends', async (correspondence) => {
   // Check if auth header valid
   const user = userRepository.findByAuth(request.header.authorization)
   if (!user) {
-    response.error(new MessageError({
+    correspondence.error(new MessageError({
       type: 'Unauthorized',
       message: 'Unknown user!'
     }))

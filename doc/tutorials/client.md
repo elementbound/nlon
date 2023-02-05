@@ -83,7 +83,7 @@ correspondence.on('data', (chunk, isFinish) => doSomething(chunk))
 Alternatively, you can loop over the incoming messages like so:
 
 ```js
-while (!correspondence.readable) {
+while (correspondence.readable) {
   const chunk = await correspondence.next()
 
   // We've received a `finish` message without data
