@@ -36,6 +36,7 @@ describe('Client', () => {
     // Given
     const message = new Message({
       header: new MessageHeader({ subject: 'test' }),
+      type: MessageTypes.Data,
       body: 'ping'
     })
 
@@ -66,7 +67,8 @@ describe('Client', () => {
   it('should throw on send after disconnect', () => {
     // Given
     const message = new Message({
-      header: new MessageHeader({ subject: 'test' })
+      header: new MessageHeader({ subject: 'test' }),
+      type: MessageTypes.Data
     })
     client.disconnect()
 
@@ -78,6 +80,7 @@ describe('Client', () => {
     // Given
     const expected = new Message({
       header: new MessageHeader({ subject: 'test' }),
+      type: MessageTypes.Data,
       body: 'ping'
     })
 
@@ -104,6 +107,7 @@ describe('Client', () => {
     // Given
     const message = new Message({
       header: new MessageHeader({ subject: 'test' }),
+      type: MessageTypes.Data,
       body: 'ping'
     })
 
