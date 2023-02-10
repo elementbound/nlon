@@ -35,7 +35,6 @@ importers:
       eslint-plugin-n: ^15.0.0
       eslint-plugin-promise: ^6.0.0
       jsdoc: ^4.0.0
-      lerna: ^6.4.1
       nanoid: ^4.0.0
       ndjson: ^2.0.0
       pino: ^8.8.0
@@ -53,7 +52,6 @@ importers:
       eslint-plugin-n: 15.6.0_eslint@8.31.0
       eslint-plugin-promise: 6.1.1_eslint@8.31.0
       jsdoc: 4.0.0
-      lerna: 6.4.1
       tap-parser: 12.0.1
       utap: 0.1.3
 
