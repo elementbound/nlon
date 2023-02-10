@@ -30,7 +30,8 @@ describe('Server', () => {
     await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test'
-      })
+      }),
+      type: MessageTypes.Data
     }))
 
     // Then
@@ -49,7 +50,8 @@ describe('Server', () => {
     await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test-unfinished'
-      })
+      }),
+      type: MessageTypes.Data
     }))
 
     // Then
@@ -65,7 +67,8 @@ describe('Server', () => {
     await send(stream, new Message({
       header: new MessageHeader({
         subject: 'unknown'
-      })
+      }),
+      type: MessageTypes.Data
     }))
 
     // Then
@@ -90,7 +93,8 @@ describe('Server', () => {
     await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test-exception'
-      })
+      }),
+      type: MessageTypes.Data
     }))
 
     // Then
@@ -118,7 +122,8 @@ describe('Server', () => {
     await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test-exception'
-      })
+      }),
+      type: MessageTypes.Data
     }))
     await sleep(delay + 10)
 
@@ -143,7 +148,8 @@ describe('Server', () => {
     await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test-exception'
-      })
+      }),
+      type: MessageTypes.Data
     }))
 
     // Then
@@ -168,7 +174,8 @@ describe('Server', () => {
     await send(stream, new Message({
       header: new MessageHeader({
         subject: 'test-exception'
-      })
+      }),
+      type: MessageTypes.Data
     }))
 
     // Then
@@ -198,7 +205,8 @@ describe('Server', () => {
 
     // When
     await send(stream, new Message({
-      header
+      header,
+      type: MessageTypes.Data
     }))
 
     // Then

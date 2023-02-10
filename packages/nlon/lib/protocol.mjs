@@ -182,5 +182,8 @@ export class Message {
     assert(message?.header?.correspondenceId?.length > 0,
       'Missing correspondence id!')
     assert(message?.header?.subject?.length > 0, 'Missing subject!')
+    assert(message?.type, 'Missing message type!')
+    assert(Object.values(MessageTypes).includes(message?.type),
+      `Unknown message type: ${message?.type}`)
   }
 }

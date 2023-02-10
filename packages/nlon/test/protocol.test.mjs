@@ -1,12 +1,17 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { Message, MessageHeader } from '../lib/protocol.mjs'
+import { Message, MessageHeader, MessageTypes } from '../lib/protocol.mjs'
 
 const invalidMessages = [
   [{}, 'missing header'],
   [{ header: {} }, 'empty header'],
   [{ header: { correspondenceId: '' } }, 'empty correspondenceId'],
-  [{ header: { correspondenceId: 'test', subject: '' } }, 'empty subject']
+  [{ header: { correspondenceId: 'test', subject: '' } }, 'empty subject'],
+  [{ header: { correspondenceId: 'test', subject: 'test' } }, 'missing type'],
+  [
+    { header: { correspondenceId: 'test', subject: 'test' }, type: 'foo' },
+    'invalid type'
+  ]
 ]
 
 const validMessages = [
@@ -15,7 +20,8 @@ const validMessages = [
       header: new MessageHeader({
         correspondenceId: 'test',
         subject: 'test'
-      })
+      }),
+      type: MessageTypes.Data
     }),
     'without body and authorization'
   ],
@@ -26,7 +32,8 @@ const validMessages = [
         correspondenceId: 'test',
         subject: 'test',
         authorization: 'super-secret'
-      })
+      }),
+      type: MessageTypes.Data
     }),
     'without body'
   ],
@@ -38,7 +45,7 @@ const validMessages = [
         subject: 'test',
         authorization: 'super-secret'
       }),
-
+      type: MessageTypes.Data,
       body: 'Hello world!'
     }),
     'with body'
