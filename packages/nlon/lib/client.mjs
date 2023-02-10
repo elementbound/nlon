@@ -2,7 +2,7 @@ import stream from 'stream'
 import ndjson from 'ndjson'
 import pino from 'pino'
 import { nanoid } from 'nanoid'
-import { Message } from './protocol.mjs'
+import { Message, MessageTypes } from './protocol.mjs'
 import { ClientDisconnectedError, InvalidMessageError, StreamingError } from './error.mjs'
 import { StreamContext } from './stream.context.mjs'
 import { Correspondence } from './correspondence/correspondence.mjs'
@@ -117,6 +117,7 @@ export class Client extends stream.EventEmitter {
   */
   send (message) {
     this.#requireConnected('Can\'t send on already disconnected client!')
+    message.type ??= MessageTypes.Data
     Message.validate(message)
 
     this.#logger.debug({ message }, 'Sending message')
