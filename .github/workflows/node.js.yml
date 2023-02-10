@@ -18,8 +18,8 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - uses: pnpm/action-setup@v2
-      name: Install pnpm
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
       id: pnpm-install
       with:
         version: 7
@@ -39,6 +39,6 @@ jobs:
     - name: Install dependencies
       run: pnpm install
     - name: Lint
-      run: pnpm lint
+      run: pnpm -r lint
     - name: Test
-      run: pnpm test
+      run: pnpm -r test
