@@ -313,4 +313,14 @@ describe('Server', () => {
 
     // Then fail if handled
   })
+
+  it('should list peers', () => {
+    // Given in beforeEach
+
+    // When
+    const peers = server.peers
+
+    // Then
+    assert.equal(peers.length, 1)
+  })
 })

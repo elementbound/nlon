@@ -337,6 +337,17 @@ export class Server extends stream.EventEmitter {
   }
 
   /**
+  * @summary Get all peers connected to this server.
+  *
+  * @description > This always return a new copy.
+  *
+  * @type {Peer[]}
+  */
+  get peers () {
+    return [...this.#peers.values()].map(pc => pc.peer)
+  }
+
+  /**
   * @param {stream.Duplex} stream
   * @param {Peer} peer
   */
