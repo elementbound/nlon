@@ -193,7 +193,7 @@ export class UnreadableCorrespondenceError extends Error {
 }
 
 /**
-* Error thrown when trying to send / receive on a client that's already
+Error thrown when trying to send / receive on a peer that's already
 * disconnected.
 */
-export class ClientDisconnectedError extends Error {}
+export class PeerDisconnectedError extends Error {}

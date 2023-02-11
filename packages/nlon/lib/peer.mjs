@@ -3,34 +3,34 @@ import ndjson from 'ndjson'
 import pino from 'pino'
 import { nanoid } from 'nanoid'
 import { Message, MessageTypes } from './protocol.mjs'
-import { ClientDisconnectedError, InvalidMessageError, StreamingError } from './error.mjs'
+import { PeerDisconnectedError, InvalidMessageError, StreamingError } from './error.mjs'
 import { StreamContext } from './stream.context.mjs'
 import { Correspondence } from './correspondence/correspondence.mjs'
 
 /**
-* @typedef {object} ClientOptions
+* @typedef {object} PeerOptions
 * @property {pino.Logger} [options.logger=pino()] Logger
 * @property {string} [options.logLevel='info'] Logging level
-* @property {string} [options.id=nanoid()] Client ID, used for logging
+* @property {string} [options.id=nanoid()] Peer ID, used for logging
 */
 
 /**
-* @summary Client class.
+* @summary Peer class.
 *
-* @description The client class attaches to a single connection and manages
+* @description The peer class attaches to a single connection and manages
 * correspondences on it. This includes both initiating new correspondences by
 * sending a message and reacting to incoming correspondences.
 *
-* Each incoming message is picked up by the client and associated with a known
+* Each incoming message is picked up by the peer and associated with a known
 * {@link Correspondence} instance, if any exists. If it is an entirely new
 * correspondence, it is emitted as a `correspondence` event.
 *
 * Any and all errors both occurring during processing and coming from the
 * underlying stream will be propagated through the `error` event.
 *
-* Note that the Client itself does not know about the particulars of its
+* Note that the Peer itself does not know about the particulars of its
 * underlying connection - as long as it can be used as a `stream.Duplex` it will
-* function fine. This enables factory methods to create clients on TCP sockets,
+* function fine. This enables factory methods to create peers on TCP sockets,
 * WebSockets, or even adapt other types.
 */
 export class Peer extends stream.EventEmitter {
@@ -44,10 +44,10 @@ export class Peer extends stream.EventEmitter {
   #logger
 
   /**
-  * Construct a client.
+  * Construct a peer.
   *
   * @param {stream.Duplex} connection Connection
-  * @param {ClientOptions} [options] Options
+  * @param {PeerOptions} [options] Options
   */
   constructor (connection, options) {
     super()
@@ -58,16 +58,16 @@ export class Peer extends stream.EventEmitter {
     })
 
     this.#logger = options?.logger ??
-      pino({ name: `nlon-client-${this.id}`, level: options?.logLevel ?? 'info' })
+      pino({ name: `nlon-peer-${this.id}`, level: options?.logLevel ?? 'info' })
 
     this.on('error', err =>
-      this.#logger.error({ err }, 'Client stream error!'))
+      this.#logger.error({ err }, 'Peer stream error!'))
 
     this.#connect(connection)
   }
 
   /**
-  * Client ID, used primarily for logging.
+  * Peer ID, used primarily for logging.
   *
   * @type {string}
   */
@@ -76,7 +76,7 @@ export class Peer extends stream.EventEmitter {
   }
 
   /**
-  * Whether the Client is connected.
+  * Whether the Peer is connected.
   *
   * @type {boolean}
   */
@@ -85,12 +85,12 @@ export class Peer extends stream.EventEmitter {
   }
 
   /**
-  * @summary Disconnect client.
+  * @summary Disconnect peer.
   *
-  * @description Afther this call, the client won't listen to any more incoming
+  * @description Afther this call, the peer won't listen to any more incoming
   * messages and won't be able to send any traffic.
   *
-  * It is considered an error to send anything after the client is disconnected.
+  * It is considered an error to send anything after the peer is disconnected.
   *
   * **Note** that the underlying stream will not be closed.
   */
@@ -118,11 +118,11 @@ export class Peer extends stream.EventEmitter {
   *
   * @param {Message} message Message
   * @returns {Correspondence} Correspondence
-  * @throws {ClientDisconnectedError} If disconnected
+  * @throws {PeerDisconnectedError} If disconnected
   * @throws On invalid messages
   */
   send (message) {
-    this.#requireConnected('Can\'t send on already disconnected client!')
+    this.#requireConnected('Can\'t send on already disconnected peer!')
     message.type ??= MessageTypes.Data
     Message.validate(message)
 
@@ -141,10 +141,10 @@ export class Peer extends stream.EventEmitter {
   * Get the next new correspondence.
   *
   * @returns {Promise<Correspondence>}
-  * @throws {ClientDisconnectedError} If disconnected
+  * @throws {PeerDisconnectedError} If disconnected
   */
   receive () {
-    this.#requireConnected('Can\'t receive on already disconnected client!')
+    this.#requireConnected('Can\'t receive on already disconnected peer!')
 
     return new Promise((resolve, reject) => {
       this.once('correspondence', resolve)
@@ -229,54 +229,54 @@ export class Peer extends stream.EventEmitter {
 
   #requireConnected (message) {
     if (!this.isConnected) {
-      throw new ClientDisconnectedError(
-        message ?? 'Client already disconnected!')
+      throw new PeerDisconnectedError(
+        message ?? 'Peer already disconnected!')
     }
   }
 }
 
 /**
-* Event emitted upon successful connection by the client.
+* Event emitted upon successful connection by the peer.
 *
-* In practice this means that after this point the client can send and receive
+* In practice this means that after this point the peer can send and receive
 * messages. This may or may not correspond to a background operation, depending
 * on the nature of the connection.
 *
-* The stream itself is emitted upon which the client will transfer messages.
+* The stream itself is emitted upon which the peer will transfer messages.
 *
-* @event Client#connect
+* @event Peer#connect
 * @type {stream.Duplex}
 */
 
 /**
-* Event emitted when the client disconnects.
+* Event emitted when the peer disconnects.
 *
-* This might happen after a {@link Peer#disconnect} call, or when the client's
+* This might happen after a {@link Peer#disconnect} call, or when the peer's
 * underlying stream is closed for whatever reason.
 *
 * Consistently with the Server events, the stream is emitted as event data.
 *
-* @event Client#disconnect
+* @event Peer#disconnect
 * @type {stream.Duplex}
 */
 
 /**
-* Event emitted when the client receives a new correspondence.
+* Event emitted when the peer receives a new correspondence.
 *
-* This happens whenever the client receives a message with a correspondence ID
+* This happens whenever the peer receives a message with a correspondence ID
 * that does not belong to an already existing {@link IncomingCorrespondence}, in
 * which case a new instance is created and emitted as event data.
 *
-* @event Client#correspondence
+* @event Peer#correspondence
 * @type {IncomingCorrespondence}
 */
 
 /**
-* Event emitted when the client encounters an error.
+* Event emitted when the peer encounters an error.
 *
 * This error may either come from the underlying stream itself or from the
-* client's own message processing logic.
+* peer's own message processing logic.
 *
-* @event Client#error
+* @event Peer#error
 * @type {Error}
 */

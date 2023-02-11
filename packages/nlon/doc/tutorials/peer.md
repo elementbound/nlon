@@ -1,14 +1,14 @@
-# Implementing a client
+# Implementing a peer
 
-NLON clients are responsible for initiating correspondences. Compared to a
-traditional HTTP client, the difference is that you don't get a response object
+NLON peers are responsible for initiating correspondences. Compared to a
+traditional HTTP peer, the difference is that you don't get a response object
 directly - instead, you get a correspondence, which you can use to stream your
 input data to the server if needed, and to process responses.
 
-## Setting up the client
+## Setting up the peer
 
-The first step is to create a client instance. To do that, we first need to
-create a connection that the client can use. This is required because NLON
+The first step is to create a peer instance. To do that, we first need to
+create a connection that the peer can use. This is required because NLON
 itself is not tied to any specific transport, so this must be handled
 externally. This can be done by an adapter ( TODO: implement ), or manually.
 
@@ -20,10 +20,10 @@ const tcpSocket = net.createConnection({
   port: 49494
 })
 
-const nlonClient = new Client(tcpSocket)
+const nlonPeer = new Peer(tcpSocket)
 ```
 
-From this point on, the client can be used to initiate correspondences and
+From this point on, the peer can be used to initiate correspondences and
 listen for incoming ones.
 
 ## Initiating a correspondence
@@ -40,7 +40,7 @@ const message = new Message({
   body: 'Hello world!'
 })
 
-const correspondence = nlonClient.send(message)
+const correspondence = nlonPeer.send(message)
 ```
 
 First off, the message must be created. The best way to do that is to create a
@@ -115,7 +115,7 @@ correspondence at any time as well. To handle these, there's two options.
 Firstly, you can subscribe to incoming correspondences via an event handler:
 
 ```js
-client.on('correspondence', async correspondence => {
+peer.on('correspondence', async correspondence => {
   doSomething(correspondence)
 })
 ```
@@ -124,7 +124,7 @@ Alternatively, if you are implementing a logical flow of correspondences, you
 might find `.receive()` useful:
 
 ```js
-const loginCorrespondence = client.send(new Message({
+const loginCorrespondence = peer.send(new Message({
   header: new MessageHeader({
     subject: 'login'
   }),
@@ -141,7 +141,7 @@ try {
   return
 }
 
-const welcomeCorrespondence = await client.receive()
+const welcomeCorrespondence = await peer.receive()
 const welcomeMessage = await welcomeCorrespondence.next()
 
 console.log('Server welcome message:', welcomeMessage)

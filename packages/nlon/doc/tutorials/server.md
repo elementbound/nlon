@@ -39,7 +39,7 @@ receive incoming messages.
 
 ## Handling messages
 
-When any of the connected clients sends a message, first its ID is looked up. If
+When any of the connected peers sends a message, first its ID is looked up. If
 it is a new correspondence, a Correspondence instance is created for it and
 passed to the appropriate correspondence handler. The initial  message's
 *subject* header is used to route the correspondence to the right correspondence
