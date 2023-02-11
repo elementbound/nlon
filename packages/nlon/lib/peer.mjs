@@ -9,9 +9,9 @@ import { Correspondence } from './correspondence/correspondence.mjs'
 
 /**
 * @typedef {object} PeerOptions
-* @property {pino.Logger} [options.logger=pino()] Logger
-* @property {string} [options.logLevel='info'] Logging level
-* @property {string} [options.id=nanoid()] Peer ID, used for logging
+* @property {pino.Logger} [logger=pino()] Logger
+* @property {string} [logLevel='info'] Logging level
+* @property {string} [id=nanoid()] Peer ID, used for logging
 */
 
 /**
