@@ -10,21 +10,23 @@ input data to the server if needed, and to process responses.
 The first step is to create a peer instance. To do that, we first need to
 create a connection that the peer can use. This is required because NLON
 itself is not tied to any specific transport, so this must be handled
-externally. This can be done by an adapter ( TODO: implement ), or manually.
+externally. This can be done by an adapter or manually.
 
-Let's take a TCP socket for example:
+Let's take a TCP socket for example using [nlon-socket]:
 
 ```js
-const tcpSocket = net.createConnection({
-  host: 'nlon.example.com',
-  port: 49494
-})
+import { createSocketPeer } from '@elementbound/nlon-socket'
 
-const nlonPeer = new Peer(tcpSocket)
+const nlonPeer = createSocketPeer({
+  host: 'nlon.example.com',
+  port: 63636
+})
 ```
 
 From this point on, the peer can be used to initiate correspondences and
 listen for incoming ones.
+
+[nlon-socket]: https://github.com/elementbound/nlon/tree/main/packages/nlon-socket
 
 ## Initiating a correspondence
 
