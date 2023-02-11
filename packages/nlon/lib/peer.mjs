@@ -33,7 +33,7 @@ import { Correspondence } from './correspondence/correspondence.mjs'
 * function fine. This enables factory methods to create clients on TCP sockets,
 * WebSockets, or even adapt other types.
 */
-export class Client extends stream.EventEmitter {
+export class Peer extends stream.EventEmitter {
   /** @type {StreamContext} */
   #streamContext
 
@@ -251,7 +251,7 @@ export class Client extends stream.EventEmitter {
 /**
 * Event emitted when the client disconnects.
 *
-* This might happen after a {@link Client#disconnect} call, or when the client's
+* This might happen after a {@link Peer#disconnect} call, or when the client's
 * underlying stream is closed for whatever reason.
 *
 * Consistently with the Server events, the stream is emitted as event data.
