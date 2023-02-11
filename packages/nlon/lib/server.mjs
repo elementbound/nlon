@@ -165,9 +165,6 @@ export class Server extends stream.EventEmitter {
   /** @type {CorrespondenceHandler} */
   #defaultHandler = unknownSubjectHandler
 
-  /** @type {Map<stream.Duplex, StreamContext>} */
-  #streams = new Map()
-
   /** @type {Map<stream.Duplex, PeerContext>} */
   #peers = new Map()
 
@@ -286,10 +283,6 @@ export class Server extends stream.EventEmitter {
   * @param {stream.Duplex} stream Stream
   */
   connect (stream) {
-    if (this.#streams.has(stream)) {
-      return
-    }
-
     const id = nanoid()
     const peer = new Peer(stream, {
       id,
@@ -370,7 +363,6 @@ export class Server extends stream.EventEmitter {
     Object.entries(handlers)
       .forEach(([event, handler]) => peer.off(event, handler))
     this.#peers.delete(stream)
-    this.#streams.delete(stream)
 
     this.emit('disconnect', stream, peer)
   }

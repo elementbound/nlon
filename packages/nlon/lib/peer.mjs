@@ -4,7 +4,6 @@ import pino from 'pino'
 import { nanoid } from 'nanoid'
 import { Message, MessageTypes } from './protocol.mjs'
 import { PeerDisconnectedError, InvalidMessageError, StreamingError } from './error.mjs'
-import { StreamContext } from './stream.context.mjs'
 import { Correspondence } from './correspondence/correspondence.mjs'
 
 /**
@@ -34,11 +33,20 @@ import { Correspondence } from './correspondence/correspondence.mjs'
 * WebSockets, or even adapt other types.
 */
 export class Peer extends stream.EventEmitter {
-  /** @type {StreamContext} */
-  #streamContext
-
   /** @type {Map<string, Correspondence>} */
   #correspondences = new Map()
+
+  /** @type {string} */
+  #id
+
+  /** @type {stream.Duplex} */
+  #stream
+
+  /** @type {stream.Duplex} */
+  #pipe
+
+  /** @type {Function} */
+  #handler
 
   /** @type {pino.Logger} */
   #logger
@@ -52,10 +60,8 @@ export class Peer extends stream.EventEmitter {
   constructor (connection, options) {
     super()
 
-    this.#streamContext = new StreamContext({
-      id: options?.id ?? nanoid(),
-      stream: connection
-    })
+    this.#id = options?.id ?? nanoid()
+    this.#stream = connection
 
     this.#logger = options?.logger ??
       pino({ name: `nlon-peer-${this.id}`, level: options?.logLevel ?? 'info' })
@@ -72,7 +78,7 @@ export class Peer extends stream.EventEmitter {
   * @type {string}
   */
   get id () {
-    return this.#streamContext.id
+    return this.#id
   }
 
   /**
@@ -81,7 +87,7 @@ export class Peer extends stream.EventEmitter {
   * @type {boolean}
   */
   get isConnected () {
-    return this.#streamContext.stream !== undefined
+    return this.#stream !== undefined
   }
 
   /**
@@ -96,13 +102,11 @@ export class Peer extends stream.EventEmitter {
   */
   disconnect () {
     this.#logger.debug('Disconnecting stream!')
-    const { pipe, stream, handler } = this.#streamContext
 
-    pipe.off('data', handler)
-    this.#streamContext.clear()
+    this.#pipe.off('data', this.#handler)
 
     // Emit disconnect, same as with Server
-    this.emit('disconnect', stream)
+    this.emit('disconnect', this.#stream)
   }
 
   /**
@@ -127,8 +131,8 @@ export class Peer extends stream.EventEmitter {
     Message.validate(message)
 
     this.#logger.debug({ message }, 'Sending message')
-    const { stream } = this.#streamContext
 
+    const stream = this.#stream
     stream.write(JSON.stringify(message) + '\n', 'utf-8')
 
     const result = new Correspondence({ header: message.header, stream })
@@ -174,9 +178,9 @@ export class Peer extends stream.EventEmitter {
     pipe.on('error', err =>
       this.emit('error', new StreamingError(stream, err)))
 
-    this.#streamContext.handler = handler
-    this.#streamContext.stream = stream
-    this.#streamContext.pipe = pipe
+    this.#handler = handler
+    this.#stream = stream
+    this.#pipe = pipe
 
     this.emit('connect', stream)
   }
@@ -194,14 +198,14 @@ export class Peer extends stream.EventEmitter {
 
       // Emit error event and bail
       this.emit('error',
-        new InvalidMessageError(this.#streamContext.stream, message, err.message)
+        new InvalidMessageError(this.#stream, message, err.message)
       )
 
       return
     }
 
     // Handle message
-    this.#logger.debug('Received message', { message })
+    this.#logger.debug({ message }, 'Received message')
     const correspondence = this.#ensureCorrespondence(message)
     correspondence.handle(message)
   }
@@ -217,7 +221,7 @@ export class Peer extends stream.EventEmitter {
 
       const result = new Correspondence({
         header: message.header,
-        stream: this.#streamContext.stream
+        stream: this.#stream
       })
 
       this.emit('correspondence', result)

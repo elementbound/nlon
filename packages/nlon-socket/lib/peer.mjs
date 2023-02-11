@@ -2,9 +2,9 @@ import net from 'node:net'
 import * as nlon from '@elementbound/nlon'
 
 /**
-* @summary A socket-specific extension of {@link nlon.Client}
+* @summary A socket-specific extension of {@link nlon.Peer}
 *
-* @description This class is an NLON Client that wraps and manages a
+* @description This class is an NLON Peer that wraps and manages a
 * {@link net.Socket} instance. All messages arriving on the socket will be
 * processed and all outbound traffic will be sent on the socket.
 *
@@ -13,18 +13,18 @@ import * as nlon from '@elementbound/nlon'
 * > This class shouldn't be instantiated directly, instead use the factory
 * > methods.
 *
-* @extends {nlon.Client}
-* @see wrapSocketClient
-* @see createSocketClient
+* @extends {nlon.Peer}
+* @see wrapSocketPeer
+* @see createSocketPeer
 */
-class SocketClient extends nlon.Client {
+class SocketPeer extends nlon.Peer {
   /** @type {net.Socket} */
   #socket
 
   /**
-  * Construct a client.
+  * Construct a peer.
   *
-  * @param {nlon.ClientOptions} options Options
+  * @param {nlon.PeerOptions} options Options
   * @param {net.Socket} options.socket Socket to wrap
   */
   constructor (options) {
@@ -43,33 +43,33 @@ class SocketClient extends nlon.Client {
 }
 
 /**
-* Wrap an existing {@link net.Socket} with an NLON Client.
+* Wrap an existing {@link net.Socket} with an NLON Peer.
 *
 * @param {net.Socket} socket Socket
-* @param {nlon.ClientOptions} [options] NLON client options
+* @param {nlon.PeerOptions} [options] NLON peer options
 */
-export function wrapSocketClient (socket, options) {
-  return new SocketClient({
+export function wrapSocketPeer (socket, options) {
+  return new SocketPeer({
     ...options,
     socket
   })
 }
 
 /**
-* @summary Create NLON client managing a socket.
+* @summary Create NLON peer managing a socket.
 *
 * @description This method will automatically create a socket based on the input
 * options using {@link net.createConnection}.
 *
 * > The options method will be passed to both `net.createConnection` ( and by
 * > extension to net.Socket constructor and its `.connect()`) and to
-* > SocketClient's constructor.
+* > SocketPeer's constructor.
 *
 * @param {net.SocketConstructorOpts | net.SocketConnectOpts | net.ConnectOpts |
-*   nlon.ClientOptions} options Options
-* @returns {nlon.Client} Client
+*   nlon.PeerOptions} options Options
+* @returns {nlon.Peer} Peer
 */
-export function createSocketClient (options) {
+export function createSocketPeer (options) {
   const socket = net.createConnection(options)
-  return wrapSocketClient(socket, options)
+  return wrapSocketPeer(socket, options)
 }

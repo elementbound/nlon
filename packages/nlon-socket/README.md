@@ -43,24 +43,24 @@ const nlonServer = createSocketServer({
 nlonServer.server
 ```
 
-### Client
+### Peer
 
 ```js
-import { createSocketClient, wrapSocketClient }
+import { createSocketPeer, wrapSocketPeer }
 import net from 'node:net'
 
 // Wrap an existing instance
 const socket = net.createConnection(...)
-const nlonClient = wrapSocketClient(socket)
+const nlonPeer = wrapSocketPeer(socket)
 
-// Connect to host and initialize client
-const nlonClient = createSocketClient({
+// Connect to host and initialize peer
+const nlonPeer = createSocketPeer({
   host: 'localhost',
   port: 63636
 })
 
 // Access wrapped net.Socket instance
-nlonClient.socket
+nlonPeer.socket
 ```
 
 ## Documentation
