@@ -1,7 +1,7 @@
 {
   "name": "@elementbound/nlon",
   "version": "0.6.0",
-  "description": "",
+  "description": "Reference implementation of the NLON protocol",
   "main": "index.mjs",
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -d jsdoc -r lib",
