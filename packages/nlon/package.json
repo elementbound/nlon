@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.mjs",
   "scripts": {
-    "doc": "jsdoc -c ../../.jsdoc.js -d jsdoc -r lib",
+    "doc": "jsdoc -c .jsdoc.js -d jsdoc -r lib",
     "lint": "eslint \"lib/*\"",
     "test": "node --test test/ | tap-parser -f -t | utap",
     "test:dump": "node --test test/"

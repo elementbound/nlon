@@ -8,6 +8,13 @@ import { StreamContext } from './stream.context.mjs'
 import { Correspondence } from './correspondence/correspondence.mjs'
 
 /**
+* @typedef {object} ClientOptions
+* @property {pino.Logger} [options.logger=pino()] Logger
+* @property {string} [options.logLevel='info'] Logging level
+* @property {string} [options.id=nanoid()] Client ID, used for logging
+*/
+
+/**
 * @summary Client class.
 *
 * @description The client class attaches to a single connection and manages
@@ -40,9 +47,7 @@ export class Client extends stream.EventEmitter {
   * Construct a client.
   *
   * @param {stream.Duplex} connection Connection
-  * @param {object} [options] Options
-  * @param {pino.Logger} [options.logger=pino()] Logger
-  * @param {string} [options.id=nanoid()] Client ID, used for logging
+  * @param {ClientOptions} [options] Options
   */
   constructor (connection, options) {
     super()
@@ -52,7 +57,8 @@ export class Client extends stream.EventEmitter {
       stream: connection
     })
 
-    this.#logger = options?.logger ?? pino({ name: `nlon-client-${this.id}` })
+    this.#logger = options?.logger ??
+      pino({ name: `nlon-client-${this.id}`, level: options.logLevel ?? 'info' })
 
     this.on('error', err =>
       this.#logger.error({ err }, 'Client stream error!'))

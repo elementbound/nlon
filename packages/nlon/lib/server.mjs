@@ -110,6 +110,12 @@ export function defaultExceptionHandler (correspondence, exception) {
 }
 
 /**
+* @typedef {object} ServerOptions
+* @property {pino.Logger} [logger=pino()] Logger
+* @property {string} [logLevel='info'] Log level
+*/
+
+/**
 * @summary Server class.
 *
 * @description The server class listens on a set of streams and for any incoming
@@ -160,13 +166,13 @@ export class Server extends stream.EventEmitter {
   /**
   * Construct a server.
   *
-  * @param {object} [options] Options
-  * @param {pino.Logger} [options.logger] Logger; defaults to a `pino` logger
+  * @param {ServerOptions} [options] Options
   */
   constructor (options) {
     super()
 
-    this.#logger = options?.logger ?? pino({ name: 'nlon-server' })
+    this.#logger = options?.logger ??
+      pino({ name: 'nlon-server', level: options?.logLevel ?? 'info' })
 
     this.on('error', err =>
       this.#logger.error({ err }, 'Server stream error!'))
