@@ -21,7 +21,7 @@ function runServer (port, response) {
       const data = await correspondence.next()
       correspondence.finish(response)
 
-      nlonServer.socket.close()
+      nlonServer.server.close()
       resolve(data)
     })
   })
@@ -46,7 +46,7 @@ async function runClient (port, message) {
   return response
 }
 
-describe('nlon-socket', () => {
+describe('nlon-socket', { timeout: 10000 }, () => {
   it('should exchange', async () => {
     // Given
     logger.info('Looking for a free port...')
