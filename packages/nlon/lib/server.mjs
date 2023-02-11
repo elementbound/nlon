@@ -31,6 +31,7 @@ import { Peer } from './peer.mjs'
 * passed to the {@link CorrespondenceExceptionHandler|exception handlers}.
 *
 * @callback CorrespondenceHandler
+* @param {Peer} peer Peer on the other end of the correspondence
 * @param {Correspondence} correspondence Received correspondence
 * @typedef {function(Correspondence)} CorrespondenceHandler
 *
@@ -60,6 +61,7 @@ import { Peer } from './peer.mjs'
 * will be emitted. Leaving correspondences unfinished is bad practice.
 *
 * @callback CorrespondenceExceptionHandler
+* @param {Peer} peer Peer on the other end of the correspondence
 * @param {WritableCorrespondence} correspondence Correspondence being processed
 * @param {any} exception Exception occurred
 * @typedef {function(WritableCorrespondence, any)} CorrespondenceExceptionHandler
@@ -87,9 +89,10 @@ import { Peer } from './peer.mjs'
 * }
 * ```
 *
+* @param {Peer} _peer Peer
 * @param {Correspondence} correspondence Correspondence
 */
-export function unknownSubjectHandler (correspondence) {
+export function unknownSubjectHandler (_peer, correspondence) {
   correspondence.error(new MessageError({
     type: 'UnknownSubject',
     message: `Unknown subject: ${correspondence.header.subject}`
@@ -104,10 +107,11 @@ export function unknownSubjectHandler (correspondence) {
 * message to be used as error type and message. Otherwise it will fall back to a
 * generic 'UnknownError' without message.
 *
+* @param {Peer} _peer Peer
 * @param {Correspondence} correspondence Correspondence
 * @param {any} exception Exception occurred
 */
-export function defaultExceptionHandler (correspondence, exception) {
+export function defaultExceptionHandler (_peer, correspondence, exception) {
   const error = new MessageError({
     type: exception.name || 'UnknownError',
     message: exception.message || 'Unexpected error occurred!'
@@ -380,20 +384,21 @@ export class Server extends stream.EventEmitter {
       logger.warn({ subject: header.subject },
         'Message subject unknown, calling default handler')
 
-    this.#applyHandler(correspondence, handler, logger)
+    this.#applyHandler(peer, correspondence, handler, logger)
   }
 
   /**
+  * @param {Peer} peer
   * @param {Correspondence} correspondence
   * @param {CorrespondenceHandler} handler
   * @param {pino} logger
   */
-  async #applyHandler (correspondence, handler, logger) {
+  async #applyHandler (peer, correspondence, handler, logger) {
     try {
-      await handler(correspondence)
+      await handler(peer, correspondence)
     } catch (err) {
       logger.warn({ err }, 'Caught exception processing message')
-      this.#handleException(correspondence, err, logger)
+      this.#handleException(peer, correspondence, err, logger)
     } finally {
       if (correspondence.writable) {
         this.emit('error', new UnfinishedCorrespondenceError(correspondence))
@@ -402,10 +407,12 @@ export class Server extends stream.EventEmitter {
   }
 
   /**
+  * @param {Peer} peer
   * @param {Correspondence} correspondence
   * @param {any} error
+  * @param {pino} logger
   */
-  async #handleException (correspondence, error, logger) {
+  async #handleException (peer, correspondence, error, logger) {
     try {
       const writable = WritableCorrespondence.wrap(correspondence)
       for (const exceptionHandler of this.#exceptionHandlers) {
@@ -413,11 +420,11 @@ export class Server extends stream.EventEmitter {
           break
         }
 
-        await exceptionHandler(writable, error)
+        await exceptionHandler(peer, writable, error)
       }
     } catch (err) {
       const correspondenceId = correspondence.header.correspondenceId
-      logger.error({ err, correspondenceId },
+      logger.error({ err, correspondenceId, peer: peer.id },
         'Caught exception processing exception')
 
       correspondence.error(new MessageError({
