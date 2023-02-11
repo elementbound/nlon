@@ -1,6 +1,6 @@
 {
   "name": "@elementbound/nlon-socket",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "author": "Tamas Galffy",
   "license": "MIT",
   "dependencies": {
-    "@elementbound/nlon": "workspace:^0.5.1"
+    "@elementbound/nlon": "workspace:^0.6.0"
   },
   "devDependencies": {
     "clean-jsdoc-theme": "^4.2.2",
