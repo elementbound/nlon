@@ -58,7 +58,7 @@ export class Client extends stream.EventEmitter {
     })
 
     this.#logger = options?.logger ??
-      pino({ name: `nlon-client-${this.id}`, level: options.logLevel ?? 'info' })
+      pino({ name: `nlon-client-${this.id}`, level: options?.logLevel ?? 'info' })
 
     this.on('error', err =>
       this.#logger.error({ err }, 'Client stream error!'))
