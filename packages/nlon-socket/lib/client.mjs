@@ -46,7 +46,7 @@ class SocketClient extends nlon.Client {
 * Wrap an existing {@link net.Socket} with an NLON Client.
 *
 * @param {net.Socket} socket Socket
-* @param {nlon.ClientOptions} options NLON client options
+* @param {nlon.ClientOptions} [options] NLON client options
 */
 export function wrapSocketClient (socket, options) {
   return new SocketClient({
