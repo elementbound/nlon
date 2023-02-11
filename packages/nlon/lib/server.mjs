@@ -1,14 +1,21 @@
 /* eslint-disable no-unused-vars */
 import stream from 'node:stream'
-import { Message, MessageError } from './protocol.mjs'
-import { WritableCorrespondence } from './correspondence/writable.correspondence.mjs'
+import { MessageError } from './protocol.mjs'
+import { Correspondence } from './correspondence/correspondence.mjs'
 /* eslint-enable no-unused-vars */
 
-import ndjson from 'ndjson'
+import { nanoid } from 'nanoid'
 import pino from 'pino'
-import { InvalidMessageError, StreamingError, UnfinishedCorrespondenceError } from './error.mjs'
-import { StreamContext } from './stream.context.mjs'
-import { Correspondence } from './correspondence/correspondence.mjs'
+import { WritableCorrespondence } from './correspondence/writable.correspondence.mjs'
+import { UnfinishedCorrespondenceError } from './error.mjs'
+import { Peer } from './peer.mjs'
+
+/**
+* @private
+* @typedef {object} PeerContext
+* @property {Peer} peer
+* @property {object} handlers
+*/
 
 /**
 * @summary Correspondence handler.
@@ -157,8 +164,8 @@ export class Server extends stream.EventEmitter {
   /** @type {Map<stream.Duplex, StreamContext>} */
   #streams = new Map()
 
-  /** @type {Map<string, Correspondence>} */
-  #correspondences = new Map()
+  /** @type {Map<stream.Duplex, PeerContext>} */
+  #peers = new Map()
 
   /** @type {pino.Logger} */
   #logger
@@ -279,33 +286,32 @@ export class Server extends stream.EventEmitter {
       return
     }
 
-    const streamContext = new StreamContext({
-      stream,
-      pipe: stream.pipe(ndjson.parse()),
-      handler: data => {
-        this.#handleMessage(data, streamContext)
-          .catch(err => this.emit('error', err))
-      }
+    const id = nanoid()
+    const peer = new Peer(stream, {
+      id,
+      logger: this.#logger.child({ peer: id })
     })
+    this.#logger.debug({ id, stream }, 'Connecting stream')
 
-    this.#logger.debug({ id: streamContext.id, stream }, 'Connecting stream')
+    // Subscribe to events
+    const handlers = {
+      disconnect: () => this.#handleDisconnect(stream, peer),
+      correspondence: correspondence =>
+        this.#handleCorrespondence(peer, correspondence),
+      // TODO: Consider wrapping in PeerError or something
+      error: err => this.emit('error', err)
+    }
 
-    streamContext.pipe.on('data', streamContext.handler)
-    streamContext.stream.on('error', err => this.emit('error',
-      new StreamingError(stream, err))
-    )
-    streamContext.pipe.on('error', err => this.emit('error',
-      new StreamingError(stream, err))
-    )
+    Object.entries(handlers)
+      .forEach(([event, handler]) => peer.on(event, handler))
 
-    stream.on('close', () => {
-      this.#logger.debug({ id: streamContext.id },
-        'Stream closed, disconnecting')
-      this.disconnect(stream)
-    })
+    /** @type {PeerContext} */
+    const peerContext = {
+      peer, handlers
+    }
 
-    this.#streams.set(stream, streamContext)
-    this.emit('connect', stream)
+    this.#peers.set(stream, peerContext)
+    this.emit('connect', stream, peer)
   }
 
   /**
@@ -318,72 +324,63 @@ export class Server extends stream.EventEmitter {
   * @param {stream.Duplex} stream Stream
   */
   disconnect (stream) {
-    const streamContext = this.#streams.get(stream)
+    const peerContext = this.#peers.get(stream)
+    if (!peerContext) { return }
 
-    if (!streamContext) { return }
-
-    this.#logger.debug({ id: streamContext.id, stream }, 'Disconnecting stream')
-    streamContext.pipe.off('data', streamContext.handler)
-    this.#streams.delete(stream)
-    this.emit('disconnect', stream)
+    // This will make the Peer emit a disconnect event, which will in turn
+    // trigger #handleDisconnect
+    peerContext.peer.disconnect()
   }
 
   /**
-  * @param {Message} message
-  * @param {StreamContext} streamContext
-  * @returns {Promise<void>}
+  * @param {stream.Duplex} stream
+  * @param {Peer} peer
   */
-  async #handleMessage (message, streamContext) {
-    const logger = this.#logger.child({ stream: streamContext.id })
-    logger.debug({ message }, 'Received message')
+  #handleDisconnect (stream, peer) {
+    this.#logger.debug({ id: peer.id, stream }, 'Disconnecting stream')
 
-    // Validate message
-    if (!this.#validateMessage(message, streamContext)) {
-      logger.error({ message }, 'Received invalid message, ignoring message')
+    const peerContext = this.#peers.get(stream)
+    const handlers = peerContext?.handlers
+
+    if (!handlers) {
+      this.#logger.error(
+        { id: peer.id, stream },
+        'Handlers missing for peer on disconnect! Please report a bug.'
+      )
 
       return
     }
 
-    // Prepare correspondenceId
-    const { stream } = streamContext
-    const { correspondence, isNew } = this.#ensureCorrespondence(message, stream)
+    // Unsubscribe and remove peer
+    Object.entries(handlers)
+      .forEach(([event, handler]) => peer.off(event, handler))
+    this.#peers.delete(stream)
+    this.#streams.delete(stream)
 
-    if (isNew) {
-      // Call handler
-      const handler =
-        this.#handlers.get(message.header.subject) ?? this.#defaultHandler
-
-      handler === this.#defaultHandler &&
-        logger.warn({ subject: message.header.subject },
-          'Message subject unknown, calling default handler')
-
-      // Intentionally not waiting for this promise to finish
-      // Control needs to move to the next line to pass message to
-      // correspondence, which will in turn feed the handler with data
-      this.#applyHandler(correspondence, handler, logger)
-    }
-
-    // Pass message to correspondence
-    correspondence.handle(message)
+    this.emit('disconnect', stream, peer)
   }
 
   /**
-  * @param {Message} message
-  * @param {stream.Duplex} stream
+  * @param {Peer} peer
+  * @param {Correspondence} correspondence
   */
-  #ensureCorrespondence (message, stream) {
-    const header = message.header
-    let isNew = false
-    if (!this.#correspondences.has(header.correspondenceId)) {
-      const result = new Correspondence({ header, stream })
-      this.#correspondences.set(header.correspondenceId, result)
-      isNew = true
-    }
+  #handleCorrespondence (peer, correspondence) {
+    // Correspondence header already populated by Peer
+    const header = correspondence.header
+    const logger = this.#logger.child({
+      correspondence: header.correspondenceId,
+      peer: peer.id
+    })
 
-    return {
-      correspondence: this.#correspondences.get(header.correspondenceId),
-      isNew
-    }
+    // Find handler
+    const handler =
+      this.#handlers.get(header.subject) ?? this.#defaultHandler
+
+    handler === this.#defaultHandler &&
+      logger.warn({ subject: header.subject },
+        'Message subject unknown, calling default handler')
+
+    this.#applyHandler(correspondence, handler, logger)
   }
 
   /**
@@ -401,8 +398,6 @@ export class Server extends stream.EventEmitter {
       if (correspondence.writable) {
         this.emit('error', new UnfinishedCorrespondenceError(correspondence))
       }
-
-      this.#correspondences.delete(correspondence.header.correspondenceId)
     }
   }
 
@@ -431,24 +426,6 @@ export class Server extends stream.EventEmitter {
       }))
     }
   }
-
-  /**
-  * @param {Message} message
-  * @param {StreamContext} streamContext
-  * @returns {boolean}
-  */
-  #validateMessage (message, streamContext) {
-    try {
-      Message.validate(message)
-    } catch (err) {
-      // Emit error event and bail
-      this.emit('error',
-        new InvalidMessageError(streamContext.stream, message, err.message)
-      )
-
-      return false
-    }
-
-    return true
-  }
 }
+
+// TODO: Document events

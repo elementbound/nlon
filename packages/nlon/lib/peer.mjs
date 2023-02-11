@@ -189,7 +189,8 @@ export class Peer extends stream.EventEmitter {
     try {
       Message.validate(message)
     } catch (err) {
-      this.#logger.error({ message }, 'Received invalid message, emitting error')
+      this.#logger.error({ err, message },
+        'Received invalid message, emitting error')
 
       // Emit error event and bail
       this.emit('error',
@@ -200,6 +201,7 @@ export class Peer extends stream.EventEmitter {
     }
 
     // Handle message
+    this.#logger.debug('Received message', { message })
     const correspondence = this.#ensureCorrespondence(message)
     correspondence.handle(message)
   }
