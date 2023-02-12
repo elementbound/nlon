@@ -7,7 +7,7 @@ import { Correspondence } from './correspondence/correspondence.mjs'
 import { nanoid } from 'nanoid'
 import pino from 'pino'
 import { WritableCorrespondence } from './correspondence/writable.correspondence.mjs'
-import { UnfinishedCorrespondenceError } from './error.mjs'
+import { PeerError, UnfinishedCorrespondenceError } from './error.mjs'
 import { Peer } from './peer.mjs'
 
 /**
@@ -295,8 +295,7 @@ export class Server extends stream.EventEmitter {
       disconnect: () => this.#handleDisconnect(stream, peer),
       correspondence: correspondence =>
         this.#handleCorrespondence(peer, correspondence),
-      // TODO: Consider wrapping in PeerError or something
-      error: err => this.emit('error', err)
+      error: err => this.emit('error', new PeerError(peer, err))
     }
 
     Object.entries(handlers)

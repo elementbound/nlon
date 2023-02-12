@@ -2,6 +2,7 @@
 import stream from 'node:stream'
 import { MessageError } from './protocol.mjs'
 import { Correspondence } from './correspondence/correspondence.mjs'
+import { Peer } from './peer.mjs'
 /* eslint-enable no-unused-vars */
 
 import assert from 'node:assert'
@@ -189,6 +190,35 @@ export class UnreadableCorrespondenceError extends Error {
   */
   get correspondence () {
     return this.#correspondence
+  }
+}
+
+/**
+* Error emitted when any of the Server's managed peers encounter an error.
+*/
+export class PeerError extends Error {
+  /** @type {Peer} */
+  #peer
+
+  /**
+  * Construct error.
+  *
+  * @param {Peer} peer Peer encountering error
+  * @param {Error} cause Encountered error
+  * @param {string} [message] Error message
+  */
+  constructor (peer, cause, message) {
+    super(message ?? 'Received error from peer', { cause })
+
+    this.#peer = peer
+  }
+
+  /**
+  * Peer that encountered the error.
+  * @type {Peer}
+  */
+  get peer () {
+    return this.#peer
   }
 }
 
