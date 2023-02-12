@@ -281,6 +281,8 @@ export class Server extends stream.EventEmitter {
   * emitting a 'disconnect' event.
   *
   * @param {stream.Duplex} stream Stream
+  *
+  * @fires Server#connect
   */
   connect (stream) {
     const id = nanoid()
@@ -318,6 +320,8 @@ export class Server extends stream.EventEmitter {
   * disconnected stream as event data.
   *
   * @param {stream.Duplex} stream Stream
+  *
+  * @fires Server#disconnect
   */
   disconnect (stream) {
     const peerContext = this.#peers.get(stream)
@@ -437,4 +441,26 @@ export class Server extends stream.EventEmitter {
   }
 }
 
-// TODO: Document events
+/**
+* Event emitted when an error is encountered by a connected peer or during
+* message processing.
+*
+* @event Server#error
+* @param {any} error Error
+*/
+
+/**
+* Event emitted when a new peer is connected to the server.
+*
+* @event Server#connect
+* @param {stream.Duplex} stream Stream connected
+* @param {Peer} peer Peer
+*/
+
+/**
+* Event emitted when a peer is disconnected.
+*
+* @event Server#disconnect
+* @param {stream.Duplex} stream Stream connected
+* @param {Peer} peer Peer
+*/
