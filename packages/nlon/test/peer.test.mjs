@@ -1,20 +1,20 @@
 import { describe, it, beforeEach, mock } from 'node:test'
 import assert from 'node:assert'
 import { InspectableStream } from './inspectable.stream.mjs'
-import { Client } from '../lib/client.mjs'
+import { Peer } from '../lib/peer.mjs'
 import { Message, MessageHeader, MessageTypes } from '../lib/protocol.mjs'
 import { objectify, send } from './utils.mjs'
 
-describe('Client', () => {
+describe('Peer', () => {
   /** @type {InspectableStream} */
   let stream
 
-  /** @type {Client} */
-  let client
+  /** @type {Peer} */
+  let peer
 
   beforeEach(() => {
     stream = new InspectableStream({ emitOnInject: true })
-    client = new Client(stream)
+    peer = new Peer(stream)
   })
 
   it('should write on send', () => {
@@ -24,7 +24,7 @@ describe('Client', () => {
     })
 
     // When
-    client.send(expected)
+    peer.send(expected)
     const actual = stream.fromJSON()
 
     // Then
@@ -50,7 +50,7 @@ describe('Client', () => {
       body: 'pong'
     })
 
-    const correspondence = client.send(message)
+    const correspondence = peer.send(message)
     correspondence.handle = mock.fn()
 
     // When
@@ -70,10 +70,10 @@ describe('Client', () => {
       header: new MessageHeader({ subject: 'test' }),
       type: MessageTypes.Data
     })
-    client.disconnect()
+    peer.disconnect()
 
     // When + then
-    assert.throws(() => client.send(message))
+    assert.throws(() => peer.send(message))
   })
 
   it('should receive new', async () => {
@@ -84,7 +84,7 @@ describe('Client', () => {
       body: 'ping'
     })
 
-    const promise = client.receive()
+    const promise = peer.receive()
 
     // When
     send(stream, expected)
@@ -97,10 +97,10 @@ describe('Client', () => {
 
   it('should throw on receive after disconnect', () => {
     // Given
-    client.disconnect()
+    peer.disconnect()
 
     // When + then
-    assert.throws(() => client.receive())
+    assert.throws(() => peer.receive())
   })
 
   it('should emit on unknown correspondence', () => {
@@ -112,7 +112,7 @@ describe('Client', () => {
     })
 
     const handler = mock.fn()
-    client.on('correspondence', handler)
+    peer.on('correspondence', handler)
 
     // When
     send(stream, message)
@@ -124,7 +124,7 @@ describe('Client', () => {
   it('should emit error on stream error', () => {
     // Given
     const handler = mock.fn()
-    client.on('error', handler)
+    peer.on('error', handler)
 
     // When
     stream.emit('error', new Error('Stream error'))
@@ -136,7 +136,7 @@ describe('Client', () => {
   it('should emit error on invalid message', () => {
     // Given
     const handler = mock.fn()
-    client.on('error', handler)
+    peer.on('error', handler)
 
     // When
     send(stream, {})
@@ -148,7 +148,7 @@ describe('Client', () => {
   it('should emit disconnect on stream close', () => {
     // Given
     const handler = mock.fn()
-    client.on('disconnect', handler)
+    peer.on('disconnect', handler)
 
     // When
     stream.emit('close')
@@ -160,10 +160,10 @@ describe('Client', () => {
   it('should emit disconnect', () => {
     // Given
     const handler = mock.fn()
-    client.on('disconnect', handler)
+    peer.on('disconnect', handler)
 
     // When
-    client.disconnect()
+    peer.disconnect()
 
     // Then
     assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')

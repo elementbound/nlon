@@ -94,7 +94,7 @@ export class Correspondence extends events.EventEmitter {
   * @summary Handle message.
   *
   * @description This method is called from the outside, typically by the {@link
-  * Client} or {@link Server}, when a message belonging to this instance's
+  * Peer} or {@link Server}, when a message belonging to this instance's
   * correspondence is received. Based on the incoming message, the appropriate
   * event is emitted.
   *

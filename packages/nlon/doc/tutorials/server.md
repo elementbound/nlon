@@ -19,37 +19,37 @@ What could be striking is that there's no listen method. Since NLON ( and its
 reference implementation ) is not tied to any specific transport, network or
 otherwise, it by itself doesn't do any connection management. Instead,
 connections must be provided, either manually by calling `server.connect()`, or
-using an adapter ( TODO: to be implemented ).
+using an adapter.
 
-For example, you might listen on a TCP socket:
+For example, you might listen on a TCP socket with [nlon-socket]:
 
 ```js
-const tcpServer = net.createServer()
+import { createSocketServer } from '@elementbound/nlon-socket'
 
-tcpServer.on('connection', c => nlonServer.connect(c))
-tcpServer.listen()
+const nlonServer = createSocketServer({
+  host: 'localhost',
+  port: 63636
+})
 ```
 
 Once this is done, the NLON server will be aware of incoming connections and
 receive incoming messages.
 
-> Anything can be passed to `server.connect()`, as long as it works as a
-> duplex stream - i.e. it emits `data` events and can be written to with `write`
-> and can be piped.
+[nlon-socket]: https://github.com/elementbound/nlon/tree/main/packages/nlon-socket
 
 ## Handling messages
 
-When any of the connected clients sends a message, first its ID is looked up. If
-it is a new correspondence, a Correspondence instance is created for it and
-passed to the appropriate correspondence handler. The initial  message's
-*subject* header is used to route the correspondence to the right correspondence
-handler.
+When any of the connected peers sends a message, first its correspondence ID is
+looked up. If it is a new correspondence, a Correspondence instance is created
+for it and passed to the appropriate correspondence handler. The initial
+message's *subject* header is used to route the correspondence to the right
+correspondence handler.
 
 From there, the handler is free to stream incoming data and send replies
 accordingly, for example:
 
 ```js
-nlonServer.handle('echo', async (correspondence) => {
+nlonServer.handle('echo', async (peer, correspondence) => {
   for async (const message of correspondence.all()) {
     correspondence.write(request.body)
   }
@@ -63,7 +63,7 @@ signifies to the recipient that no more data should be expected on it. To fix
 that, simply call `.finish()`:
 
 ```js
-nlonServer.handle('echo', async (correspondence) => {
+nlonServer.handle('echo', async (peer, correspondence) => {
   for async (const message of correspondence.all()) {
     correspondence.write(request.body)
   }
@@ -76,7 +76,7 @@ Note that NLON correspondences can also be finished with a piece of data, in
 case you'd like to add some parting message:
 
 ```js
-nlonServer.handle('echo', async (correspondence) => {
+nlonServer.handle('echo', async (peer, correspondence) => {
   for async (const message of correspondence.all()) {
     correspondence.write(request.body)
   }
@@ -85,7 +85,7 @@ nlonServer.handle('echo', async (correspondence) => {
 })
 ```
 
-> Finishing a correpsondence with data results in a single finish message
+> Finishing a correspondence with data results in a single finish message
 > written to the stream, same as finishing without data. This means that
 > finishing with data does *not* write a data *and* a finish message to the
 > stream.
@@ -105,7 +105,7 @@ Take the following example, where you want to write a handler that:
 Naively, this could be done like so:
 
 ```js
-nlonServer.handle('friends', async (correspondence) => {
+nlonServer.handle('friends', async (peer, correspondence) => {
   const request = await correspondence.next()
 
   // Check if auth header present
@@ -163,7 +163,7 @@ function requireUser() {
   }
 }
 
-nlonServer.handle('friends', async (correspondence) => {
+nlonServer.handle('friends', async (peer, correspondence) => {
   const request = await correspondence.next(
     requireAuth(),
     requireUser()
@@ -235,7 +235,7 @@ function requireUser() {
 }
 
 export function friendsHandlers(server) {
-  nlonServer.handle('friends', async (correspondence) => {
+  server.handle('friends', async (peer, correspondence) => {
     const request = await correspondence.next(
       requireAuth(),
       requireUser()
@@ -255,12 +255,12 @@ And then register our handlers:
 ```js
 // index.mjs
 import { friendsHandlers } from './handlers.mjs'
+import { createSocketServer } from '@elementbound/nlon-socket'
 
-const nlonServer = new Server()
-const tcpServer = net.createServer()
+const nlonServer = createSocketServer({
+  host: 'localhost',
+  port: 63636
+})
 
 nlonServer.configure(friendsHandlers)
-
-tcpServer.on('connection', c => server.connect(c))
-tcpServer.listen()
 ```

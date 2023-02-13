@@ -44,8 +44,8 @@ export class InspectableStream extends stream.Duplex {
       // _read is called apparently, because data is pulled and emitted as
       // 'data' events.
       //
-      // However, in the Client tests, if the event is not manually emitted, the
-      // Client doesn't know about it and the correspondences are not updated.
+      // However, in the Peer tests, if the event is not manually emitted, the
+      // Peer doesn't know about it and the correspondences are not updated.
       this.emit('data', data)
     }
   }

@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import getPort from 'get-port'
 import pino from 'pino'
 import { createSocketServer } from '../lib/server.mjs'
-import { createSocketClient } from '../lib/client.mjs'
+import { createSocketPeer } from '../lib/peer.mjs'
 import { Message, MessageHeader } from '@elementbound/nlon'
 
 const logger = pino({ name: 'test' })
@@ -17,7 +17,7 @@ function runServer (port, response) {
       logger: pino({ level: 'debug', name: 'server' })
     })
 
-    nlonServer.handle('test', async correspondence => {
+    nlonServer.handle('test', async (peer, correspondence) => {
       const data = await correspondence.next()
       correspondence.finish(response)
 
@@ -27,14 +27,14 @@ function runServer (port, response) {
   })
 }
 
-async function runClient (port, message) {
-  const nlonClient = createSocketClient({
+async function runPeer (port, message) {
+  const nlonPeer = createSocketPeer({
     host: 'localhost',
     port,
-    logger: pino({ level: 'debug', name: 'client' })
+    logger: pino({ level: 'debug', name: 'peer' })
   })
 
-  const correspondence = nlonClient.send(new Message({
+  const correspondence = nlonPeer.send(new Message({
     header: new MessageHeader({ subject: 'test' }),
     body: message
   }))
@@ -42,7 +42,7 @@ async function runClient (port, message) {
   const response = await correspondence.next()
   correspondence.finish()
 
-  nlonClient.socket.destroy()
+  nlonPeer.socket.destroy()
   return response
 }
 
@@ -54,13 +54,13 @@ describe('nlon-socket', { timeout: 10000 }, () => {
     logger.info('Found free port: %d', port)
 
     // When
-    logger.info('Running server and client')
+    logger.info('Running server and peer')
     const serverPromise = runServer(port, 'OK')
-    const clientPromise = runClient(port, 'O?')
+    const peerPromise = runPeer(port, 'O?')
 
     // Then
     logger.info('Awaiting on results...')
     assert.equal(await serverPromise, 'O?')
-    assert.equal(await clientPromise, 'OK')
+    assert.equal(await peerPromise, 'OK')
   })
 })
