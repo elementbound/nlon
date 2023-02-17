@@ -1,7 +1,4 @@
-/* eslint-disable no-unused-vars */
-import * as ws from 'isomorphic-ws'
-/* eslint-enable no-unused-vars */
-
+import ws from 'isomorphic-ws'
 import * as nlon from '@elementbound/nlon'
 import { WebSocketStream } from './websocket.wrapper.mjs'
 
