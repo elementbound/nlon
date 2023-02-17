@@ -76,12 +76,16 @@ importers:
       eslint-plugin-n: ^15.0.0
       eslint-plugin-promise: ^6.0.0
       get-port: ^6.1.2
+      isomorphic-ws: ^5.0.0
       jsdoc: ^4.0.0
       pino: ^8.8.0
       tap-parser: ^12.0.1
       utap: ^0.1.3
+      ws: ^8.12.1
     dependencies:
       '@elementbound/nlon': link:../nlon
+      isomorphic-ws: 5.0.0_ws@8.12.1
+      ws: 8.12.1
     devDependencies:
       clean-jsdoc-theme: 4.2.2_jsdoc@4.0.0
       eslint: 8.31.0
@@ -3482,6 +3486,14 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /isomorphic-ws/5.0.0_ws@8.12.1:
+    resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
+    peerDependencies:
+      ws: '*'
+    dependencies:
+      ws: 8.12.1
+    dev: false
+
   /jake/10.8.5:
     resolution: {integrity: sha512-sVpxYeuAhWt0OTWITwT98oyV0GsXyMlXCF+3L1SuafBVUIr/uILGRB+NqwkzhgXKvoJpDIpQvqkUALgdmQsQxw==}
     engines: {node: '>=10'}
@@ -5736,6 +5748,19 @@ packages:
       type-fest: 0.4.1
       write-json-file: 3.2.0
     dev: true
+
+  /ws/8.12.1:
+    resolution: {integrity: sha512-1qo+M9Ba+xNhPB+YTWUlK6M17brTut5EXbcBaMRN5pH5dFrXz7lzz1ChFSUq3bOUl8yEvSenhHmYUNJxFzdJew==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
 
   /xmlcreate/2.0.4:
     resolution: {integrity: sha512-nquOebG4sngPmGPICTS5EnxqhKbCmz5Ox5hsszI2T6U5qdrJizBc+0ilYSEjTSzU0yZcmvppztXe/5Al5fUwdg==}
