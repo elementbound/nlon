@@ -39,7 +39,6 @@ export class WebSocketStream extends stream.Duplex {
   }
 
   _read () {
-    // TODO: Will this work?
     // Do nothing - data is pushed from subscriber
   }
 
