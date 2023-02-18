@@ -2,7 +2,7 @@
   "name": "@elementbound/nlon-websocket-example",
   "version": "0.8.0",
   "description": "An example app using NLON over WebSockets",
-  "main": "index.mjs",
+  "main": "src/host.mjs",
   "scripts": {
     "lint": "eslint \"src/*\"",
     "test": "node --test test/ | tap-parser -f -t | utap",
@@ -12,6 +12,9 @@
   "author": "Tamas Galffy",
   "license": "MIT",
   "dependencies": {
+    "@elementbound/nlon-websocket": "workspace:^0.8.0",
+    "express": "^4.18.2",
+    "pino": "^8.8.0"
   },
   "devDependencies": {
     "eslint": "^8.31.0",
