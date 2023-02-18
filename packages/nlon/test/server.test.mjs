@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import { Server } from '../lib/server.mjs'
 import { InspectableStream } from './inspectable.stream.mjs'
 import { Message, MessageError, MessageHeader, MessageTypes } from '../lib/protocol.mjs'
-import { StreamingError, InvalidMessageError } from '../lib/error.mjs'
+import { StreamingError, InvalidMessageError, PeerError } from '../lib/error.mjs'
 import { objectify, send, sleep } from './utils.mjs'
 
 describe('Server', () => {
@@ -229,8 +229,8 @@ describe('Server', () => {
     // Then
     const calls = handler.mock.calls
     assert.equal(calls.length, 1, 'No error was emitted?')
-    assert(calls[0]?.arguments?.[0] instanceof StreamingError,
-      'Wrong error emitted!')
+    assert(calls[0]?.arguments?.[0] instanceof PeerError,
+      `Wrong error emitted: ${calls[0]?.arguments?.[0]?.constructor?.name}`)
   })
 
   it('should reject invalid message', async () => {
@@ -245,8 +245,8 @@ describe('Server', () => {
     // Then
     const calls = handler.mock.calls
     assert.equal(calls.length, 1, 'No error was emitted?')
-    assert(calls[0]?.arguments?.[0] instanceof InvalidMessageError,
-      'Wrong error emitted!')
+    assert(calls[0]?.arguments?.[0] instanceof PeerError,
+      `Wrong error emitted: ${calls[0]?.arguments?.[0]?.constructor?.name}`)
   })
   // }}}
 

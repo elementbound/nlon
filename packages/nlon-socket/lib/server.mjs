@@ -68,7 +68,7 @@ export function wrapSocketServer (server, options) {
 * incoming options. This will also automatically call `.listen()` on the socket
 * server before wrapping it in an NLON server.
 *
-* > The same options object will be passed to `net.cerateServer`, `.listen()`
+* > The same options object will be passed to `net.createServer`, `.listen()`
 * > and the new NLON Server instance.
 *
 * @param {net.ServerOpts | net.ListenOptions | nlon.ServerOptions} options Options

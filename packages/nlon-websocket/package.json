@@ -1,10 +1,10 @@
 {
-  "name": "@elementbound/nlon",
+  "name": "@elementbound/nlon-websocket",
   "version": "0.8.0",
-  "description": "Reference implementation of the NLON protocol",
-  "main": "index.mjs",
+  "description": "WebSocket adapter for NLON",
+  "main": "index.js",
   "scripts": {
-    "doc": "jsdoc -c .jsdoc.js -d jsdoc -r lib",
+    "doc": "jsdoc -c .jsdoc.js -R README.md -d jsdoc -r lib",
     "lint": "eslint \"lib/*\"",
     "test": "node --test test/ | tap-parser -f -t | utap",
     "test:dump": "node --test test/"
@@ -13,9 +13,9 @@
   "author": "Tamas Galffy",
   "license": "MIT",
   "dependencies": {
-    "nanoid": "^4.0.0",
-    "ndjson": "^2.0.0",
-    "pino": "^8.8.0"
+    "@elementbound/nlon": "workspace:^0.8.0",
+    "isomorphic-ws": "^5.0.0",
+    "ws": "^8.12.1"
   },
   "devDependencies": {
     "clean-jsdoc-theme": "^4.2.2",
@@ -24,7 +24,9 @@
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
+    "get-port": "^6.1.2",
     "jsdoc": "^4.0.0",
+    "pino": "^8.8.0",
     "tap-parser": "^12.0.1",
     "utap": "^0.1.3"
   }
