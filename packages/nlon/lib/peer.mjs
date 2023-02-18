@@ -107,6 +107,10 @@ export class Peer extends stream.EventEmitter {
 
     // Emit disconnect, same as with Server
     this.emit('disconnect', this.#stream)
+
+    this.#stream = undefined
+    this.#pipe = undefined
+    this.#handler = undefined
   }
 
   /**
