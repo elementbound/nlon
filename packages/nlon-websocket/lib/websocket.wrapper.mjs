@@ -1,12 +1,23 @@
 import * as stream from 'node:stream'
 
+/**
+* @summary A Duplex stream implementation wrapping a WebSocket.
+*
+* @description This class can be used to treat a WebSocket as a regular stream.
+* Under the hood it subscribes to the WebSocket's events and forwards any
+* writes.
+*
+* @extends {stream.Duplex}
+*/
 export class WebSocketStream extends stream.Duplex {
   /** @type {WebSocket} */
   #ws
 
   /**
-  * @param {WebSocket} ws
-  * @param {stream.DuplexOptions} options
+  * Wrap a WebSocket.
+  *
+  * @param {WebSocket} ws WebSocket to wrap
+  * @param {stream.DuplexOptions} options Stream options
   */
   constructor (ws, options) {
     super(options)

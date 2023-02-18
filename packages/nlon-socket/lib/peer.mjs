@@ -61,7 +61,7 @@ export function wrapSocketPeer (socket, options) {
 * @description This method will automatically create a socket based on the input
 * options using {@link net.createConnection}.
 *
-* > The options method will be passed to both `net.createConnection` ( and by
+* > The options parameter will be passed to both `net.createConnection` ( and by
 * > extension to net.Socket constructor and its `.connect()`) and to
 * > SocketPeer's constructor.
 *
