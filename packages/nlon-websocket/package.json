@@ -2,7 +2,7 @@
   "name": "@elementbound/nlon-websocket",
   "version": "0.8.1",
   "description": "WebSocket adapter for NLON",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -R README.md -d jsdoc -r lib",
     "lint": "eslint \"lib/*\"",

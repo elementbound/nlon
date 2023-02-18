@@ -30,9 +30,15 @@ const nlonp = nlonws.wrapWebSocketPeer(ws)
 const nlons = new nlon.Server()
 nlons.connect(new nlonws.WebSocketStream(ws))
 
-nlons.handle('history', async correspondence => {
+nlons.handle('history', async (peer, correspondence) => {
   for await (const message of correspondence.all()) {
+    if (!message) {
+      continue
+    }
+
     console.log('Received history', message)
     appendMessage(message)
   }
+
+  correspondence.finish()
 })

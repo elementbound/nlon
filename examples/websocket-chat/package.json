@@ -30,7 +30,7 @@
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
-    "events-browserify": "^0.0.1",
+    "events": "^3.3.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "nodemon": "^2.0.20",
     "os-browserify": "^0.3.0",

@@ -34,7 +34,7 @@ export default {
   resolve: {
     fallback: {
       assert: require.resolve('assert-browserify'),
-      events: require.resolve('events-browserify'),
+      events: require.resolve('events/'),
       os: require.resolve('os-browserify'),
       stream: require.resolve('stream-browserify'),
       process: require.resolve('process')

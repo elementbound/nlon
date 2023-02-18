@@ -1,4 +1,5 @@
-import stream from 'stream'
+import stream from 'node:stream'
+import events from 'node:events'
 import ndjson from 'ndjson'
 import pino from 'pino'
 import { nanoid } from 'nanoid'
@@ -32,7 +33,7 @@ import { Correspondence } from './correspondence/correspondence.mjs'
 * function fine. This enables factory methods to create peers on TCP sockets,
 * WebSockets, or even adapt other types.
 */
-export class Peer extends stream.EventEmitter {
+export class Peer extends events.EventEmitter {
   /** @type {Map<string, Correspondence>} */
   #correspondences = new Map()
 
