@@ -1,0 +1,25 @@
+{
+  "name": "@elementbound/nlon-websocket-example",
+  "version": "0.8.0",
+  "description": "An example app using NLON over WebSockets",
+  "main": "index.mjs",
+  "scripts": {
+    "lint": "eslint \"src/*\"",
+    "test": "node --test test/ | tap-parser -f -t | utap",
+    "test:dump": "node --test test/"
+  },
+  "keywords": [],
+  "author": "Tamas Galffy",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "eslint": "^8.31.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "tap-parser": "^12.0.1",
+    "utap": "^0.1.3"
+  }
+}
