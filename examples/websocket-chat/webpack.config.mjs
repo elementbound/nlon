@@ -1,9 +1,13 @@
 import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
+import webpack from 'webpack'
 import CopyPlugin from 'copy-webpack-plugin'
+import NodePolyfillWebpackPlugin from 'node-polyfill-webpack-plugin'
+import { createRequire } from 'module'
 
 const scriptDirname = dirname(fileURLToPath(import.meta.url))
 const dist = resolve(scriptDirname, 'dist')
+const require = createRequire(import.meta.url)
 
 export default {
   entry: {
@@ -13,7 +17,8 @@ export default {
     filename: '[name].js',
     path: dist
   },
-  mode: 'production',
+  mode: 'development',
+  devtool: 'eval-source-map',
 
   module: {
     rules: [
@@ -26,11 +31,31 @@ export default {
     ]
   },
 
+  resolve: {
+    fallback: {
+      assert: require.resolve('assert-browserify'),
+      events: require.resolve('events-browserify'),
+      os: require.resolve('os-browserify'),
+      stream: require.resolve('stream-browserify'),
+      process: require.resolve('process')
+    }
+  },
+
   plugins: [
+    // Handle 'node:*' imports by replacing them with their regular counterparts
+    // which can be polyfilled
+    new webpack.NormalModuleReplacementPlugin(/^node:/, resource => {
+      resource.request = resource.request.replace(/^node:/, '')
+    }),
+
     new CopyPlugin({
       patterns: [
         { from: './assets/', to: dist }
       ]
+    }),
+
+    new webpack.ProvidePlugin({
+      process: 'process'
     })
   ],
 
