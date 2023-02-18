@@ -42,3 +42,64 @@ nlons.handle('history', async (peer, correspondence) => {
 
   correspondence.finish()
 })
+
+nlons.handle('message', async (peer, correspondence) => {
+  for await (const message of correspondence.all()) {
+    if (!message) {
+      continue
+    }
+
+    console.log('Received message', message)
+    appendMessage(message)
+  }
+
+  correspondence.finish()
+})
+
+window.addEventListener('load', () => {
+  console.log('Hi!')
+  const inputs = {
+    name: document.querySelector('.chatbox_name'),
+    content: document.querySelector('.chatbox_message'),
+    send: document.querySelector('.chatbox_send')
+  }
+
+  console.log('inputs', inputs)
+
+  inputs.content.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 'Enter') {
+      inputs.content.value += '\n'
+      e.stopImmediatePropagation()
+    }
+  })
+
+  inputs.send.addEventListener('click', e => {
+    const name = inputs.name.value
+    const content = inputs.content.value
+    const chatMessage = new ChatMessage({
+      sender: name,
+      content
+    })
+
+    nlonp.send(new nlon.Message({
+      header: new nlon.MessageHeader({
+        subject: 'message'
+      }),
+
+      body: chatMessage
+    }))
+      .finish()
+
+    inputs.content.value = ''
+  })
+
+  Object.values(inputs).forEach(e => {
+    e.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') {
+        return
+      }
+
+      inputs.send.click()
+    })
+  })
+})

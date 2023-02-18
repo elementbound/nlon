@@ -45,7 +45,7 @@ nlons.on('connect', (stream, peer) => {
   correspondence.finish()
 })
 
-nlons.handle('message', async correspondence => {
+nlons.handle('message', async (peer, correspondence) => {
   const message = new ChatMessage(await correspondence.next())
   logger.info({ message }, 'Received message')
 
