@@ -5,8 +5,12 @@
   "main": "src/host.mjs",
   "scripts": {
     "lint": "eslint \"src/*\"",
-    "test": "node --test test/ | tap-parser -f -t | utap",
-    "test:dump": "node --test test/"
+    "build": "webpack",
+    "build:dev": "webpack --watch",
+    "host": "node .",
+    "host:dev": "nodemon . | pino-pretty",
+    "start": "pnpm build && pnpm host",
+    "start:dev": "concurrently \"pnpm build:dev\" \"pnpm host:dev\""
   },
   "keywords": [],
   "author": "Tamas Galffy",
@@ -17,12 +21,16 @@
     "pino": "^8.8.0"
   },
   "devDependencies": {
+    "concurrently": "^7.6.0",
+    "copy-webpack-plugin": "^11.0.0",
     "eslint": "^8.31.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
-    "tap-parser": "^12.0.1",
-    "utap": "^0.1.3"
+    "nodemon": "^2.0.20",
+    "pino-pretty": "^9.3.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   }
 }

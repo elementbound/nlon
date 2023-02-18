@@ -1,11 +1,13 @@
+import * as http from 'node:http'
 import express from 'express'
 import pino from 'pino'
 
 const app = express()
+const httpServer = http.createServer(app)
 const logger = pino()
 const port = process.env.PORT ?? 3000
 
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   logger.info({
     path: req.path,
     params: req.params,
@@ -17,10 +19,12 @@ app.use((req, res, next) => {
   next()
 })
 
-app.get('/', (req, res) => {
+app.use(express.static('dist'))
+
+app.get('/', (_req, res) => {
   res.send('Hello world!')
 })
 
-app.listen(port, () => {
+httpServer.listen(port, () => {
   logger.info(`Listening on port ${port}`)
 })
