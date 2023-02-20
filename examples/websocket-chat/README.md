@@ -8,20 +8,20 @@ Checkout the repo and install dependencies by running the following in the
 example's directory:
 
 ```sh
-npm install
+pnpm install
 ```
 
 Once that's done, you can start the application:
 
 ```sh
-npm start
+pnpm start
 ```
 
 This will build the frontend and launch the server. If you'd like to work on the
 source, use the following:
 
 ```sh
-npm run start:dev
+pnpm run start:dev
 ```
 
 This will watch the code for changes, rebuilding the frontend and restart the

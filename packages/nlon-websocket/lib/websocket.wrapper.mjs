@@ -31,11 +31,9 @@ export class WebSocketStream extends stream.Duplex {
       if (data.constructor.name === 'Blob') {
         data.text()
           .then(t => {
-            console.log('ws blob', t)
             this.push(t)
           })
       } else {
-        console.log('ws unk', data.toString())
         this.push(data.toString())
       }
     }
