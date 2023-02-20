@@ -1,4 +1,3 @@
-import stream from 'node:stream'
 import events from 'node:events'
 import ndjson from 'ndjson'
 import pino from 'pino'
