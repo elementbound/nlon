@@ -2,7 +2,6 @@ import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import webpack from 'webpack'
 import CopyPlugin from 'copy-webpack-plugin'
-import NodePolyfillWebpackPlugin from 'node-polyfill-webpack-plugin'
 import { createRequire } from 'module'
 
 const scriptDirname = dirname(fileURLToPath(import.meta.url))

@@ -1,6 +1,6 @@
 # websocket-chat
 
-An example app using NLON over Websocket, powered by Express and Webpack.
+A basic example app using NLON over Websocket, powered by Express and Webpack.
 
 ## Usage
 
@@ -8,7 +8,7 @@ Checkout the repo and install dependencies by running the following in the
 example's directory:
 
 ```sh
-npm i
+npm install
 ```
 
 Once that's done, you can start the application:
@@ -26,6 +26,8 @@ npm run start:dev
 
 This will watch the code for changes, rebuilding the frontend and restart the
 server as needed.
+
+With your server running, open <http://localhost:3000/> to see the app running.
 
 ## NLON in the browser
 

@@ -7,7 +7,8 @@ export class ChatMessage {
   /** @type {string} */
   content
 
-  // TODO: Timestamps
+  /** @type {number} */
+  timestamp
 
   /**
   * @param {ChatMessage} data

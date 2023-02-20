@@ -16,7 +16,8 @@ const logger = pino({ level: logLevel })
 const messages = [
   new ChatMessage({
     sender: '@server',
-    content: 'Greetings!'
+    content: 'Greetings!',
+    timestamp: +(new Date())
   })
 ]
 
@@ -47,6 +48,7 @@ nlons.on('connect', (stream, peer) => {
 
 nlons.handle('message', async (peer, correspondence) => {
   const message = new ChatMessage(await correspondence.next())
+  message.timestamp = +(new Date())
   logger.info({ message }, 'Received message')
 
   // Store message
@@ -60,6 +62,9 @@ nlons.handle('message', async (peer, correspondence) => {
     }))
       .finish()
   )
+
+  // Finish correspondence
+  correspondence.finish()
 })
 
 httpServer.listen(port, () => {
