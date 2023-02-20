@@ -31,7 +31,6 @@
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "events": "^3.3.0",
-    "node-polyfill-webpack-plugin": "^2.0.1",
     "nodemon": "^2.0.20",
     "os-browserify": "^0.3.0",
     "pino-pretty": "^9.3.0",

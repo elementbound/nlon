@@ -11,7 +11,8 @@ This package provides such an adapter for use with
 Under the hood, this package uses `isomorphic-ws`, which delegates to either
 `ws` or the browser's WebSocket implementation, depending on where it's used.
 
-> Browser support is considered but not yet confirmed.
+To see NLON running in the browser, see the [websocket-chat
+example](../../examples/websocket-chat/).
 
 ## Install
 
