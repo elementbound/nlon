@@ -6,7 +6,7 @@
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -R README.md -d jsdoc -r lib",
     "lint": "eslint \"lib/*\"",
-    "test": "node --test test/ | tap-parser -f -t | utap",
+    "test": "node --test test/ | utap",
     "test:dump": "node --test test/"
   },
   "keywords": [],
@@ -26,6 +26,6 @@
     "jsdoc": "^4.0.0",
     "pino": "^8.8.0",
     "tap-parser": "^12.0.1",
-    "utap": "^0.1.3"
+    "utap": "^0.2.0"
   }
 }

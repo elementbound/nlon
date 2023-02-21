@@ -21,7 +21,7 @@ importers:
       ndjson: ^2.0.0
       pino: ^8.8.0
       tap-parser: ^12.0.1
-      utap: ^0.1.3
+      utap: ^0.2.0
     dependencies:
       nanoid: 4.0.0
       ndjson: 2.0.0
@@ -35,7 +35,7 @@ importers:
       eslint-plugin-promise: 6.1.1_eslint@8.31.0
       jsdoc: 4.0.0
       tap-parser: 12.0.1
-      utap: 0.1.3
+      utap: 0.2.0
 
   packages/nlon-socket:
     specifiers:
@@ -50,7 +50,7 @@ importers:
       jsdoc: ^4.0.0
       pino: ^8.8.0
       tap-parser: ^12.0.1
-      utap: ^0.1.3
+      utap: ^0.2.0
     dependencies:
       '@elementbound/nlon': link:../nlon
     devDependencies:
@@ -64,7 +64,7 @@ importers:
       jsdoc: 4.0.0
       pino: 8.8.0
       tap-parser: 12.0.1
-      utap: 0.1.3
+      utap: 0.2.0
 
   packages/nlon-websocket:
     specifiers:
@@ -80,7 +80,7 @@ importers:
       jsdoc: ^4.0.0
       pino: ^8.8.0
       tap-parser: ^12.0.1
-      utap: ^0.1.3
+      utap: ^0.2.0
       ws: ^8.12.1
     dependencies:
       '@elementbound/nlon': link:../nlon
@@ -97,7 +97,7 @@ importers:
       jsdoc: 4.0.0
       pino: 8.8.0
       tap-parser: 12.0.1
-      utap: 0.1.3
+      utap: 0.2.0
 
 packages:
 
@@ -5572,8 +5572,8 @@ packages:
       punycode: 2.2.0
     dev: true
 
-  /utap/0.1.3:
-    resolution: {integrity: sha512-cSYnajZi8qe8CP0RC9xiYJpbDeYOsS995ujLA/+6FEnfvwOtwI2IONb9eAe77bHUF/jdqdhgK5z2ayYdpI4uOA==}
+  /utap/0.2.0:
+    resolution: {integrity: sha512-YbDY2Qb/+UHUc7Qhued83UzmTyxSozwczDpWxLs4Htees2H7Krj7WkmMbyJI4Pq2UCxQuPHrVv4/kozHz4WWYQ==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
