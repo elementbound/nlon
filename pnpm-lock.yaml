@@ -20,7 +20,6 @@ importers:
       nanoid: ^4.0.0
       ndjson: ^2.0.0
       pino: ^8.8.0
-      tap-parser: ^12.0.1
       utap: ^0.2.0
     dependencies:
       nanoid: 4.0.0
@@ -34,12 +33,11 @@ importers:
       eslint-plugin-n: 15.6.0_eslint@8.31.0
       eslint-plugin-promise: 6.1.1_eslint@8.31.0
       jsdoc: 4.0.0
-      tap-parser: 12.0.1
       utap: 0.2.0
 
   packages/nlon-socket:
     specifiers:
-      '@elementbound/nlon': workspace:^0.8.0
+      '@elementbound/nlon': workspace:^0.8.1
       clean-jsdoc-theme: ^4.2.2
       eslint: ^8.31.0
       eslint-config-standard: ^17.0.0
@@ -49,7 +47,6 @@ importers:
       get-port: ^6.1.2
       jsdoc: ^4.0.0
       pino: ^8.8.0
-      tap-parser: ^12.0.1
       utap: ^0.2.0
     dependencies:
       '@elementbound/nlon': link:../nlon
@@ -63,12 +60,11 @@ importers:
       get-port: 6.1.2
       jsdoc: 4.0.0
       pino: 8.8.0
-      tap-parser: 12.0.1
       utap: 0.2.0
 
   packages/nlon-websocket:
     specifiers:
-      '@elementbound/nlon': workspace:^0.8.0
+      '@elementbound/nlon': workspace:^0.8.1
       clean-jsdoc-theme: ^4.2.2
       eslint: ^8.31.0
       eslint-config-standard: ^17.0.0
@@ -79,7 +75,6 @@ importers:
       isomorphic-ws: ^5.0.0
       jsdoc: ^4.0.0
       pino: ^8.8.0
-      tap-parser: ^12.0.1
       utap: ^0.2.0
       ws: ^8.12.1
     dependencies:
@@ -96,7 +91,6 @@ importers:
       get-port: 6.1.2
       jsdoc: 4.0.0
       pino: 8.8.0
-      tap-parser: 12.0.1
       utap: 0.2.0
 
 packages:
@@ -2566,11 +2560,6 @@ packages:
 
   /eventemitter3/4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
-    dev: true
-
-  /events-to-array/2.0.3:
-    resolution: {integrity: sha512-f/qE2gImHRa4Cp2y1stEOSgw8wTFyUdVJX7G//bMwbaV9JqISFxg99NbmVQeP7YLnDUZ2un851jlaDrlpmGehQ==}
-    engines: {node: '>=12'}
     dev: true
 
   /events/3.3.0:
@@ -5313,21 +5302,6 @@ packages:
   /supports-preserve-symlinks-flag/1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
-    dev: true
-
-  /tap-parser/12.0.1:
-    resolution: {integrity: sha512-MHeYGwFyDxmIbDWoOp52gQze6iBh6R2c9rgfhyhCsxMHAbgggEDn0EmL/RFtra8XJY4fjV6E4CiyBTiHkiCBsg==}
-    engines: {node: '>= 12'}
-    hasBin: true
-    dependencies:
-      events-to-array: 2.0.3
-      tap-yaml: 1.0.2
-    dev: true
-
-  /tap-yaml/1.0.2:
-    resolution: {integrity: sha512-GegASpuqBnRNdT1U+yuUPZ8rEU64pL35WPBpCISWwff4dErS2/438barz7WFJl4Nzh3Y05tfPidZnH+GaV1wMg==}
-    dependencies:
-      yaml: 1.10.2
     dev: true
 
   /tar-stream/2.2.0:
