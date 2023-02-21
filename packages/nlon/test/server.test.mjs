@@ -247,6 +247,7 @@ describe('Server', () => {
     assert.equal(calls.length, 1, 'No error was emitted?')
     assert(calls[0]?.arguments?.[0] instanceof PeerError,
       `Wrong error emitted: ${calls[0]?.arguments?.[0]?.constructor?.name}`)
+    assert.fail('test')
   })
   // }}}
 
