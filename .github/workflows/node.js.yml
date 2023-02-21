@@ -41,4 +41,4 @@ jobs:
     - name: Lint
       run: pnpm -r lint
     - name: Test
-      run: pnpm -r test
+      run: pnpm -r test:dump
