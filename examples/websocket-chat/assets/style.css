@@ -1,0 +1,55 @@
+body {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 7 7 auto;
+}
+
+.footer {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatbox_name {
+  display: block;
+  width: 100%;
+}
+
+.chatbox_message {
+  display: block;
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+.message_timestamp {
+  color: gray;
+  width: 8rem;
+  display: inline;
+}
+
+.message_user::before {
+  content: "<";
+}
+
+.message_user::after {
+  content: ">";
+}
+
+.message_user {
+  color: green;
+  display: inline;
+}
+
+.message_content {
+  display: inline;
+}

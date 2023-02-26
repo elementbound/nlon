@@ -26,7 +26,17 @@ export class WebSocketStream extends stream.Duplex {
 
     ws.onclose = () => this.push(null)
     ws.onerror = err => this.destroy(err)
-    ws.onmessage = message => this.push(message.data)
+    ws.onmessage = message => {
+      const data = message.data
+      if (data.constructor.name === 'Blob') {
+        data.text()
+          .then(t => {
+            this.push(t)
+          })
+      } else {
+        this.push(data.toString())
+      }
+    }
   }
 
   _write (chunk, _encoding, callback) {

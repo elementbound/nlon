@@ -4,6 +4,7 @@ import { MessageError } from './protocol.mjs'
 import { Correspondence } from './correspondence/correspondence.mjs'
 /* eslint-enable no-unused-vars */
 
+import events from 'node:events'
 import { nanoid } from 'nanoid'
 import pino from 'pino'
 import { WritableCorrespondence } from './correspondence/writable.correspondence.mjs'
@@ -153,7 +154,7 @@ export function defaultExceptionHandler (_peer, correspondence, exception) {
 * adapt the specific `Duplex` implementations to something the `Server` can
 * manage.
 */
-export class Server extends stream.EventEmitter {
+export class Server extends events.EventEmitter {
   /** @type {Map<string, CorrespondenceHandler>} */
   #handlers = new Map()
 

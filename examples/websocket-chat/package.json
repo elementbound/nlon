@@ -1,0 +1,42 @@
+{
+  "name": "@elementbound/nlon-websocket-example",
+  "version": "0.9.0",
+  "description": "An example app using NLON over WebSockets",
+  "main": "src/host.mjs",
+  "scripts": {
+    "lint": "eslint \"src/*\"",
+    "build": "webpack",
+    "build:dev": "webpack --watch",
+    "host": "node .",
+    "host:dev": "nodemon . | pino-pretty",
+    "start": "pnpm build && pnpm host",
+    "start:dev": "concurrently \"pnpm build:dev\" \"pnpm host:dev\""
+  },
+  "keywords": [],
+  "author": "Tamas Galffy",
+  "license": "MIT",
+  "dependencies": {
+    "@elementbound/nlon": "workspace:^0.9.0",
+    "@elementbound/nlon-websocket": "workspace:^0.9.0",
+    "express": "^4.18.2",
+    "pino": "^8.8.0"
+  },
+  "devDependencies": {
+    "assert-browserify": "^2.0.0",
+    "concurrently": "^7.6.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "eslint": "^8.31.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "events": "^3.3.0",
+    "nodemon": "^2.0.20",
+    "os-browserify": "^0.3.0",
+    "pino-pretty": "^9.3.0",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  }
+}
