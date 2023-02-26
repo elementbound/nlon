@@ -228,6 +228,11 @@ export class Peer extends events.EventEmitter {
         stream: this.#stream
       })
 
+      // Free correspondence when it's closed on both sides
+      result.once('close', () =>
+        this.#correspondences.delete(id)
+      )
+
       this.emit('correspondence', result)
       this.#correspondences.set(id, result)
 
