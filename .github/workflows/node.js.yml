@@ -7,17 +7,14 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
     steps:
     - uses: actions/checkout@v3
     - name: Install Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 18.x
     - name: Install pnpm
       uses: pnpm/action-setup@v2
       id: pnpm-install
@@ -42,3 +39,5 @@ jobs:
       run: pnpm -r lint
     - name: Test
       run: pnpm -r test:dump
+    - name: Performance tests
+      run: pnpm -r test:perf
