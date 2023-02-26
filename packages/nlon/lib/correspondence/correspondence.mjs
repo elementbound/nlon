@@ -401,7 +401,6 @@ export class Correspondence extends events.EventEmitter {
 
   #checkClosed () {
     if (!this.#closed && !this.writable && !this.readable) {
-      // TODO: Document event
       this.#closed = true
       this.emit('close')
     }
@@ -470,4 +469,14 @@ export class Correspondence extends events.EventEmitter {
 *
 * @event Correspondence#error
 * @type {CorrespondenceError}
+*/
+
+/**
+* Event emitted when the correspondence is closed.
+*
+* The correspondence is considered closed when it becomes both unreadable and
+* unwritable. In practice, this happens when peers on both ends of the
+* correspondence close it, either by sending an error or a finish message.
+*
+* @event Correspondence#close
 */
