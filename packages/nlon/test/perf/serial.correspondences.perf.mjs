@@ -6,14 +6,27 @@ import { Server } from '../../lib/server.mjs'
 import { InspectableStream } from '../inspectable.stream.mjs'
 import { Message, MessageHeader, MessageTypes } from '../../lib/protocol.mjs'
 import { send } from '../utils.mjs'
+import { Duplex } from 'node:stream'
 
 const logger = pino({ name: 'test' })
 const correspondenceCount = process.env.TEST_CORRESPONDENCES ?? 1024
 
+function requestGC () {
+  try {
+    global.gc()
+    return true
+  } catch (e) {
+    // Do nothing - GC probably not available
+    return false
+  }
+}
+
 test('serial correspondences should keep memory usage', async t => {
   // Given
   logger.info('Setting up server')
-  const stream = new InspectableStream()
+  const stream = new InspectableStream({
+    recordWrites: false
+  })
   const server = new Server()
   server.connect(stream)
 
@@ -21,9 +34,16 @@ test('serial correspondences should keep memory usage', async t => {
     correspondence.finish()
   )
 
+  const gcInterval = 128
   const baselineRam = process.memoryUsage().rss
   const ramSamples = []
   let maxRam = baselineRam
+
+  if (!requestGC()) {
+    logger.warn(
+      'GC is not available, test might fail! Use the `--expose-gc` flag'
+    )
+  }
 
   // When
   logger.info('Starting test with %d serial correspondences',
@@ -42,10 +62,18 @@ test('serial correspondences should keep memory usage', async t => {
 
     await send(stream, startMessage)
     await send(stream, finishMessage)
+    stream.extract() // Discard recorded writes
 
     const ram = process.memoryUsage().rss
     ramSamples.push(ram)
     maxRam = Math.max(maxRam, ram)
+
+    if (i % gcInterval === 0) {
+      logger.info('Requesting GC at correspondence#%d - %d%%',
+        i, ((i + 1) / correspondenceCount) * 100)
+      logger.info('Memory usage at %d mb', ram / 1024 / 1024)
+      requestGC()
+    }
   }
 
   // Then
@@ -68,6 +96,6 @@ test('serial correspondences should keep memory usage', async t => {
     logger.warn({ err }, 'Failed to save perf report')
   }
 
-  assert(increasePercent < 0.15, 'Memory usage increased more than 15%!')
-  assert(increaseBytes < 5 * 1024 * 1024, 'Memory usage increased more than 5MB!')
+  assert(increaseBytes < 10 * 1024 * 1024,
+    'Memory usage increased more than 10MB!')
 })

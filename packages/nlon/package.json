@@ -7,7 +7,7 @@
     "doc": "jsdoc -c .jsdoc.js -d jsdoc -r lib",
     "lint": "eslint \"lib/*\"",
     "test": "node --test test/*.test.mjs test/*/*.test.mjs | utap",
-    "test:perf": "node --test test/perf/*.perf.mjs",
+    "test:perf": "node --expose-gc --test test/perf/*.perf.mjs",
     "test:dump": "node --test test/*.test.mjs test/*/*.test.mjs"
   },
   "keywords": [],
