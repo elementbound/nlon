@@ -49,9 +49,12 @@ export class Correspondence extends events.EventEmitter {
   #header
 
   /** @type {boolean} */
-  #readable
+  #readable = false
   /** @type {boolean} */
-  #writable
+  #writable = false
+
+  /** @type {boolean} */
+  #closed = false
 
   #internal = new events.EventEmitter()
   #context = {}
@@ -130,6 +133,8 @@ export class Correspondence extends events.EventEmitter {
 
       this.emit('error', new CorrespondenceError(message.error))
     }
+
+    this.#checkClosed()
   }
 
   /**
@@ -238,6 +243,7 @@ export class Correspondence extends events.EventEmitter {
     )
 
     this.#writable = false
+    this.#checkClosed()
   }
 
   // TODO: Make unwritable if peer disconnects
@@ -261,6 +267,7 @@ export class Correspondence extends events.EventEmitter {
     )
 
     this.#writable = false
+    this.#checkClosed()
   }
 
   // TODO: Make unreadable if peer disconnects
@@ -389,6 +396,14 @@ export class Correspondence extends events.EventEmitter {
   #ensureReadable () {
     if (!this.#readable) {
       throw new UnreadableCorrespondenceError(this)
+    }
+  }
+
+  #checkClosed () {
+    if (!this.#closed && !this.writable && !this.readable) {
+      // TODO: Document event
+      this.#closed = true
+      this.emit('close')
     }
   }
 

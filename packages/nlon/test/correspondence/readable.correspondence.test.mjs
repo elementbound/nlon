@@ -44,10 +44,12 @@ describe('ReadableCorrespondence', () => {
     assert.deepStrictEqual(calls[0].arguments, [expected, false])
   })
 
-  it('should emit finish', () => {
+  it('should emit finish and close', () => {
     // Given
-    const handler = mock.fn()
-    correspondence.on('finish', handler)
+    const finishHandler = mock.fn()
+    const closeHandler = mock.fn()
+    correspondence.on('finish', finishHandler)
+    correspondence.on('close', closeHandler)
 
     // When
     correspondence.handle(new Message({
@@ -59,16 +61,19 @@ describe('ReadableCorrespondence', () => {
     }))
 
     // Then
-    assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
+    assert.equal(finishHandler.mock.callCount(), 1, 'No finish event!')
+    assert.equal(closeHandler.mock.callCount(), 1, 'No close event!')
   })
 
-  it('should emit data and finish', () => {
+  it('should emit data, finish and close', () => {
     // Given
     const dataHandler = mock.fn()
     const finishHandler = mock.fn()
+    const closeHandler = mock.fn()
 
     correspondence.on('data', dataHandler)
     correspondence.on('finish', finishHandler)
+    correspondence.on('close', closeHandler)
 
     const expected = 'test data'
 
@@ -90,12 +95,15 @@ describe('ReadableCorrespondence', () => {
     )
 
     assert.equal(finishHandler.mock.callCount(), 1, 'No finish event emitted!')
+    assert.equal(closeHandler.mock.callCount(), 1, 'No close event emitted!')
   })
 
-  it('should emit error', () => {
+  it('should emit error and close', () => {
     // Given
-    const handler = mock.fn()
-    correspondence.on('error', handler)
+    const errorHandler = mock.fn()
+    const closeHandler = mock.fn()
+    correspondence.on('error', errorHandler)
+    correspondence.on('close', closeHandler)
 
     const error = new MessageError({ type: 'TestError', message: 'test' })
     const expected = new CorrespondenceError(error)
@@ -111,8 +119,9 @@ describe('ReadableCorrespondence', () => {
     }))
 
     // Then
-    assert.equal(handler.mock.callCount(), 1, 'No error event was emitted!')
-    assert.deepStrictEqual(handler.mock.calls[0].arguments, [expected])
+    assert.equal(errorHandler.mock.callCount(), 1, 'No error event was emitted!')
+    assert.deepStrictEqual(errorHandler.mock.calls[0].arguments, [expected])
+    assert.equal(closeHandler.mock.callCount(), 1, 'No close event was emitted!')
   })
 
   /// }}}
