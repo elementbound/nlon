@@ -5,21 +5,24 @@ export class InspectableStream extends stream.Duplex {
   #writeBuffer = Buffer.alloc(0)
 
   #recordWrites = false
+  #emitOnInject = false
 
   /**
   * @param {object} [options]
   * @param {boolean} [options.recordWrites=true]
+  * @param {boolean} [options.emitOnInject=false]
   */
   constructor (options) {
     super(options)
 
     this.#recordWrites = options?.recordWrites ?? true
+    this.#emitOnInject = options?.emitOnInject ?? false
   }
 
   _write (chunk, _encoding, next) {
     if (this.#recordWrites) {
       // NOTE: not very fast, but OK for small tests
-      this.#writeBuffer = Buffer.concat(this.#writeBuffer, Buffer.from(chunk))
+      this.#writeBuffer = Buffer.concat([this.#writeBuffer, Buffer.from(chunk)])
     }
 
     next()
@@ -30,6 +33,10 @@ export class InspectableStream extends stream.Duplex {
 
   inject (data) {
     this.push(data)
+
+    if (this.#emitOnInject) {
+      this.emit('data', data)
+    }
   }
 
   extract (size) {
