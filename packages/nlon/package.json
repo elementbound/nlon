@@ -6,8 +6,9 @@
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -d jsdoc -r lib",
     "lint": "eslint \"lib/*\"",
-    "test": "node --test test/ | utap",
-    "test:dump": "node --test test/"
+    "test": "node --test test/*.test.mjs test/*/*.test.mjs | utap",
+    "test:perf": "node --test test/perf/*.perf.mjs",
+    "test:dump": "node --test test/*.test.mjs test/*/*.test.mjs"
   },
   "keywords": [],
   "author": "Tamas Galffy",
