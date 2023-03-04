@@ -1,4 +1,4 @@
-import { describe, it, beforeEach } from 'node:test'
+import { describe, it, beforeEach, mock } from 'node:test'
 import assert from 'node:assert'
 import { InspectableStream } from '../inspectable.stream.mjs'
 import { MessageError, MessageHeader, MessageTypes } from '../../lib/protocol.mjs'
@@ -99,6 +99,35 @@ describe('WritableCorrespondence', () => {
     // Then
     assert.deepStrictEqual(objectify(actual), objectify(expected))
     assert(!correspondence.writable)
+  })
+  // }}}
+
+  // {{{ events
+  it('should emit close on finish', () => {
+    // Given
+    const closeHandler = mock.fn()
+    correspondence.on('close', closeHandler)
+
+    // When
+    correspondence.finish()
+
+    // Then
+    assert.equal(closeHandler.mock.callCount(), 1, 'No close event emitted!')
+  })
+
+  it('should emit close on error', () => {
+    // Given
+    const closeHandler = mock.fn()
+    correspondence.on('close', closeHandler)
+
+    // When
+    correspondence.error(new MessageError({
+      type: 'Error',
+      message: 'Test error'
+    }))
+
+    // Then
+    assert.equal(closeHandler.mock.callCount(), 1, 'No close event emitted!')
   })
   // }}}
 

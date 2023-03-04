@@ -49,9 +49,12 @@ export class Correspondence extends events.EventEmitter {
   #header
 
   /** @type {boolean} */
-  #readable
+  #readable = false
   /** @type {boolean} */
-  #writable
+  #writable = false
+
+  /** @type {boolean} */
+  #closed = false
 
   #internal = new events.EventEmitter()
   #context = {}
@@ -130,6 +133,8 @@ export class Correspondence extends events.EventEmitter {
 
       this.emit('error', new CorrespondenceError(message.error))
     }
+
+    this.#checkClosed()
   }
 
   /**
@@ -238,6 +243,7 @@ export class Correspondence extends events.EventEmitter {
     )
 
     this.#writable = false
+    this.#checkClosed()
   }
 
   // TODO: Make unwritable if peer disconnects
@@ -261,6 +267,7 @@ export class Correspondence extends events.EventEmitter {
     )
 
     this.#writable = false
+    this.#checkClosed()
   }
 
   // TODO: Make unreadable if peer disconnects
@@ -392,6 +399,13 @@ export class Correspondence extends events.EventEmitter {
     }
   }
 
+  #checkClosed () {
+    if (!this.#closed && !this.writable && !this.readable) {
+      this.#closed = true
+      this.emit('close')
+    }
+  }
+
   #makeProxy (target) {
     const handler = {
       get (obj, prop) {
@@ -455,4 +469,14 @@ export class Correspondence extends events.EventEmitter {
 *
 * @event Correspondence#error
 * @type {CorrespondenceError}
+*/
+
+/**
+* Event emitted when the correspondence is closed.
+*
+* The correspondence is considered closed when it becomes both unreadable and
+* unwritable. In practice, this happens when peers on both ends of the
+* correspondence close it, either by sending an error or a finish message.
+*
+* @event Correspondence#close
 */

@@ -8,6 +8,7 @@
     "lerna": "^6.4.1"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "examples/*"
   ]
 }
