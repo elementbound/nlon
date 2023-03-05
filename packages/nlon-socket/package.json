@@ -14,6 +14,11 @@
   ],
   "author": "Tamas Galffy",
   "license": "MIT",
+  "homepage": "https://github.com/elementbound/nlon/packages/nlon-socket#readme",
+  "bugs": {
+    "url": "https://github.com/elementbound/nlon/issues"
+  },
+  "repository": "github:elementbound/nlon",
   "dependencies": {
     "@elementbound/nlon": "workspace:^0.10.2"
   },
