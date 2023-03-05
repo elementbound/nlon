@@ -16,8 +16,8 @@ export class ChatMessage {
   constructor (data) {
     data && Object.assign(this, data)
 
-    assert(this.sender, 'Message must have a sender!')
-    assert(this.content, 'Message must have content!')
+    assert(this.sender, 'Message must have a sender! ' + JSON.stringify(data))
+    assert(this.content, 'Message must have content! ' + JSON.stringify(data))
 
     assert(this.sender.length < 128, 'Sender name too long!')
     assert(this.content.length < 1024, 'Message too large!')

@@ -6,7 +6,7 @@ import * as nlon from '@elementbound/nlon'
 *
 * @description This class functions exactly the same as {@link nlon.Server},
 * with the addition that it keeps a reference to a {@link net.Server} which can
-* be accessed through the `server` field.
+* be accessed through the `.stream` field.
 *
 * Any incoming connection over this server will be automatically connected to
 * and managed by the NLON server.
@@ -19,9 +19,6 @@ import * as nlon from '@elementbound/nlon'
 * @see createSocketServer
 */
 class SocketServer extends nlon.Server {
-  /** @type {net.Server} */
-  #server
-
   /**
   * Construct server.
   *
@@ -29,19 +26,22 @@ class SocketServer extends nlon.Server {
   * @param {net.Server} options.server Server instance to wrap
   */
   constructor (options) {
-    super(options)
-    this.#server = options?.server
+    super({
+      ...options,
+      stream: options.server
+    })
 
-    this.#server.on('connection', connection => this.connect(connection))
+    const server = options.server
+    server.on('connection', connection => this.connect(connection))
   }
 
   /**
-  * The underlying net.Server instance.
+  * The underlying {@link net.Server|Server} instance.
   *
   * @type {net.Server}
   */
-  get server () {
-    return this.#server
+  get stream () {
+    return super.stream
   }
 }
 

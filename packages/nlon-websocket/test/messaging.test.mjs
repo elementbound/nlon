@@ -21,11 +21,11 @@ function runServer (port, response) {
       logger: pino({ level: 'debug', name: 'server' })
     })
 
-    nlonServer.handle('test', async (peer, correspondence) => {
+    nlonServer.handle('test', async (_peer, correspondence) => {
       const data = await correspondence.next()
       correspondence.finish(response)
 
-      nlonServer.server.close()
+      nlonServer.stream.close()
       resolve(data)
     })
   })
@@ -37,7 +37,7 @@ async function runPeer (port, message) {
     logger: pino({ level: 'debug', name: 'peer' })
   })
 
-  await promiseEvent(nlonPeer.socket, 'open')
+  await promiseEvent(nlonPeer.stream, 'open')
 
   const correspondence = nlonPeer.send(new Message({
     header: new MessageHeader({ subject: 'test' }),
@@ -47,7 +47,7 @@ async function runPeer (port, message) {
   const response = await correspondence.next()
   correspondence.finish()
 
-  nlonPeer.socket.close()
+  nlonPeer.stream.close()
   return response
 }
 
