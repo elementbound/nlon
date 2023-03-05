@@ -43,6 +43,7 @@ class SocketPeer extends nlon.Peer {
 *
 * @param {net.Socket} socket Socket
 * @param {nlon.PeerOptions} [options] NLON peer options
+* @returns {SocketPeer} Peer
 */
 export function wrapSocketPeer (socket, options) {
   return new SocketPeer({
@@ -63,7 +64,7 @@ export function wrapSocketPeer (socket, options) {
 *
 * @param {net.SocketConstructorOpts | net.SocketConnectOpts | net.ConnectOpts |
 *   nlon.PeerOptions} options Options
-* @returns {nlon.Peer} Peer
+* @returns {SocketPeer} Peer
 */
 export function createSocketPeer (options) {
   const socket = net.createConnection(options)

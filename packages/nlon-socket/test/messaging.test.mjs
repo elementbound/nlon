@@ -21,7 +21,7 @@ function runServer (port, response) {
       const data = await correspondence.next()
       correspondence.finish(response)
 
-      nlonServer.server.close()
+      nlonServer.stream.close()
       resolve(data)
     })
   })
@@ -42,7 +42,7 @@ async function runPeer (port, message) {
   const response = await correspondence.next()
   correspondence.finish()
 
-  nlonPeer.socket.destroy()
+  nlonPeer.stream.destroy()
   return response
 }
 

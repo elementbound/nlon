@@ -51,6 +51,7 @@ class WebSocketWrapperPeer extends nlon.Peer {
 *
 * @param {ws.WebSocket} socket
 * @param {nlon.PeerOptions} options
+* @returns {WebSocketWrapperPeer} Peer
 */
 export function wrapWebSocketPeer (socket, options) {
   return new WebSocketWrapperPeer(socket, options)
@@ -72,7 +73,7 @@ export function wrapWebSocketPeer (socket, options) {
 * > passed to the NLON Peer as settings.
 *
 * @param {nlon.PeerOptions | WebSocketOptions} options Options
-* @returns {nlon.Peer} Peer
+* @returns {WebSocketWrapperPeer} Peer
 */
 export function createWebSocketPeer (options) {
   const socket = new ws.WebSocket(options.address, options.protocols)

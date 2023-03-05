@@ -187,7 +187,7 @@ export class Server extends events.EventEmitter {
     this.#logger = options?.logger ??
       pino({ name: 'nlon-server', level: options?.logLevel ?? 'info' })
 
-    this.#stream = options.stream
+    this.#stream = options?.stream
 
     this.on('error', err =>
       this.#logger.error({ err }, 'Server stream error!'))

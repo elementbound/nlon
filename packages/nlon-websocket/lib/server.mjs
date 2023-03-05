@@ -29,7 +29,7 @@ class WebSocketWrapperServer extends nlon.Server {
   constructor (server, options) {
     super({
       ...options,
-      stream: options.server
+      stream: server
     })
 
     server.on('error', err => this.emit('error', err))
@@ -54,6 +54,7 @@ class WebSocketWrapperServer extends nlon.Server {
 *
 * @param {ws.WebSocketServer} server WebSocket server
 * @param {nlon.ServerOptions} options NLON server options
+* @returns {WebSocketWrapperServer}
 */
 export function wrapWebSocketServer (server, options) {
   return new WebSocketWrapperServer(server, options)
