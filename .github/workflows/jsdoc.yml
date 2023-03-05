@@ -3,8 +3,6 @@ name: Generate API docs with JSDoc
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: [ "main" ] # TODO: Remove before merging
 
 permissions:
   contents: read
@@ -37,6 +35,9 @@ jobs:
 
         echo "Append original README"
         cat README.bak.md >> README.md
+
+        echo "Cleanup"
+        rm README.bak.md
     - name: Create docs
       run: pnpm doc && pnpm -r doc
     - name: Aggregate docs
