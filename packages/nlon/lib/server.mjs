@@ -359,6 +359,8 @@ export class Server extends events.EventEmitter {
   *
   * > The actual value depends on the adapter implementation or constructor
   * parameters.
+  *
+  * @type {any?}
   */
   get stream () {
     return this.#stream
