@@ -1,7 +1,9 @@
 {
   "name": "@elemetnbound/nlon-root",
   "description": "Root package for NLON monorepo",
-  "keywords": [],
+  "keywords": [
+    "nlon", "network", "protocol"
+  ],
   "author": "Tamas Galffy",
   "license": "MIT",
   "scripts": {

@@ -10,7 +10,9 @@
     "test:perf": "node --expose-gc --test test/perf/*.perf.mjs",
     "test:dump": "node --test test/*.test.mjs test/*/*.test.mjs"
   },
-  "keywords": [],
+  "keywords": [
+    "nlon", "network", "protocol"
+  ],
   "author": "Tamas Galffy",
   "license": "MIT",
   "dependencies": {
