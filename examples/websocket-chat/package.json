@@ -2,6 +2,7 @@
   "name": "@elementbound/nlon-websocket-example",
   "version": "0.10.2",
   "description": "An example app using NLON over WebSockets",
+  "private": "true",
   "main": "src/host.mjs",
   "scripts": {
     "lint": "eslint \"src/*\"",

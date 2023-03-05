@@ -27,5 +27,8 @@
     "eslint-plugin-promise": "^6.0.0",
     "jsdoc": "^4.0.0",
     "utap": "^0.2.0"
-  }
+  },
+  "files": [
+    "lib/*"
+  ]
 }
