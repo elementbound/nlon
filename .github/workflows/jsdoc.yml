@@ -1,0 +1,66 @@
+name: Generate API docs with JSDoc
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup
+      uses: ./.github/actions/setup.node
+    - name: Generate front page
+      shell: bash
+      run: |
+        echo "Backup README"
+        cp README.md README.bak.md
+
+        echo "Generate ToC"
+
+        echo "# Packages" > README.md
+        for package in $(ls packages); do
+          echo "- [$package]($package/)" >> README.md
+        done
+
+        echo "Append original README"
+        cat README.bak.md >> README.md
+
+        echo "Cleanup"
+        rm README.bak.md
+    - name: Create docs
+      run: pnpm doc && pnpm -r doc
+    - name: Aggregate docs
+      shell: bash
+      run: |
+        echo "Moving root docs"
+        mv "jsdoc" ".ghpages"
+
+        for package in $(ls packages); do
+          echo "Moving docs for package $package"
+          mv "packages/$package/jsdoc" ".ghpages/$package"
+        done
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: .ghpages
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1

@@ -4,7 +4,12 @@
   "keywords": [],
   "author": "Tamas Galffy",
   "license": "MIT",
+  "scripts": {
+    "doc": "jsdoc -c .jsdoc.js -R README.md -d jsdoc ."
+  },
   "devDependencies": {
+    "clean-jsdoc-theme": "^4.2.2",
+    "jsdoc": "^4.0.0",
     "lerna": "^6.4.1"
   },
   "workspaces": [
