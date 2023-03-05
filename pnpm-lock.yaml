@@ -4,8 +4,12 @@ importers:
 
   .:
     specifiers:
+      clean-jsdoc-theme: ^4.2.2
+      jsdoc: ^4.0.0
       lerna: ^6.4.1
     devDependencies:
+      clean-jsdoc-theme: 4.2.2_jsdoc@4.0.0
+      jsdoc: 4.0.0
       lerna: 6.4.1
 
   examples/websocket-chat:
