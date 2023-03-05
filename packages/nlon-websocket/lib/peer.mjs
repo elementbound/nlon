@@ -9,7 +9,7 @@ import { WebSocketStream } from './websocket.wrapper.mjs'
 * {@link WebSocket} instance. All messages arriving on the socket will be
 * processed and all outbound traffic will be sent on it.
 *
-* The underlying WebSocket can also be accessed using `.socket`.
+* The underlying WebSocket can also be accessed using `.stream`.
 *
 * > This class shouldn't be instantiated directly, instead use the factory
 * > methods.
@@ -39,8 +39,10 @@ class WebSocketWrapperPeer extends nlon.Peer {
   *
   * @type {ws.WebSocket}
   */
-  get socket () {
-    return this.#socket
+  get stream () {
+    return this.isConnected
+      ? this.#socket
+      : undefined
   }
 }
 

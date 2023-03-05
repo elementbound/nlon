@@ -20,9 +20,6 @@ import { WebSocketStream } from './websocket.wrapper.mjs'
 * @see createWebSocketServer
 */
 class WebSocketWrapperServer extends nlon.Server {
-  /** @type {ws.WebSocketServer} */
-  #server
-
   /**
   * Construct server.
   *
@@ -30,12 +27,14 @@ class WebSocketWrapperServer extends nlon.Server {
   * @param {nlon.ServerOptions} options NLON server options
   */
   constructor (server, options) {
-    super(options)
+    super({
+      ...options,
+      stream: options.server
+    })
 
-    this.#server = server
-    this.#server.on('error', err => this.emit('error', err))
-    this.#server.on('wsClientError', err => this.emit('error', err))
-    this.#server.on('connection', (ws, _req) =>
+    server.on('error', err => this.emit('error', err))
+    server.on('wsClientError', err => this.emit('error', err))
+    server.on('connection', (ws, _req) =>
       this.connect(new WebSocketStream(ws))
     )
   }
@@ -45,8 +44,8 @@ class WebSocketWrapperServer extends nlon.Server {
   *
   * @type {ws.WebSocketServer}
   */
-  get server () {
-    return this.#server
+  get stream () {
+    return super.stream
   }
 }
 

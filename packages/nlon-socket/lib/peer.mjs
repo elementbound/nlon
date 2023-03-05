@@ -8,7 +8,7 @@ import * as nlon from '@elementbound/nlon'
 * {@link net.Socket} instance. All messages arriving on the socket will be
 * processed and all outbound traffic will be sent on the socket.
 *
-* The underlying socket can also be accessed using `.socket`.
+* The underlying socket can also be accessed using `.stream`.
 *
 * > This class shouldn't be instantiated directly, instead use the factory
 * > methods.
@@ -18,9 +18,6 @@ import * as nlon from '@elementbound/nlon'
 * @see createSocketPeer
 */
 class SocketPeer extends nlon.Peer {
-  /** @type {net.Socket} */
-  #socket
-
   /**
   * Construct a peer.
   *
@@ -29,16 +26,15 @@ class SocketPeer extends nlon.Peer {
   */
   constructor (options) {
     super(options.socket, options)
-    this.#socket = options.socket
   }
 
   /**
-  * The underlying Socket.
+  * Get the underlying {@link net.Socket|Socket}.
   *
   * @type {net.Socket}
   */
-  get socket () {
-    return this.#socket
+  get stream () {
+    return super.stream
   }
 }
 

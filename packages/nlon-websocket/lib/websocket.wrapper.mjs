@@ -39,6 +39,15 @@ export class WebSocketStream extends stream.Duplex {
     }
   }
 
+  /**
+  * Get the underlying {@link WebSocket}.
+  *
+  * @type {WebSocket}
+  */
+  get ws () {
+    return this.#ws
+  }
+
   _write (chunk, _encoding, callback) {
     try {
       this.#ws.send(chunk)
