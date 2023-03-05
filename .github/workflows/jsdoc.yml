@@ -39,7 +39,7 @@ jobs:
         echo "Append original README"
         tail -n +2 README.bak.md >> README.md
     - name: Create docs
-      run: pnpm -r doc
+      run: pnpm doc && pnpm -r doc
     - name: Aggregate docs
       shell: bash
       run: |
