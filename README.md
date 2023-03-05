@@ -37,8 +37,10 @@ See the [reference implementation](packages/nlon).
 
 - [Protocol specification](doc/protocol.md)
 - [Example flow](doc/example-flow.md)
-- API docs: TODO
+- [API docs](https://elementbound.github.io/nlon/)
   - Or generate your own by running `pnpm -r doc`
+- Examples
+  - [WebSocket example](examples/websocket-chat)
 
 ## License
 
