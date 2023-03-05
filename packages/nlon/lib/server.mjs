@@ -125,6 +125,7 @@ export function defaultExceptionHandler (_peer, correspondence, exception) {
 * @typedef {object} ServerOptions
 * @property {pino.Logger} [logger=pino()] Logger
 * @property {string} [logLevel='info'] Log level
+* @property {any} [stream] Root connection stream
 */
 
 /**
@@ -172,6 +173,9 @@ export class Server extends events.EventEmitter {
   /** @type {pino.Logger} */
   #logger
 
+  /** @type {any} */
+  #stream
+
   /**
   * Construct a server.
   *
@@ -182,6 +186,8 @@ export class Server extends events.EventEmitter {
 
     this.#logger = options?.logger ??
       pino({ name: 'nlon-server', level: options?.logLevel ?? 'info' })
+
+    this.#stream = options.stream
 
     this.on('error', err =>
       this.#logger.error({ err }, 'Server stream error!'))
@@ -342,6 +348,20 @@ export class Server extends events.EventEmitter {
   */
   get peers () {
     return [...this.#peers.values()].map(pc => pc.peer)
+  }
+
+  /**
+  * @summary Get main stream as set by constructor.
+  *
+  * @description For instances that listen on an underlying connection ( e.g.
+  * sockets ), this can return that stream. In other cases, where the instance
+  * gets streams attached from external sources, this can be undefined.
+  *
+  * > The actual value depends on the adapter implementation or constructor
+  * parameters.
+  */
+  get stream () {
+    return this.#stream
   }
 
   /**

@@ -91,6 +91,16 @@ export class Peer extends events.EventEmitter {
   }
 
   /**
+  * @summary Connection
+  *
+  * @description Returns undefined if the Peer is disconnected
+  * @type {stream.Duplex?}
+  * */
+  get stream () {
+    return this.#stream
+  }
+
+  /**
   * @summary Disconnect peer.
   *
   * @description Afther this call, the peer won't listen to any more incoming
