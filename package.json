@@ -5,7 +5,7 @@
   "author": "Tamas Galffy",
   "license": "MIT",
   "scripts": {
-    "doc": "jsdoc -c .jsdoc.js -R README.md -d jsdoc ."
+    "doc": "jsdoc -c .jsdoc.js -R README.md -u doc/ -d jsdoc ."
   },
   "devDependencies": {
     "clean-jsdoc-theme": "^4.2.2",
