@@ -24,10 +24,20 @@ jobs:
       uses: ./.github/actions/setup.node
     - name: Create docs
       run: pnpm -r doc
+    - name: Aggregate docs
+      shell: bash
+      run: |
+        echo "Creating directory for GH pages"
+        mkdir .ghpages
+
+        for package in $(ls packages); do
+          echo "Moving docs for package $package"
+          mv "packages/$package/jsdoc" ".ghpages/$package"
+        done
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
       with:
-        path: packages/**/jsdoc
+        path: .ghpages
   deploy:
     environment:
       name: github-pages
