@@ -119,10 +119,11 @@ If the `type` field is not present or its value is undefined, implementations
 MUST assume the type to be "data".
 
 If the `type` field is present, but its value is not contained in the above
-list, implementations MUST NOT process the Message and MAY respond with an error
-Message.
+list, the message MUST be considered invalid ( see [Invalid messages] )
 
 The individual message types are discussed below.
+
+[Invalid messages]: #invalid-messages
 
 #### Data
 
@@ -162,12 +163,73 @@ MUST be a JSON object with the following two fields:
     error
   - Example: `"No known handler for subject \"session/loging\""`
 
+### Invalid messages
+
+If a Message does not conform to the above requirements, it is considered
+invalid. Implementations MUST NOT process invalid messages and MAY respond with
+an error message.
+
+If the message's correspondence is decipherable, implementations MAY terminate
+the correspondence as described under the [Correspondences](#correspondences)
+chapter.
+
 ## Correspondences
+
+Each message is processed as part of a Correspondence. A single Correspondence
+can contain one or more messages.
+
+Each Correspondence has an identifier, that is included in the Message Header,
+to associate Messages with Correspondences.
+
+Every active Correspondence's ID SHOULD be unique to that particular
+Correspondence. Multiple Correspondences can use the same ID for very specific
+use cases if required, but for almost every case this won't be the best
+solution.
+
+The uniqueness constraint intentionally mentions *active* Correspondences. Once
+a Correspondence is terminated by both Peers, implementations MAY reuse its ID.
 
 ### Initiation
 
+Initiating a new Correspondence is done by sending a "data" message with a
+previously unused ID. Implementations MUST treat unknown Correspondence ID's as
+new Correspondences.
+
 ### Conversation
+
+Once the Correspondence has been initiated, it can be used to exchange data.
+This is done by sending data messages back and forth, using the same
+Correspondence ID. 
+
+During the conversation, both Peers can send messages at any given time, without
+restrictions to order or timing.
+
+Having a conversation part enables streaming data, e.g. instead of sending one
+huge message with a large data set, potentially forcing the receiving Peer to
+buffer it all in memory, the data can be broken up into multiple messages, each
+chunk being processed as received, instead of buffering all of it in memory.
 
 ### Termination
 
+Once a Peer is done with a Correspondence and doesn't intend to send any more
+data, it MUST terminate the Correspondence by sending a [Finish message].
+
+Finish messages are strictly required, so that the receiving Peer can free any
+resources it has allocated for the Correspondence. Peers MAY consider a
+Correspondence terminated after an arbitrary time of inactivity. Peers SHOULD
+NOT send any messages over a Correspondence after they have terminated it. Peers
+MUST receive all incoming messages over a Correspondence, even if they have
+already terminated it.
+
+Note that Correspondences are terminated on both ends, meaning that both Peers
+need to send a Finish message for the Correspondence to be fully terminated.
+
+[Finish message]: #finish
+
 ### Errors
+
+Peers MAY signify error events by sending an [Error message]. Implementations
+SHOULD consider the Correspondence terminated after receiving an Error message
+on it.
+
+[Error message]: #error
