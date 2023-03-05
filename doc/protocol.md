@@ -127,13 +127,13 @@ The individual message types are discussed below.
 
 #### Data
 
-Data messages are either marked by the "data" type.
+Data messages are marked by the "data" type.
 
 This message type transmits a chunk of data as part of a correspondence. For
 this message type, the `body` field is RECOMMENDED to be present with a value.
 For the field's value, implementations MUST support any valid JSON data type.
 
-For nice use cases, the `body` MAY be omitted or set to `undefined`.
+For niche use cases, the `body` MAY be omitted or set to `undefined`.
 
 #### Finish
 
