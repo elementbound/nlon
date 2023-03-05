@@ -28,6 +28,7 @@ implementation in JavaScript.
 
 - pnpm: `pnpm add @elementbound/nlon`
 - npm: `npm i @elementbound/nlon`
+- yarn: `yarn add @elementbound/nlon`
 
 ## Usage
 

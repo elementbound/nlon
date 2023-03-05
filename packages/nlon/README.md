@@ -12,9 +12,7 @@ This package is the reference implementation of the [NLON protocol].
 
 ## Usage
 
-For a more detailed explanation, see the tutorials:
-- [Implementing a server](doc/tutorials/server.md)
-- [Implementing a peer](doc/tutorials/peer.md)
+For a more detailed explanation, see the [documentation](#documentation)
 
 ### Server
 
@@ -62,6 +60,9 @@ async function getGreeting () {
 
 - [API docs](https://elementbound.github.io/nlon/nlon/)
   - Or generate your own with `pnpm doc`
+- Tutorials
+  - [Implementing a server](doc/tutorials/server.md)
+  - [Implementing a peer](doc/tutorials/peer.md)
 
 ## License
 

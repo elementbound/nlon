@@ -16,11 +16,9 @@ example](../../examples/websocket-chat/).
 
 ## Install
 
-Install with npm:
-
-```bash
-npm i @elementbound/nlon-websocket
-```
+- pnpm: `pnpm add @elementbound/nlon-websocket`
+- npm: `npm i @elementbound/nlon-websocket`
+- yarn: `yarn add @elementbound/nlon-websocket`
 
 ## Usage
 
@@ -86,15 +84,9 @@ Access the `WebSocket` instance behind the NLON Peer with `nlonPeer.socket`.
 
 ## Documentation
 
-To generate the reference documentation, run the following:
-
-```js
-npm run doc
-```
-
-The resulting docs will be under the `jsdoc` directory.
+- [API docs](https://elementbound.github.io/nlon/nlon-websocket/)
+  - Or generate your own with `pnpm doc`
 
 ## License
 
 This package is under the [MIT License](LICENSE).
-

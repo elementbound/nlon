@@ -10,11 +10,9 @@ This package provides such an adapter for use with Node's
 
 ## Install
 
-Install with npm:
-
-```bash
-npm i @elementbound/nlon-socket
-```
+- pnpm: `pnpm add @elementbound/nlon-socket`
+- npm: `npm i @elementbound/nlon-socket`
+- yarn: `yarn add @elementbound/nlon-socket`
 
 ## Usage
 
@@ -65,15 +63,9 @@ nlonPeer.socket
 
 ## Documentation
 
-To generate the reference documentation, run the following:
-
-```js
-npm run doc
-```
-
-The resulting docs will be under the `jsdoc` directory.
+- [API docs](https://elementbound.github.io/nlon/nlon-socket/)
+  - Or generate your own with `pnpm doc`
 
 ## License
 
 This package is under the [MIT License](LICENSE).
-
