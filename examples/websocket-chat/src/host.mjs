@@ -47,21 +47,24 @@ nlons.on('connect', (stream, peer) => {
 })
 
 nlons.handle('message', async (peer, correspondence) => {
-  const message = new ChatMessage(await correspondence.next())
-  message.timestamp = +(new Date())
-  logger.info({ message }, 'Received message')
+  for await (const message of correspondence.all()) {
+    logger.info({ message }, 'Received message to parse')
+    const chatMessage = new ChatMessage(message)
+    chatMessage.timestamp = +(new Date())
+    logger.info({ chatMessage }, 'Received message')
 
-  // Store message
-  messages.push(message)
+    // Store message
+    messages.push(chatMessage)
 
-  // Broadcast message
-  nlons.peers.forEach(peer =>
-    peer.send(new nlon.Message({
-      header: new nlon.MessageHeader({ subject: 'message' }),
-      body: message
-    }))
-      .finish()
-  )
+    // Broadcast message
+    nlons.peers.forEach(peer =>
+      peer.send(new nlon.Message({
+        header: new nlon.MessageHeader({ subject: 'message' }),
+        body: chatMessage
+      }))
+        .finish()
+    )
+  }
 
   // Finish correspondence
   correspondence.finish()

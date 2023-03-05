@@ -179,7 +179,7 @@ export class UnreadableCorrespondenceError extends Error {
   * @param {Correspondence} correspondence Correspondence
   */
   constructor (correspondence) {
-    super('Correspondence is not writable!')
+    super('Correspondence is not readable!')
 
     this.#correspondence = correspondence
   }
