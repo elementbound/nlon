@@ -233,3 +233,22 @@ SHOULD consider the Correspondence terminated after receiving an Error message
 on it.
 
 [Error message]: #error
+
+## Limitations
+
+### Versioning
+
+For the initial version of the protocol, no versioning mechanism is planned. If
+/ when the protocol gets a new release, a versioning mechanism will be
+introduced.
+
+The rationale being that NLON is expected to be used on smaller scales ( at
+least initially ), where the used protocol version is well controlled and peers
+implementing different protocol versions don't need to interact.
+
+### Security
+
+The protocol itself offers no dedicated encryption mechanism - this can either
+be provided by the underlying stream ( for example secure WebSockets ), or as a
+less secure solution, the peers themselves can encrypt the message subjects and
+bodies.
