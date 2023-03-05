@@ -30,14 +30,13 @@ jobs:
 
         echo "Generate ToC"
 
-        head -n 1 README.bak.md > README.md
-        echo "## Packages" >> README.md
+        echo "# Packages" > README.md
         for package in $(ls packages); do
-          echo "- [$package]($package/)"
+          echo "- [$package]($package/)" >> README.md
         done
 
         echo "Append original README"
-        tail -n +2 README.bak.md >> README.md
+        cat README.bak.md >> README.md
     - name: Create docs
       run: pnpm doc && pnpm -r doc
     - name: Aggregate docs
