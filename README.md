@@ -9,3 +9,4 @@ implementation in JavaScript.
 ## Docs
 
 - [Protocol specification](doc/protocol.md)
+- [Example flow](doc/example-flow.md)
