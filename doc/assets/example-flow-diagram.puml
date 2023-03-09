@@ -1,0 +1,33 @@
+@startuml
+
+title NLON Example sequence
+actor Actor 
+
+Actor -> Client ++ : List lobbies
+
+group Connect to server
+    Client -> Server ++  : Establish connection
+    Client -> Server ++  : Send a login request
+    Server --> Client -- : Respond with session token, close correspondence
+    Client -> Server     : Close correspondence
+    deactivate Server
+end group
+
+group List lobbies
+Client -> Server ++ : Send a request to list lobbies, close correspondence
+loop 
+Server -> Client: Reply with lobby details
+end loop
+Server --> Client -- : Close correspondence
+end group
+
+Client --> Actor -- : Display list of lobbies 
+
+Actor -> Client ++ : Connect to a lobby
+group Attempt connecting to a lobby
+Client -> Server ++ : Send a request to join lobby
+Server --> Client -- : Reply with error message
+end group
+Client --> Actor -- : Acknowledge
+
+@enduml
