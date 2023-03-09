@@ -99,6 +99,11 @@ Implementations SHOULD use this field for authorization / authentication, but if
 necessary, exceptions can be made in cases where both peer implementations can
 agree on a shared meaning for the header.
 
+Similar to HTTP's `Authorization` header, you can use any of the authorization
+schemes like Basic or Bearer with JWTs, or even something custom. Since the
+specification doesn't explicitly enforce any method of authorization, just how
+it's communicated, any solution can be used as long as both Peers recognize it.
+
 #### Other fields
 
 The header MAY contain other, arbitrary fields. These can be added and
