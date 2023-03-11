@@ -152,7 +152,7 @@ correspondence.
 
 ## Listing lobbies
 
-### Request
+### List request
 
 Armed with its session token, the client sends a request to the server to list
 all the available lobbies:
@@ -186,7 +186,7 @@ message in the correspondence - its *type* is `fin`. This is perfectly valid, it
 only means that the initiating peer is not planning to send any more data.
 However, it will accept any data it receives in response.
 
-### Response
+### List response
 
 Upon receiving the request, the server validates the authorization header and
 gathers the list of lobbies visible to the client.
@@ -266,7 +266,7 @@ be freed.
 
 ## Joining a lobby
 
-### Request
+### Join request
 
 Now with a list of lobbies, the client decides to join the Tavern. To this end,
 it sends the following message, initiating a new correspondence:

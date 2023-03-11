@@ -41,8 +41,8 @@ See the [reference implementation](packages/nlon).
 
 ## Documentation
 
-- [Protocol specification](doc/protocol.md)
-- [Example flow](doc/example-flow.md)
+- [Protocol specification](doc/spec/protocol.md)
+- [Example flow](doc/spec/example-flow.md)
 - [API docs](https://elementbound.github.io/nlon/)
   - Or generate your own by running `pnpm -r doc`
 - Examples
