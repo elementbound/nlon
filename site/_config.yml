@@ -42,6 +42,10 @@ plugins:
 collections:
   packages:
     output: true
+    permalink: /:collection/:path/
+  reference:
+    output: true
+    permalink: /:collection/:path/
 
 # Exclude from processing.
 # The following items will not be processed, by default.

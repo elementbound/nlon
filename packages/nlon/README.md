@@ -1,6 +1,6 @@
 # nlon
 
-This package is the reference implementation of the [nlon protocol](../).
+This package is the reference implementation of the [nlon protocol](../../).
 
 ## Install
 

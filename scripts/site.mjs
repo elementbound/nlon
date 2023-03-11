@@ -106,9 +106,7 @@ function processApiDoc (text, title) {
   // this is not exactly linking to the heading itself but close enough
   const regex = /<a\s*name="(.*)"/g
 
-  console.log('Patching API doc', title, regex.test(text))
   const patchedText = text.replace(regex, (match, name) => {
-    console.log('Patching', match, '=>', `<a id="${name}">`)
     return `<a id="${name}"`
   })
 
@@ -168,11 +166,11 @@ async function main () {
     )
 
     console.log('Generating API docs for', pkg)
-    // const doc = await jsdoc2md(root, path.join(root, 'packages', pkg))
-    // await save(
-    //   path.join(out, 'packages', pkg, 'api.md'),
-    //   processApiDoc(doc, pkg)
-    // )
+    const doc = await jsdoc2md(root, path.join(root, 'packages', pkg))
+    await save(
+      path.join(out, '_reference', `${pkg}.md`),
+      processApiDoc(doc, `${pkg} reference docs`)
+    )
   }
 }
 

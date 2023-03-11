@@ -1,6 +1,6 @@
 # nlon-websocket
 
-WebSocket adapter for [nlon](../).
+WebSocket adapter for [nlon](../../).
 
 Since nlon by itself is not concerned by the actual method of data transfer,
 adapters can be used to apply the protocol over various media.
