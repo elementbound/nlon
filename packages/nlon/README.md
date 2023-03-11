@@ -1,8 +1,8 @@
 # nlon
 
-This package is the reference implementation of the [NLON protocol].
+This package is the reference implementation of the [nlon protocol].
 
-[NLON protocol]: https://github.com/elementbound/nlon
+[nlon protocol]: https://github.com/elementbound/nlon
 
 ## Install
 

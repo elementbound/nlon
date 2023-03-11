@@ -1,7 +1,7 @@
 {
   "name": "@elementbound/nlon-socket",
   "version": "0.10.2",
-  "description": "Socket adapter for NLON",
+  "description": "Socket adapter for nlon",
   "main": "index.js",
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -R README.md -d jsdoc -r lib",

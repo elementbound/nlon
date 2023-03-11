@@ -1,4 +1,4 @@
-# NLON
+# nlon
 
 A bidirectional communication protocol that can be used over raw sockets,
 WebSockets or any other method of transmission.

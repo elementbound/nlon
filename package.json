@@ -1,6 +1,6 @@
 {
   "name": "@elementbound/nlon-root",
-  "description": "Root package for NLON monorepo",
+  "description": "Root package for nlon monorepo",
   "keywords": [
     "nlon", "network", "protocol"
   ],
