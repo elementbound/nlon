@@ -75,7 +75,7 @@ async function jsdoc2md (root, directory) {
   return execResult.stdout
 }
 
-async function processReadme (p) {
+async function processReadme (p, type = '') {
   const regex = /#\s*(.+)/
   const text = (await fs.readFile(p)).toString('utf-8')
 
@@ -93,7 +93,7 @@ async function processReadme (p) {
   const frontMatter = [
     '---',
     'layout: home',
-    'title: ' + title,
+    `title: ${type}${title}`,
     '---'
   ].join('\n')
 
@@ -162,14 +162,35 @@ async function main () {
     console.log('Processing README for package', pkg)
     await save (
       path.join(out, '_packages', `${pkg}.md`),
-      await processReadme(path.join(root, 'packages', pkg, 'README.md'))
+      await processReadme(path.join(root, 'packages', pkg, 'README.md'), '📦 ')
     )
 
     console.log('Generating API docs for', pkg)
     const doc = await jsdoc2md(root, path.join(root, 'packages', pkg))
     await save(
       path.join(out, '_reference', `${pkg}.md`),
-      processApiDoc(doc, `${pkg} reference docs`)
+      processApiDoc(doc, `📖 ${pkg}`)
+    )
+  }
+
+  console.log('Processing docs')
+  for (const doc of await recurse(path.join(root, 'doc'))) {
+    if (path.extname(doc) !== '.md') {
+      continue
+    }
+
+    const types = {
+      spec: '📜 ',
+      tutorial: 'ℹ️ '
+    }
+    const defaultType = '📎 '
+
+    const collection = path.basename(path.dirname(doc))
+    console.log('Processing doc', doc, 'under collection', collection)
+    const name = path.basename(doc)
+    await save(
+      path.join(out, '_' + collection, name),
+      await processReadme(doc, types[collection] ?? defaultType)
     )
   }
 }
