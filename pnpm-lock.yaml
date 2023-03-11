@@ -14,8 +14,8 @@ importers:
 
   examples/websocket-chat:
     specifiers:
-      '@elementbound/nlon': workspace:^0.10.2
-      '@elementbound/nlon-websocket': workspace:^0.10.2
+      '@elementbound/nlon': workspace:^0.10.3
+      '@elementbound/nlon-websocket': workspace:^0.10.3
       assert-browserify: ^2.0.0
       concurrently: ^7.6.0
       copy-webpack-plugin: ^11.0.0
@@ -86,7 +86,7 @@ importers:
 
   packages/nlon-socket:
     specifiers:
-      '@elementbound/nlon': workspace:^0.10.2
+      '@elementbound/nlon': workspace:^0.10.3
       clean-jsdoc-theme: ^4.2.2
       eslint: ^8.31.0
       eslint-config-standard: ^17.0.0
@@ -113,7 +113,7 @@ importers:
 
   packages/nlon-websocket:
     specifiers:
-      '@elementbound/nlon': workspace:^0.10.2
+      '@elementbound/nlon': workspace:^0.10.3
       clean-jsdoc-theme: ^4.2.2
       eslint: ^8.31.0
       eslint-config-standard: ^17.0.0

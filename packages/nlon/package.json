@@ -1,6 +1,6 @@
 {
   "name": "@elementbound/nlon",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description": "Reference implementation of the nlon protocol",
   "main": "index.mjs",
   "scripts": {
@@ -11,7 +11,9 @@
     "test:dump": "node --test test/*.test.mjs test/*/*.test.mjs"
   },
   "keywords": [
-    "nlon", "network", "protocol"
+    "nlon",
+    "network",
+    "protocol"
   ],
   "author": "Tamas Galffy",
   "license": "MIT",
