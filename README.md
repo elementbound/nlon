@@ -3,13 +3,18 @@
 A bidirectional communication protocol that can be used over raw sockets,
 WebSockets or any other method of transmission.
 
+Its main use case is situations where you have a transport layer without any
+structure, e.g. TCP sockets where you stream arbitrary bytes. The role of nlon
+here is to provide a convenient layer on top of the transport to give shape to
+the data being transmitted.
+
 This repository includes the protocol specification and a reference
 implementation in JavaScript.
 
 ## Features
 
 - 📦 Almost no dependencies
-  - The core uses pino for logging and ndjson for message parsing
+  - The core uses 3 dependencies: pino, nanoid, ndjson
 - 🔩 Protocol-agnostic
   - Works the same over TCP as WebSockets by using Adapters
 - ⚡ Simple specification
