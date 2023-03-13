@@ -1,4 +1,7 @@
-# nlon
+---
+layout: home
+title: nlon
+---
 
 A bidirectional communication protocol that can be used over raw sockets,
 WebSockets or any other method of transmission.
@@ -41,8 +44,8 @@ See the [reference implementation](packages/nlon).
 
 ## Documentation
 
-- [Protocol specification](doc/spec/protocol.md)
-- [Example flow](doc/spec/example-flow.md)
+- [Protocol specification](doc/protocol.md)
+- [Example flow](doc/example-flow.md)
 - [API docs](https://elementbound.github.io/nlon/)
   - Or generate your own by running `pnpm -r doc`
 - Examples

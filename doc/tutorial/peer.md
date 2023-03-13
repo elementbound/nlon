@@ -1,6 +1,6 @@
 # Implementing a peer
 
-NLON peers are responsible for initiating correspondences. Compared to a
+nlon peers are responsible for initiating correspondences. Compared to a
 traditional HTTP peer, the difference is that you don't get a response object
 directly - instead, you get a correspondence, which you can use to stream your
 input data to the server if needed, and to process responses.
@@ -8,7 +8,7 @@ input data to the server if needed, and to process responses.
 ## Setting up the peer
 
 The first step is to create a peer instance. To do that, we first need to
-create a connection that the peer can use. This is required because NLON
+create a connection that the peer can use. This is required because nlon
 itself is not tied to any specific transport, so this must be handled
 externally. This can be done by an adapter or manually.
 
@@ -50,7 +50,7 @@ First off, the message must be created. The best way to do that is to create a
 done with the `MessageHeader`.
 
 > You can also manually assemble your message object, but it must conform to the
-> NLON message format. This includes generating your own correspondence ID,
+> nlon message format. This includes generating your own correspondence ID,
 > which is usually done automatically by the `MessageHeader` constructor if none
 > is provided.
 
@@ -111,7 +111,7 @@ received during the correspondence.
 
 ## Incoming correspondences
 
-Since NLON is a bidirectional protocol, the server can initiate a new
+Since nlon is a bidirectional protocol, the server can initiate a new
 correspondence at any time as well. To handle these, there's two options.
 
 Firstly, you can subscribe to incoming correspondences via an event handler:

@@ -1,7 +1,7 @@
 {
   "name": "@elementbound/nlon-websocket",
-  "version": "0.10.2",
-  "description": "WebSocket adapter for NLON",
+  "version": "0.10.3",
+  "description": "WebSocket adapter for nlon",
   "main": "index.mjs",
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -R README.md -d jsdoc -r lib",
@@ -9,11 +9,22 @@
     "test": "node --test test/ | utap",
     "test:dump": "node --test test/"
   },
-  "keywords": [],
+  "keywords": [
+    "nlon",
+    "network",
+    "protocol",
+    "websocket",
+    "ws"
+  ],
   "author": "Tamas Galffy",
   "license": "MIT",
+  "homepage": "https://github.com/elementbound/nlon/packages/nlon-websocket/#readme",
+  "bugs": {
+    "url": "https://github.com/elementbound/nlon/issues"
+  },
+  "repository": "github:elementbound/nlon",
   "dependencies": {
-    "@elementbound/nlon": "workspace:^0.10.2",
+    "@elementbound/nlon": "workspace:^0.10.3",
     "isomorphic-ws": "^5.0.0",
     "ws": "^8.12.1"
   },
@@ -28,5 +39,8 @@
     "jsdoc": "^4.0.0",
     "pino": "^8.8.0",
     "utap": "^0.2.0"
-  }
+  },
+  "files": [
+    "lib/*"
+  ]
 }

@@ -2,6 +2,25 @@ import net from 'node:net'
 import * as nlon from '@elementbound/nlon'
 
 /**
+* An nlon Server.
+* @external "nlon.Server"
+* @see {@link http://elementbound.github.io/nlon/reference/nlon/#class-Server}
+*/
+
+/**
+* Options for an nlon Server.
+* @external "nlon.ServerOptions"
+* @see {@link
+* http://elementbound.github.io/nlon/reference/nlon/#typedef-ServerOptions}
+*/
+
+/**
+* Node's TCP Server implementation.
+* @external "net.Server"
+* @see {@link https://nodejs.org/api/net.html#class-netserver}
+*/
+
+/**
 * @summary A socket-specific extension of {@link nlon.Server}.
 *
 * @description This class functions exactly the same as {@link nlon.Server},
@@ -9,7 +28,7 @@ import * as nlon from '@elementbound/nlon'
 * be accessed through the `.stream` field.
 *
 * Any incoming connection over this server will be automatically connected to
-* and managed by the NLON server.
+* and managed by the nlon server.
 *
 * > This class shouldn't be instantiated directly, instead use the factory
 * > methods.
@@ -46,13 +65,13 @@ class SocketServer extends nlon.Server {
 }
 
 /**
-* @summary Wrap an existing {@link net.Server} instance with an NLON Server.
+* @summary Wrap an existing {@link net.Server} instance with an nlon Server.
 *
 * @description > You will have to manually call `.listen()`!
 *
 * @param {net.Server} server Existing server
-* @param {nlon.ServerOptions} [options] NLON Server options
-* @returns {SocketServer} NLON Server
+* @param {nlon.ServerOptions} [options] nlon Server options
+* @returns {SocketServer} nlon Server
 */
 export function wrapSocketServer (server, options) {
   return new SocketServer({
@@ -62,14 +81,14 @@ export function wrapSocketServer (server, options) {
 }
 
 /**
-* @summary Create an NLON server listening on socket.
+* @summary Create an nlon server listening on socket.
 *
 * @description A {@link net.Server} instance will be created based on the
 * incoming options. This will also automatically call `.listen()` on the socket
-* server before wrapping it in an NLON server.
+* server before wrapping it in an nlon server.
 *
 * > The same options object will be passed to `net.createServer`, `.listen()`
-* > and the new NLON Server instance.
+* > and the new nlon Server instance.
 *
 * @param {net.ServerOpts | net.ListenOptions | nlon.ServerOptions} options Options
 * @returns {SocketServer} Server

@@ -3,6 +3,24 @@ import * as nlon from '@elementbound/nlon'
 import { WebSocketStream } from './websocket.wrapper.mjs'
 
 /**
+* An nlon Server.
+* @external "nlon.Server"
+* @see {@link http://elementbound.github.io/nlon/reference/nlon/#class-Server}
+*/
+
+/**
+* Options for an nlon Server.
+* @external "nlon.ServerOptions"
+* @see {@link
+* http://elementbound.github.io/nlon/reference/nlon/#typedef-ServerOptions}
+*/
+
+/**
+* @external "ws.WebSocketServer"
+* @see {@link https://github.com/websockets/ws/blob/master/doc/ws.md#class-websocketserver}
+*/
+
+/**
 * @summary A WebSocket-specific extension of {@link nlon.Server}.
 *
 * @description This class functions exactly the same as {@link nlon.Server},
@@ -10,7 +28,7 @@ import { WebSocketStream } from './websocket.wrapper.mjs'
 * can be accessed through the `server` field.
 *
 * Any incoming WebSocket connection will be wrapped in {@link WebSocketStream}
-* and connected to the NLON server.
+* and connected to the nlon server.
 *
 * > This class shouldn't be instantiated directly, instead use the factory
 * > methods.
@@ -24,7 +42,7 @@ class WebSocketWrapperServer extends nlon.Server {
   * Construct server.
   *
   * @param {ws.WebSocketServer} server WebSocketServer
-  * @param {nlon.ServerOptions} options NLON server options
+  * @param {nlon.ServerOptions} options nlon server options
   */
   constructor (server, options) {
     super({
@@ -50,10 +68,10 @@ class WebSocketWrapperServer extends nlon.Server {
 }
 
 /**
-* Wrap an existing WebSocketServer as an NLON Server.
+* Wrap an existing WebSocketServer as an nlon Server.
 *
 * @param {ws.WebSocketServer} server WebSocket server
-* @param {nlon.ServerOptions} options NLON server options
+* @param {nlon.ServerOptions} options nlon server options
 * @returns {WebSocketWrapperServer}
 */
 export function wrapWebSocketServer (server, options) {
@@ -61,14 +79,14 @@ export function wrapWebSocketServer (server, options) {
 }
 
 /**
-* @summary Create an NLON server listening on WebSocket.
+* @summary Create an nlon server listening on WebSocket.
 *
 * @description The WebSocket server will be automatically created based on the
 * input options. Under the hood, the `ws` package is used, which also means that
 * depending on the options, an HTTP server will be launched.
 *
 * > The options parameter will be used to both create the WebSocket server and
-* > the NLON server.
+* > the nlon server.
 *
 * @param {nlon.ServerOptions | ws.ServerOptions} options Options
 * @returns {WebSocketWrapperServer}

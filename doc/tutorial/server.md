@@ -15,7 +15,7 @@ The first step is to create your server instance:
 const nlonServer = new Server()
 ```
 
-What could be striking is that there's no listen method. Since NLON ( and its
+What could be striking is that there's no listen method. Since nlon ( and its
 reference implementation ) is not tied to any specific transport, network or
 otherwise, it by itself doesn't do any connection management. Instead,
 connections must be provided, either manually by calling `server.connect()`, or
@@ -32,7 +32,7 @@ const nlonServer = createSocketServer({
 })
 ```
 
-Once this is done, the NLON server will be aware of incoming connections and
+Once this is done, the nlon server will be aware of incoming connections and
 receive incoming messages.
 
 [nlon-socket]: https://github.com/elementbound/nlon/tree/main/packages/nlon-socket
@@ -72,7 +72,7 @@ nlonServer.handle('echo', async (peer, correspondence) => {
 })
 ```
 
-Note that NLON correspondences can also be finished with a piece of data, in
+Note that nlon correspondences can also be finished with a piece of data, in
 case you'd like to add some parting message:
 
 ```js
