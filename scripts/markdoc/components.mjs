@@ -16,14 +16,34 @@ export function createLinks (doclets) {
   })
 }
 
-export function tryLink (type) {
+export function link (type) {
   return links.has(type)
     ? `<a href="${links.get(type)}">${type}</a>`
-    : type
+    : undefined
+}
+
+export function tryLink (type) {
+  return link(type) ?? type
 }
 
 export function getLinks () {
   return [...links.entries()]
+}
+
+export function process (text) {
+  const typedLink = /\{@link\s+([^\|]+)\|([^}]+)\}/g
+  const plainLink = /\{@link\s+([^}]+)\}/g
+
+  return text
+    .replace(typedLink, (_, type, text) => links.has(type)
+      ? `<a href="${links.get(type)}">${text}</a>`
+      : `${text}`
+    )
+    .replace(plainLink, (_, type) => tryLink(type))
+}
+
+export function processItem (text) {
+  return process(tryLink(text))
 }
 
 /**
@@ -34,6 +54,7 @@ export function slug (doclet) {
   return [doclet.scope, doclet.kind, doclet.longname]
     .filter(s => !!s)
     .join('-')
+    .replace(/#/g, '-at-')
 }
 
 export function titleParams (doclet) {
@@ -126,11 +147,11 @@ export function contentsList (doclets, title, indent) {
 }
 
 export function summarise (doclet) {
-  return doclet.summary ?? ''
+  return process(doclet.summary ?? '')
 }
 
 export function describe (doclet) {
-  return doclet.classdesc ?? doclet.description ?? ''
+  return process(doclet.classdesc ?? doclet.description ?? '')
 }
 
 /**
@@ -172,22 +193,22 @@ export function prefixList (list, prefix, mapper) {
 }
 
 export function see (doclet) {
-  return prefixList(doclet.see, '**See:**', tryLink)
+  return prefixList(doclet.see, '**See:**', processItem)
 }
 
 export function augments (doclet) {
-  return prefixList(doclet.augments, '**Extends:**', tryLink)
+  return prefixList(doclet.augments, '**Extends:**', processItem)
 }
 
 export function fires (doclet) {
-  return prefixList(doclet.fires, '**Fires:**', tryLink)
+  return prefixList(doclet.fires, '**Fires:**', processItem)
 }
 
 export function throws (doclet) {
   return prefixList(doclet.exceptions, '**Throws:**', e =>
     e.type?.names?.length
-    ? `<code>${type(e.type)}</code> ${e.description}`
-    : e.description
+    ? `<code>${type(e.type)}</code> ${process(e.description)}`
+    : process(e.description)
   )
 }
 
