@@ -3,13 +3,11 @@ import { classBodies } from './class.mjs'
 import { contentsList, createLinks, extractByType, getLinks, renderBodies } from './components.mjs'
 import { functionBodies } from './function.mjs'
 
-function main () {
-  const raw = fs.readFileSync(process.stdin.fd, 'utf-8')
-
-  /** @type {Doclet[]} */
+export function markdoc (raw) {
   const doclets = JSON.parse(raw)
     .filter(d => d.access !== 'private')
     .filter(d => d.scope !== 'inner')
+    .sort((a, b) => a.longname.localeCompare(b.longname))
 
   const classes = extractByType(doclets, 'class')
   const functions = extractByType(doclets, 'function')
@@ -28,15 +26,7 @@ function main () {
     ...externals
   ])
 
-  const frontMatter = [
-    '---',
-    'title: Documentation',
-    'layout: home',
-    '---'
-  ]
-
   const result = [
-    ...frontMatter,
     contentsList(classes, 'Classes'),
     contentsList(functions, 'Functions'),
     contentsList(typedefs, 'Typedefs'),
@@ -47,15 +37,17 @@ function main () {
     functionBodies(functions),
     renderBodies(typedefs),
     renderBodies(constants),
-    renderBodies(externals),
-    '\n---\n',
-    '```',
-    getLinks().map(([a, b]) => `${a} => ${b}`),
-    '```'
+    renderBodies(externals)
   ].flat()
     .filter(l => l !== undefined)
 
-  result.forEach(l => console.log(l))
+  return result.join('\n')
+}
+
+function main () {
+  const raw = fs.readFileSync(process.stdin.fd, 'utf-8')
+  const processed = markdoc(raw)
+  console.log(processed)
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
