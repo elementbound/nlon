@@ -228,7 +228,8 @@ export function examples (doclet) {
 export function footer (doclet) {
   return [
     kind(doclet),
-    paramTable(doclet),
+    fieldsTable(doclet.properties, 'Property'),
+    fieldsTable(doclet.params, 'Param'),
     returns(doclet),
     throws(doclet),
     augments(doclet),
@@ -254,20 +255,20 @@ export function returns (doclet) {
 * @param {Doclet} doclet
 * @returns {string}
 */
-export function paramTable (doclet) {
-  if (!doclet.params?.length) {
+export function fieldsTable (fields, name = 'Param') {
+  if (!fields?.length) {
     return ''
   }
 
   return [
     '<table>',
     '<thead>',
-    '<tr><th>Param</th><th>Type</th><th>Description</th></tr>',
+    `<tr><th>${name ?? 'Param'}</th><th>Type</th><th>Description</th></tr>`,
     '</thead>',
-    doclet.params.map(p =>
-      `<tr><td>${p.name}</td>` +
+    fields.map(p =>
+      '<tr><td>' + (p.optional ? `[${p.name}]` : p.name) + '</td>' +
         `<td>${type(p.type)}</td>` +
-        `<td>${p.description ?? ''}</td></tr>`
+        `<td>${describe(p)}</td></tr>`
     ),
     '</table>'
   ].flat().join('\n') + '\n'
