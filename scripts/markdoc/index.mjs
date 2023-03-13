@@ -11,13 +11,22 @@ function main () {
     .filter(d => d.access !== 'private')
     .filter(d => d.scope !== 'inner')
 
-  createLinks(doclets)
-
   const classes = extractByType(doclets, 'class')
   const functions = extractByType(doclets, 'function')
   const typedefs = extractByType(doclets, 'typedef')
   const constants = extractByType(doclets, 'constant')
     .filter(doclet => !doclet.undocumented)
+  const externals = extractByType(doclets, 'external')
+
+  externals
+    .forEach(e => {
+      e.name = e.name.replace(/"([^"]+)"/g, (_, c) => c)
+    })
+
+  createLinks([
+    ...doclets,
+    ...externals
+  ])
 
   const frontMatter = [
     '---',
@@ -32,11 +41,13 @@ function main () {
     contentsList(functions, 'Functions'),
     contentsList(typedefs, 'Typedefs'),
     contentsList(constants, 'Constants'),
+    contentsList(externals, 'External'),
     '\n---\n',
     classBodies(classes, doclets),
     functionBodies(functions),
     renderBodies(typedefs),
     renderBodies(constants),
+    renderBodies(externals),
     '\n---\n',
     '```',
     getLinks().map(([a, b]) => `${a} => ${b}`),

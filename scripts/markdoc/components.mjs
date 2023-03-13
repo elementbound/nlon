@@ -51,10 +51,12 @@ export function processItem (text) {
 * @returns {string}
 */
 export function slug (doclet) {
-  return [doclet.scope, doclet.kind, doclet.longname]
+  return [doclet.kind, doclet.longname]
     .filter(s => !!s)
     .join('-')
     .replace(/#/g, '-at-')
+    .replace(/["']/g, '-qt-')
+    .replace(/[^\w\d-]/g, '--')
 }
 
 export function titleParams (doclet) {
@@ -99,7 +101,7 @@ export function title (doclet, indent) {
   return [
     '#'.repeat(indent ?? 2),
     doclet.async ? '`async` ' : '',
-    doclet.longname,
+    doclet.kind !== 'external' ? doclet.longname : doclet.name,
     titleParams(doclet),
     titleReturns(doclet),
     titleType(doclet),
@@ -114,7 +116,7 @@ export function contentsItem (doclet) {
   return [
     `<a href="#${slug(doclet)}">`,
     doclet.async ? '`async` ' : '',
-    doclet.name,
+    doclet.kind !== 'external' ? doclet.longname : doclet.name,
     titleParams(doclet),
     '</a>',
     titleReturns(doclet),
