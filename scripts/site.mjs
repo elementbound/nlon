@@ -3,6 +3,7 @@ import * as path from 'node:path'
 import * as child_process from 'node:child_process'
 import * as util from 'node:util'
 import { fileURLToPath } from 'node:url'
+import { markdoc } from './markdoc/index.mjs'
 
 const exec = util.promisify(child_process.exec)
 
@@ -43,8 +44,9 @@ async function recurse (directory, filter = () => true) {
   ]
 }
 
-async function jsdoc2md (root, directory) {
-  const cli = path.join(root, 'node_modules/jsdoc-to-markdown/bin/cli.js')
+async function jsondoc (root, directory) {
+  const clidir = path.join(root, 'node_modules/jsdoc/')
+  const cli = 'jsdoc.js'
   const config = path.join(directory, '.jsdoc.js')
   const ignoredDirs = ['node_modules', 'jsdoc']
   const searchDirs = ['lib', 'src']
@@ -60,16 +62,16 @@ async function jsdoc2md (root, directory) {
 
   console.log('Found sources', sources)
 
-  const cmd = ['node', cli, '-c', config, '--no-gfm', '-f', ...sources]
+  const cmd = ['node', cli, '-c', config, '-X', ...sources]
     .map(c => `"${c}"`)
     .join(' ')
 
   console.log('Running command:', cmd)
-  const execResult = await exec(cmd)
+  const execResult = await exec(cmd, { cwd: clidir })
 
   if (execResult.stderr) {
-    console.error('jsdoc2md failed with output:', execResult)
-    throw new Error('Failed to run jsdoc2md')
+    console.error('jsdoc failed with output:', execResult)
+    throw new Error('Failed to run jsdoc')
   }
 
   return execResult.stdout
@@ -166,7 +168,8 @@ async function main () {
     )
 
     console.log('Generating API docs for', pkg)
-    const doc = await jsdoc2md(root, path.join(root, 'packages', pkg))
+    const docjson = await jsondoc(root, path.join(root, 'packages', pkg))
+    const doc = markdoc(docjson)
     await save(
       path.join(out, '_reference', `${pkg}.md`),
       processApiDoc(doc, `📖 ${pkg}`)

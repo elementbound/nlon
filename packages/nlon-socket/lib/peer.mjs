@@ -2,6 +2,25 @@ import net from 'node:net'
 import * as nlon from '@elementbound/nlon'
 
 /**
+* An nlon Peer.
+* @external "nlon.Peer"
+* @see {@link http://elementbound.github.io/nlon/reference/nlon/#class-Peer}
+*/
+
+/**
+* Options for an nlon Peer.
+* @external "nlon.PeerOptions"
+* @see {@link
+* http://elementbound.github.io/nlon/reference/nlon/#typedef-PeerOptions}
+*/
+
+/**
+* Node's TCP Socket implementation.
+* @external "net.Socket"
+* @see {@link https://nodejs.org/api/net.html#class-netsocket}
+*/
+
+/**
 * @summary A socket-specific extension of {@link nlon.Peer}
 *
 * @description This class is an nlon Peer that wraps and manages a

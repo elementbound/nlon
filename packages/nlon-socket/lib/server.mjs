@@ -2,6 +2,25 @@ import net from 'node:net'
 import * as nlon from '@elementbound/nlon'
 
 /**
+* An nlon Server.
+* @external "nlon.Server"
+* @see {@link http://elementbound.github.io/nlon/reference/nlon/#class-Server}
+*/
+
+/**
+* Options for an nlon Server.
+* @external "nlon.ServerOptions"
+* @see {@link
+* http://elementbound.github.io/nlon/reference/nlon/#typedef-ServerOptions}
+*/
+
+/**
+* Node's TCP Server implementation.
+* @external "net.Server"
+* @see {@link https://nodejs.org/api/net.html#class-netserver}
+*/
+
+/**
 * @summary A socket-specific extension of {@link nlon.Server}.
 *
 * @description This class functions exactly the same as {@link nlon.Server},
