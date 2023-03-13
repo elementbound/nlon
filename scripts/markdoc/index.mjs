@@ -13,6 +13,8 @@ function main () {
   const classes = extractByType(doclets, 'class')
   const functions = extractByType(doclets, 'function')
   const typedefs = extractByType(doclets, 'typedef')
+  const constants = extractByType(doclets, 'constant')
+    .filter(doclet => !doclet.undocumented)
 
   const frontMatter = [
     '---',
@@ -26,9 +28,12 @@ function main () {
     contentsList(classes, 'Classes'),
     contentsList(functions, 'Functions'),
     contentsList(typedefs, 'Typedefs'),
+    contentsList(constants, 'Constants'),
+    '\n---\n',
     classBodies(classes, doclets),
     functionBodies(functions),
-    renderBodies(typedefs)
+    renderBodies(typedefs),
+    renderBodies(constants)
   ].flat()
     .filter(l => l !== undefined)
 
