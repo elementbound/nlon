@@ -1,5 +1,31 @@
 import { merge, uniq } from "./utils.mjs";
 
+const links = new Map()
+
+export function createLinks (doclets) {
+  links.clear()
+
+  doclets.forEach(doclet => {
+    const link = '#' + slug(doclet)
+
+    if (!links.has(doclet.name) || doclet.scope == 'global') {
+      links.set(doclet.name, link)
+    }
+
+    links.set(doclet.longname, link)
+  })
+}
+
+export function tryLink (type) {
+  return links.has(type)
+    ? `<a href="${links.get(type)}">${type}</a>`
+    : type
+}
+
+export function getLinks () {
+  return [...links.entries()]
+}
+
 /**
 * @param {Doclet} doclet
 * @returns {string}
@@ -39,13 +65,12 @@ export function titleType (doclet) {
     return ''
   }
 
-  // TODO: Link to type?
   return ` : <code>${type(doclet.type)}</code>`
 }
 
 export function titleAugments (doclet) {
   return doclet.augments?.length
-    ? (' ⇐ ' + doclet.augments.join(', '))
+    ? (' ⇐ ' + doclet.augments.map(tryLink).join(', '))
     : ''
 }
 
@@ -123,11 +148,9 @@ export function kind (doclet) {
 }
 
 export function type (t) {
-  if (!t?.names?.length) {
-    return ''
-  } else {
-    return t.names.join(', ')
-  }
+  return (t?.names ?? [])
+    .map(t => tryLink(t))
+    .join(', ')
 }
 
 export function prefixList (list, prefix, mapper) {
@@ -149,21 +172,21 @@ export function prefixList (list, prefix, mapper) {
 }
 
 export function see (doclet) {
-  return prefixList(doclet.see, '**See:**')
+  return prefixList(doclet.see, '**See:**', tryLink)
 }
 
 export function augments (doclet) {
-  return prefixList(doclet.augments, '**Extends:**')
+  return prefixList(doclet.augments, '**Extends:**', tryLink)
 }
 
 export function fires (doclet) {
-  return prefixList(doclet.fires, '**Fires:**')
+  return prefixList(doclet.fires, '**Fires:**', tryLink)
 }
 
 export function throws (doclet) {
   return prefixList(doclet.exceptions, '**Throws:**', e =>
     e.type?.names?.length
-    ? `\`${type(e.type)}\` ${e.description}`
+    ? `<code>${type(e.type)}</code> ${e.description}`
     : e.description
   )
 }

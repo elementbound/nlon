@@ -1,6 +1,6 @@
 import * as fs from 'node:fs'
 import { classBodies } from './class.mjs'
-import { contentsList, extractByType, renderBodies } from './components.mjs'
+import { contentsList, createLinks, extractByType, getLinks, renderBodies } from './components.mjs'
 import { functionBodies } from './function.mjs'
 
 function main () {
@@ -9,6 +9,9 @@ function main () {
   /** @type {Doclet[]} */
   const doclets = JSON.parse(raw)
     .filter(d => d.access !== 'private')
+    .filter(d => d.scope !== 'inner')
+
+  createLinks(doclets)
 
   const classes = extractByType(doclets, 'class')
   const functions = extractByType(doclets, 'function')
@@ -33,7 +36,11 @@ function main () {
     classBodies(classes, doclets),
     functionBodies(functions),
     renderBodies(typedefs),
-    renderBodies(constants)
+    renderBodies(constants),
+    '\n---\n',
+    '```',
+    getLinks().map(([a, b]) => `${a} => ${b}`),
+    '```'
   ].flat()
     .filter(l => l !== undefined)
 
