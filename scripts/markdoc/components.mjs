@@ -80,6 +80,10 @@ export function contentsItem (doclet) {
 }
 
 export function contentsList (doclets, title, indent) {
+  if (!doclets?.length) {
+    return ''
+  }
+
   title = title
     ? ('#'.repeat(indent ?? 2) + ' ' + title + '\n')
     : ''
@@ -164,6 +168,17 @@ export function throws (doclet) {
   )
 }
 
+export function examples (doclet) {
+  if (!doclet.examples?.length) {
+    return ''
+  }
+
+  return [
+    '**Examples:**',
+    doclet.examples.map(e => '```js\n' + e + '\n```')
+  ].flat().join('\n\n')
+}
+
 export function footer (doclet) {
   return [
     kind(doclet),
@@ -172,7 +187,8 @@ export function footer (doclet) {
     throws(doclet),
     augments(doclet),
     fires(doclet),
-    see(doclet)
+    see(doclet),
+    examples(doclet)
   ]
     .filter(l => !!l)
     .join('\n\n') + '\n'
