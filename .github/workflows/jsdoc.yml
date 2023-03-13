@@ -2,7 +2,7 @@ name: Generate API docs with JSDoc
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "chore/jekyll-site"]
 
 permissions:
   contents: read
@@ -20,36 +20,15 @@ jobs:
     - uses: actions/checkout@v3
     - name: Setup
       uses: ./.github/actions/setup.node
-    - name: Generate front page
+    - name: Generate site
       shell: bash
       run: |
-        echo "Backup README"
-        cp README.md README.bak.md
-
-        echo "Generate ToC"
-
-        echo "# Packages" > README.md
-        for package in $(ls packages); do
-          echo "- [$package]($package/)" >> README.md
-        done
-
-        echo "Append original README"
-        cat README.bak.md >> README.md
-
-        echo "Cleanup"
-        rm README.bak.md
-    - name: Create docs
-      run: pnpm doc && pnpm -r doc
-    - name: Aggregate docs
-      shell: bash
-      run: |
-        echo "Moving root docs"
-        mv "jsdoc" ".ghpages"
-
-        for package in $(ls packages); do
-          echo "Moving docs for package $package"
-          mv "packages/$package/jsdoc" ".ghpages/$package"
-        done
+        node scripts/site.mjs
+    - name: Build with Jekyll
+      uses: actions/jekyll-build-pages@v1
+      with:
+        source: _site
+        destination: .ghpages
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
       with:
