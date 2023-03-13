@@ -11,7 +11,7 @@ github_username:  elementbound
 # Build settings
 markdown: CommonMarkGhPages
 commonmark:
-  options: ["SMART", "FOOTNOTES"]
+  options: ["SMART", "FOOTNOTES", "UNSAFE"]
   extensions: ["strikethrough", "autolink", "table", "tagfilter"]
 remote_theme: sighingnow/jekyll-gitbook
 plugins:
