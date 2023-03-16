@@ -1,8 +1,8 @@
 # nlon-websocket
 
-WebSocket adapter for [NLON](https://github.com/elementbound/nlon).
+WebSocket adapter for [nlon](https://github.com/elementbound/nlon).
 
-Since NLON by itself is not concerned by the actual method of data transfer,
+Since nlon by itself is not concerned by the actual method of data transfer,
 adapters can be used to apply the protocol over various media.
 
 This package provides such an adapter for use with
@@ -11,16 +11,14 @@ This package provides such an adapter for use with
 Under the hood, this package uses `isomorphic-ws`, which delegates to either
 `ws` or the browser's WebSocket implementation, depending on where it's used.
 
-To see NLON running in the browser, see the [websocket-chat
+To see nlon running in the browser, see the [websocket-chat
 example](../../examples/websocket-chat/).
 
 ## Install
 
-Install with npm:
-
-```bash
-npm i @elementbound/nlon-websocket
-```
+- pnpm: `pnpm add @elementbound/nlon-websocket`
+- npm: `npm i @elementbound/nlon-websocket`
+- yarn: `yarn add @elementbound/nlon-websocket`
 
 ## Usage
 
@@ -43,7 +41,7 @@ const wss = new ws.WebSocketServer({
 const nlonServer = wrapWebSocketServer(wss)
 ```
 
-Create a new WebSocket server and wrap in NLON:
+Create a new WebSocket server and wrap in nlon:
 
 ```js
 import { createWebSocketServer } from '@elementbound/nlon-websocket'
@@ -54,7 +52,7 @@ const nlonServer = createWebSocketServer({
 })
 ```
 
-Access the `WebSocketServer` instance behind the NLON Server with
+Access the `WebSocketServer` instance behind the nlon Server with
 `nlonServer.server`.
 
 > These only work in Node, no WebSocket server implementation is available in
@@ -72,7 +70,7 @@ const ws = new WebSocket('ws://localhost:63636/')
 const nlonPeer = wrapWebSocketPeer(ws)
 ```
 
-Connect to WS server and wrap in NLON Peer:
+Connect to WS server and wrap in nlon Peer:
 
 ```js
 import { createWebSocketPeer } from '@elementb/nlon-websocket'
@@ -82,19 +80,13 @@ const nlonPeer = createWebSocketPeer({
 })
 ```
 
-Access the `WebSocket` instance behind the NLON Peer with `nlonPeer.socket`.
+Access the `WebSocket` instance behind the nlon Peer with `nlonPeer.socket`.
 
 ## Documentation
 
-To generate the reference documentation, run the following:
-
-```js
-npm run doc
-```
-
-The resulting docs will be under the `jsdoc` directory.
+- [API docs](https://elementbound.github.io/nlon/nlon-websocket/)
+  - Or generate your own with `pnpm doc`
 
 ## License
 
 This package is under the [MIT License](LICENSE).
-

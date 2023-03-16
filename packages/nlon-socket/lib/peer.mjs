@@ -4,7 +4,7 @@ import * as nlon from '@elementbound/nlon'
 /**
 * @summary A socket-specific extension of {@link nlon.Peer}
 *
-* @description This class is an NLON Peer that wraps and manages a
+* @description This class is an nlon Peer that wraps and manages a
 * {@link net.Socket} instance. All messages arriving on the socket will be
 * processed and all outbound traffic will be sent on the socket.
 *
@@ -39,10 +39,10 @@ class SocketPeer extends nlon.Peer {
 }
 
 /**
-* Wrap an existing {@link net.Socket} with an NLON Peer.
+* Wrap an existing {@link net.Socket} with an nlon Peer.
 *
 * @param {net.Socket} socket Socket
-* @param {nlon.PeerOptions} [options] NLON peer options
+* @param {nlon.PeerOptions} [options] nlon peer options
 * @returns {SocketPeer} Peer
 */
 export function wrapSocketPeer (socket, options) {
@@ -53,7 +53,7 @@ export function wrapSocketPeer (socket, options) {
 }
 
 /**
-* @summary Create NLON peer managing a socket.
+* @summary Create nlon peer managing a socket.
 *
 * @description This method will automatically create a socket based on the input
 * options using {@link net.createConnection}.

@@ -1,12 +1,19 @@
 {
-  "name": "@elemetnbound/nlon-root",
-  "description": "Root package for NLON monorepo",
-  "keywords": [],
+  "name": "@elementbound/nlon-root",
+  "description": "Root package for nlon monorepo",
+  "keywords": [
+    "nlon", "network", "protocol"
+  ],
   "author": "Tamas Galffy",
   "license": "MIT",
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -R README.md -u doc/ -d jsdoc ."
   },
+  "homepage": "https://github.com/elementbound/nlon#readme",
+  "bugs": {
+    "url": "https://github.com/elementbound/nlon/issues"
+  },
+  "repository": "github:elementbound/nlon",
   "devDependencies": {
     "clean-jsdoc-theme": "^4.2.2",
     "jsdoc": "^4.0.0",

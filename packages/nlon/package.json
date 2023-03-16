@@ -1,7 +1,7 @@
 {
   "name": "@elementbound/nlon",
-  "version": "0.10.2",
-  "description": "Reference implementation of the NLON protocol",
+  "version": "0.10.3",
+  "description": "Reference implementation of the nlon protocol",
   "main": "index.mjs",
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -d jsdoc -r lib",
@@ -10,9 +10,18 @@
     "test:perf": "node --expose-gc --test test/perf/*.perf.mjs",
     "test:dump": "node --test test/*.test.mjs test/*/*.test.mjs"
   },
-  "keywords": [],
+  "keywords": [
+    "nlon",
+    "network",
+    "protocol"
+  ],
   "author": "Tamas Galffy",
   "license": "MIT",
+  "homepage": "https://github.com/elementbound/nlon#readme",
+  "bugs": {
+    "url": "https://github.com/elementbound/nlon/issues"
+  },
+  "repository": "github:elementbound/nlon",
   "dependencies": {
     "nanoid": "^4.0.0",
     "ndjson": "^2.0.0",
@@ -27,5 +36,8 @@
     "eslint-plugin-promise": "^6.0.0",
     "jsdoc": "^4.0.0",
     "utap": "^0.2.0"
-  }
+  },
+  "files": [
+    "lib/*"
+  ]
 }

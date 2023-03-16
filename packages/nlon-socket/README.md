@@ -1,8 +1,8 @@
 # nlon-socket
 
-Socket adapter for [NLON](https://github.com/elementbound/nlon).
+Socket adapter for [nlon](https://github.com/elementbound/nlon).
 
-Since NLON by itself is not concerned by the actual method of data transfer,
+Since nlon by itself is not concerned by the actual method of data transfer,
 adapters can be used to apply the protocol over various media.
 
 This package provides such an adapter for use with Node's
@@ -10,16 +10,14 @@ This package provides such an adapter for use with Node's
 
 ## Install
 
-Install with npm:
-
-```bash
-npm i @elementbound/nlon-socket
-```
+- pnpm: `pnpm add @elementbound/nlon-socket`
+- npm: `npm i @elementbound/nlon-socket`
+- yarn: `yarn add @elementbound/nlon-socket`
 
 ## Usage
 
 The package provides factory methods to either wrap an existing socket or create
-a new one and add NLON on top of it.
+a new one and add nlon on top of it.
 
 ### Server
 
@@ -33,7 +31,7 @@ const nlonServer = wrapSocketServer(netServer)
 netServer.listen() // This must be called manually when wrapping
 
 // Create a socket and start listening on it
-// You can pass options for both the socket and NLON server
+// You can pass options for both the socket and nlon server
 const nlonServer = createSocketServer({
   host: 'localhost',
   port: 63636
@@ -65,15 +63,9 @@ nlonPeer.socket
 
 ## Documentation
 
-To generate the reference documentation, run the following:
-
-```js
-npm run doc
-```
-
-The resulting docs will be under the `jsdoc` directory.
+- [API docs](https://elementbound.github.io/nlon/nlon-socket/)
+  - Or generate your own with `pnpm doc`
 
 ## License
 
 This package is under the [MIT License](LICENSE).
-
