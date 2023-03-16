@@ -41,3 +41,6 @@ collections:
   60license:
     output: true
     permalink: /LICENSE
+  99about:
+    output: true
+    permalink: /about/

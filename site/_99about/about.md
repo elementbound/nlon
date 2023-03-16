@@ -1,8 +1,6 @@
 ---
 layout: home
 title: About
-output: true
-permalink: /about/
 ---
 
 This site was generated using [Jekyll](https://jekyllrb.com/).

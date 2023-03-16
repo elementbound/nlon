@@ -154,14 +154,15 @@ async function main () {
   await fs.mkdir(out, { recursive: true })
 
   console.log('Copying site base');
-  (await fs.readdir(siteroot, { withFileTypes: true }))
-    .filter(d => d.isFile())
-    .map(d => d.name)
+  (await recurse(siteroot, d => !path.basename(d).startsWith('.')))
+    // .map(d => d.name)
+    .map(f => path.relative(siteroot, f))
     .forEach(f => {
       const from = path.join(siteroot, f)
       const to = path.join(out, f)
       console.log(`Copy ${from} => ${to}`)
-      fs.copyFile(from, to)
+      fs.mkdir(path.dirname(to), { recursive: true })
+        .then(() => fs.copyFile(from, to))
     })
 
   console.log('Copying main README')
