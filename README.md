@@ -28,8 +28,8 @@ implementation in JavaScript.
 
 ### Adapters
 
-- [nlon-socket](packages/nlon-socket) for TCP sockets
-- [nlon-websocket](packages/nlon-websocket) for the browser
+- [nlon-socket](packages/nlon-socket/) for TCP sockets
+- [nlon-websocket](packages/nlon-websocket/) for the browser
 
 ## Install
 
@@ -39,7 +39,7 @@ implementation in JavaScript.
 
 ## Usage
 
-See the [reference implementation](packages/nlon).
+See the [reference implementation](packages/nlon/).
 
 ## Documentation
 

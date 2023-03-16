@@ -25,16 +25,16 @@ syntax_highlighter_style: colorful
 collections:
   10packages:
     output: true
-    permalink: /:collection/:path/
+    permalink: /packages/:path/
   20reference:
     output: true
-    permalink: /:collection/:path/
+    permalink: /reference/:path/
   30spec:
     output: true
-    permalink: /doc/:collection/:path.md
+    permalink: /doc/spec/:path.md
   40tutorial:
     output: true
-    permalink: /doc/:collection/:path.md
+    permalink: /doc/tutorial/:path.md
   50examples:
     output: true
-    permalink: /:collection/
+    permalink: /examples/:path/
