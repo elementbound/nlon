@@ -12,6 +12,12 @@ import { PeerError, UnfinishedCorrespondenceError } from './error.mjs'
 import { Peer } from './peer.mjs'
 
 /**
+* Duplex stream.
+* @external "stream.Duplex"
+* @see {@link https://nodejs.org/api/stream.html#class-streamduplex}
+*/
+
+/**
 * @private
 * @typedef {object} PeerContext
 * @property {Peer} peer

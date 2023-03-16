@@ -1,6 +1,6 @@
 # websocket-chat
 
-A basic example app using NLON over Websocket, powered by Express and Webpack.
+A basic example app using nlon over Websocket, powered by Express and Webpack.
 
 ## Usage
 
@@ -29,9 +29,9 @@ server as needed.
 
 With your server running, open <http://localhost:3000/> to see the app running.
 
-## NLON in the browser
+## nlon in the browser
 
-While NLON is not bound to any environment/runtime, the reference implementation
+While nlon is not bound to any environment/runtime, the reference implementation
 uses a few Node modules. To run this code in the browser, you need to provide
 polyfills for those modules, see the [webpack config](webpack.config.mjs#L35) for
 a list of modules and their polyfills.
