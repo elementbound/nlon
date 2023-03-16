@@ -64,7 +64,7 @@ nlonPeer.socket
 ## Documentation
 
 - [API docs](https://elementbound.github.io/nlon/nlon-socket/)
-  - Or generate your own with `pnpm doc`
+  - Or generate your own with JSDoc: `pnpm doc`
 
 ## License
 
