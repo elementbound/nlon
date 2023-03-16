@@ -1,5 +1,5 @@
 import * as fs from 'node:fs'
-import { classBodies } from './class.mjs'
+import { classBodies, extractClasses } from './class.mjs'
 import { contentsList, createLinks, extractByType, getLinks, renderBodies } from './components.mjs'
 import { functionBodies } from './function.mjs'
 
@@ -9,7 +9,7 @@ export function markdoc (raw) {
     .filter(d => d.scope !== 'inner')
     .sort((a, b) => a.longname.localeCompare(b.longname))
 
-  const classes = extractByType(doclets, 'class')
+  const classes = extractClasses(doclets)
   const functions = extractByType(doclets, 'function')
   const typedefs = extractByType(doclets, 'typedef')
   const constants = extractByType(doclets, 'constant')

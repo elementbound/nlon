@@ -30,6 +30,12 @@ export function getLinks () {
   return [...links.entries()]
 }
 
+export function isConstructor (doclet) {
+  return doclet.kind === 'class' &&
+    doclet.memberof &&
+    doclet.scope === 'instance'
+}
+
 export function process (text) {
   const typedLink = /\{@link\s+([^\|]+)\|([^}]+)\}/g
   const plainLink = /\{@link\s+([^}]+)\}/g
@@ -98,10 +104,17 @@ export function titleAugments (doclet) {
 }
 
 export function title (doclet, indent) {
+  const name = (doclet.kind === 'external' && doclet.name) ||
+    (isConstructor(doclet) && `new ${doclet.memberof}`) ||
+    doclet.longname
+
   return [
     '#'.repeat(indent ?? 2),
+    isConstructor(doclet) && '`constructor`',
     doclet.async ? '`async` ' : '',
-    doclet.kind !== 'external' ? doclet.longname : doclet.name,
+    (doclet.kind === 'external' && doclet.name) ||
+      (isConstructor(doclet) && doclet.name) ||
+      doclet.longname,
     titleParams(doclet),
     titleReturns(doclet),
     titleType(doclet),
