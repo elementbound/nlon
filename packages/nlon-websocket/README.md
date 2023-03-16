@@ -89,4 +89,4 @@ Access the `WebSocket` instance behind the nlon Peer with `nlonPeer.socket`.
 
 ## License
 
-This package is under the [MIT License](LICENSE).
+This package is under the [MIT License](../../LICENSE).

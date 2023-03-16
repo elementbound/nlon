@@ -38,3 +38,6 @@ collections:
   50examples:
     output: true
     permalink: /examples/:path/
+  60license:
+    output: true
+    permalink: /LICENSE

@@ -61,4 +61,4 @@ async function getGreeting () {
 
 ## License
 
-This package is under the [MIT License](LICENSE).
+This package is under the [MIT License](../../LICENSE).

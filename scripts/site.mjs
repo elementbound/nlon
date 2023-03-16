@@ -12,7 +12,8 @@ const Collections = {
   Reference: '_20reference',
   Spec: '_30spec',
   Tutorial: '_40tutorial',
-  Examples: '_50examples'
+  Examples: '_50examples',
+  License: '_60license'
 }
 
 function listPackages (root, prefix = 'packages') {
@@ -167,6 +168,19 @@ async function main () {
   await save(
     path.join(out, 'index.md'),
     await processReadme(path.join(root, 'README.md'), undefined, 'Home')
+  )
+
+  console.log('Copying LICENSE')
+  const license = await fs.readFile(path.join(root, 'LICENSE'))
+  await save(
+    path.join(out, Collections.License, 'LICENSE.md'),
+    [
+      '---',
+      'title: 🪪 License',
+      'layout: home',
+      '---',
+      license
+    ].join('\n')
   )
 
   for (const pkg of packages) {
