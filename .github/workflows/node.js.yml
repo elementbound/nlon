@@ -18,6 +18,19 @@ jobs:
       uses: ./.github/actions/setup.node
     - name: Lint
       run: pnpm -r lint
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup
+      uses: ./.github/actions/setup.node
+    - name: Generate site
+      run: node scripts/site.mjs
+    - name: Build with Jekyll
+      uses: actions/jekyll-build-pages@v1
+      with:
+        source: _site
+        destination: .ghpages
   test:
     runs-on: ubuntu-latest
     needs: lint

@@ -155,7 +155,6 @@ async function main () {
 
   console.log('Copying site base');
   (await recurse(siteroot, d => !path.basename(d).startsWith('.')))
-    // .map(d => d.name)
     .map(f => path.relative(siteroot, f))
     .forEach(f => {
       const from = path.join(siteroot, f)

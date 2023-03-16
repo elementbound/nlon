@@ -2,7 +2,7 @@ name: Generate API docs with JSDoc
 
 on:
   push:
-    branches: ["main", "chore/jekyll-site"]
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -21,9 +21,7 @@ jobs:
     - name: Setup
       uses: ./.github/actions/setup.node
     - name: Generate site
-      shell: bash
-      run: |
-        node scripts/site.mjs
+      run: node scripts/site.mjs
     - name: Build with Jekyll
       uses: actions/jekyll-build-pages@v1
       with:
