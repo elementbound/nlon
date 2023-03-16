@@ -20,16 +20,21 @@ plugins:
 
 syntax_highlighter_style: colorful
 
+# Each collection is prefixed with a number
+# This is to ensure ordering on the menu bar
 collections:
-  packages:
+  10packages:
     output: true
     permalink: /:collection/:path/
-  reference:
+  20reference:
     output: true
     permalink: /:collection/:path/
-  spec:
+  30spec:
     output: true
     permalink: /doc/:collection/:path.md
-  tutorial:
+  40tutorial:
     output: true
     permalink: /doc/:collection/:path.md
+  50examples:
+    output: true
+    permalink: /:collection/

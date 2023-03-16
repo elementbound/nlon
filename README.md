@@ -51,7 +51,7 @@ See the [reference implementation](packages/nlon).
   - [Implementing a server](doc/tutorial/server.md)
   - [Implementing a peer](doc/tutorial/peer.md)
 - Examples
-  - [WebSocket example](examples/websocket-chat)
+  - [WebSocket example](examples/websocket-chat/)
 
 ## License
 

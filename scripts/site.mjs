@@ -7,6 +7,14 @@ import { markdoc } from './markdoc/index.mjs'
 
 const exec = util.promisify(child_process.exec)
 
+const Collections = {
+  Package: '_10packages',
+  Reference: '_20reference',
+  Spec: '_30spec',
+  Tutorial: '_40tutorial',
+  Examples: '_50examples'
+}
+
 function listPackages (root, prefix = 'packages') {
   return fs.readdir(path.join(root, prefix), {
     withFileTypes: true
@@ -77,12 +85,13 @@ async function jsondoc (root, directory) {
   return execResult.stdout
 }
 
-async function processReadme (p, type = '') {
+async function processReadme (p, type, title) {
   const regex = /#\s*(.+)/
   const text = (await fs.readFile(p)).toString('utf-8')
 
   // Retrieve page title based on regex
-  const title = regex.exec(text)[1]
+  title ??= regex.exec(text)[1]
+  type ??= ''
 
   // Remove line with title
   const lines = text.split('\n')
@@ -136,7 +145,7 @@ async function main () {
   const packages = await listPackages(root, 'packages')
   const examples = await listPackages(root, 'examples')
 
-  console.log({
+  console.log('Found paths', {
     root, packages, examples
   })
 
@@ -157,13 +166,13 @@ async function main () {
   console.log('Copying main README')
   await save(
     path.join(out, 'index.md'),
-    await processReadme(path.join(root, 'README.md'))
+    await processReadme(path.join(root, 'README.md'), undefined, 'Home')
   )
 
   for (const pkg of packages) {
     console.log('Processing README for package', pkg)
     await save (
-      path.join(out, '_packages', `${pkg}.md`),
+      path.join(out, Collections.Package, `${pkg}.md`),
       await processReadme(path.join(root, 'packages', pkg, 'README.md'), '📦 ')
     )
 
@@ -171,8 +180,16 @@ async function main () {
     const docjson = await jsondoc(root, path.join(root, 'packages', pkg))
     const doc = markdoc(docjson)
     await save(
-      path.join(out, '_reference', `${pkg}.md`),
-      processApiDoc(doc, `📖 ${pkg}`)
+      path.join(out, Collections.Reference, `${pkg}.md`),
+      processApiDoc(doc, `🔍 ${pkg}`)
+    )
+  }
+
+  for (const example of examples) {
+    console.log('Processing README for example', example)
+    await save (
+      path.join(out, Collections.Examples, `${example}.md`),
+      await processReadme(path.join(root, 'examples', example, 'README.md'), '💡 ')
     )
   }
 
@@ -188,11 +205,17 @@ async function main () {
     }
     const defaultType = '📎 '
 
+    const docCollections = {
+      spec: Collections.Spec,
+      tutorial: Collections.Tutorial
+    }
+    const defaultCollection = Collections.Tutorial
+
     const collection = path.basename(path.dirname(doc))
     console.log('Processing doc', doc, 'under collection', collection)
     const name = path.basename(doc)
     await save(
-      path.join(out, '_' + collection, name),
+      path.join(out, docCollections[collection] ?? defaultCollection, name),
       await processReadme(doc, types[collection] ?? defaultType)
     )
   }
