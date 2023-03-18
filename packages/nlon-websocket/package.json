@@ -1,6 +1,6 @@
 {
   "name": "@elementbound/nlon-websocket",
-  "version": "0.10.5",
+  "version": "1.0.0",
   "description": "WebSocket adapter for nlon",
   "main": "index.mjs",
   "scripts": {
@@ -18,13 +18,13 @@
   ],
   "author": "Tamas Galffy",
   "license": "MIT",
-  "homepage": "https://github.com/elementbound/nlon/packages/nlon-websocket/#readme",
+  "homepage": "https://elementbound.github.io/nlon/",
   "bugs": {
     "url": "https://github.com/elementbound/nlon/issues"
   },
   "repository": "github:elementbound/nlon",
   "dependencies": {
-    "@elementbound/nlon": "workspace:^0.10.5",
+    "@elementbound/nlon": "workspace:^1.0.0",
     "isomorphic-ws": "^5.0.0",
     "ws": "^8.12.1"
   },

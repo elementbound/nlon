@@ -1,6 +1,6 @@
 {
   "name": "@elementbound/nlon-socket",
-  "version": "0.10.5",
+  "version": "1.0.0",
   "description": "Socket adapter for nlon",
   "main": "index.js",
   "scripts": {
@@ -18,13 +18,13 @@
   ],
   "author": "Tamas Galffy",
   "license": "MIT",
-  "homepage": "https://github.com/elementbound/nlon/packages/nlon-socket#readme",
+  "homepage": "https://elementbound.github.io/nlon/",
   "bugs": {
     "url": "https://github.com/elementbound/nlon/issues"
   },
   "repository": "github:elementbound/nlon",
   "dependencies": {
-    "@elementbound/nlon": "workspace:^0.10.5"
+    "@elementbound/nlon": "workspace:^1.0.0"
   },
   "devDependencies": {
     "clean-jsdoc-theme": "^4.2.2",

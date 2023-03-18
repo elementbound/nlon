@@ -11,7 +11,7 @@
   "scripts": {
     "doc": "jsdoc -c .jsdoc.js -R README.md -u doc/ -d jsdoc ."
   },
-  "homepage": "https://github.com/elementbound/nlon#readme",
+  "homepage": "https://elementbound.github.io/nlon/",
   "bugs": {
     "url": "https://github.com/elementbound/nlon/issues"
   },
