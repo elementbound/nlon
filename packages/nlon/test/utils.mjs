@@ -1,5 +1,5 @@
 /**
-* Send NLON message to stream
+* Send nlon message to stream
 * @param {InspectableStream} stream Stream
 * @param {string|object} message Message
 * @private

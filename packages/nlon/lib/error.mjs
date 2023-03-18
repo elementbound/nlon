@@ -11,7 +11,7 @@ import assert from 'node:assert'
 * @summary Error representing an invalid message.
 *
 * @description Invalid messages are JSON strings that can be parsed as such,
-* but do not conform to NLON's protocol, for example missing header,
+* but do not conform to nlon's protocol, for example missing header,
 * correspondenceId or subject.
 */
 export class InvalidMessageError extends Error {

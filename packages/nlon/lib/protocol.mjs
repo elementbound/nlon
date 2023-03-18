@@ -115,7 +115,7 @@ export class MessageError {
 }
 
 /**
-* @summary Message class, holding all the data of a well-formed NLON message.
+* @summary Message class, holding all the data of a well-formed nlon message.
 *
 * @description Messages belong to *correspondences*, similar to how emails can
 * be organized into threads. Each correspondence begins with an initial message,
