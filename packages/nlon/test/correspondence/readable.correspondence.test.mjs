@@ -336,7 +336,7 @@ describe('ReadableCorrespondence', () => {
     const promise = generator.next()
 
     // Then
-    assert.rejects(promise)
+    assert.rejects(promise, 'Didn\'t reject!')
   })
   // }}}
 
