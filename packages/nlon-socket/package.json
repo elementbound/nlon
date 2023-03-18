@@ -1,6 +1,6 @@
 {
   "name": "@elementbound/nlon-socket",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "Socket adapter for nlon",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,7 @@
   },
   "repository": "github:elementbound/nlon",
   "dependencies": {
-    "@elementbound/nlon": "workspace:^0.10.4"
+    "@elementbound/nlon": "workspace:^0.10.5"
   },
   "devDependencies": {
     "clean-jsdoc-theme": "^4.2.2",

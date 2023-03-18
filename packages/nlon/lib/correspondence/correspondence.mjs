@@ -197,7 +197,7 @@ export class Correspondence extends events.EventEmitter {
   * @throws If any of the handlers throw
   */
   async * all (...handlers) {
-    while (this.readable) {
+    do {
       const data = await this.next(...handlers)
       if (data !== _CorrespondenceEnd) {
         yield Promise.resolve(data)
@@ -205,7 +205,7 @@ export class Correspondence extends events.EventEmitter {
       }
 
       break
-    }
+    } while (this.readable)
   }
 
   /**
