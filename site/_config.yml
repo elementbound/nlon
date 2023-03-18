@@ -9,7 +9,9 @@ twitter_username: elementbound
 github_username:  elementbound
 
 # Build settings
-markdown: CommonMarkGhPages
+# markdown: CommonMarkGhPages
+markdown: kramdown
+highlighter: rouge
 commonmark:
   options: ["SMART", "FOOTNOTES", "UNSAFE"]
   extensions: ["strikethrough", "autolink", "table", "tagfilter"]
@@ -18,7 +20,7 @@ plugins:
   - jekyll-remote-theme
   - jekyll-readme-index
 
-syntax_highlighter_style: colorful
+syntax_highlighter_style: github
 
 # Each collection is prefixed with a number
 # This is to ensure ordering on the menu bar
