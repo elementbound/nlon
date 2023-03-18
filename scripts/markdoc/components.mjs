@@ -17,13 +17,20 @@ export function createLinks (doclets) {
 }
 
 export function link (type) {
-  return links.has(type)
-    ? `<a href="${links.get(type)}">${type}</a>`
-    : undefined
+  const protocolRegex = /^\w+:\/\//
+  const escaped = escapeHTML(type)
+
+  if (links.has(type)) {
+    return `<a href="${links.get(type)}">${escaped}</a>`
+  } else if (protocolRegex.test(type)) {
+    return `<a href="${type}">${escaped}</a>`
+  }
+
+  return undefined
 }
 
 export function tryLink (type) {
-  return link(type) ?? type
+  return link(type) ?? escapeHTML(type)
 }
 
 export function getLinks () {
@@ -50,6 +57,16 @@ export function process (text) {
 
 export function processItem (text) {
   return process(tryLink(text))
+}
+
+export function escapeHTML (text) {
+  // Source: https://stackoverflow.com/a/6234804
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 /**

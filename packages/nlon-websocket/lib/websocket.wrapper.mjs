@@ -1,6 +1,12 @@
 import * as stream from 'node:stream'
 
 /**
+* Duplex stream.
+* @external "stream.Duplex"
+* @see {@link https://nodejs.org/api/stream.html#class-streamduplex}
+*/
+
+/**
 * @summary A Duplex stream implementation wrapping a WebSocket.
 *
 * @description This class can be used to treat a WebSocket as a regular stream.

@@ -84,7 +84,7 @@ Access the `WebSocket` instance behind the nlon Peer with `nlonPeer.socket`.
 
 ## Documentation
 
-- [API docs](https://elementbound.github.io/nlon/nlon-websocket/)
+- [API docs](https://elementbound.github.io/nlon/reference/nlon-websocket/)
   - Or generate your own with JSDoc: `pnpm doc`
 
 ## License

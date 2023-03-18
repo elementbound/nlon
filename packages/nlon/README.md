@@ -56,7 +56,7 @@ async function getGreeting () {
 
 ## Documentation
 
-- [API docs](https://elementbound.github.io/nlon/nlon/)
+- [API docs](https://elementbound.github.io/nlon/reference/nlon/)
   - Or generate your own with JSDoc: `pnpm doc`
 
 ## License
