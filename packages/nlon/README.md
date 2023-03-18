@@ -1,8 +1,6 @@
 # nlon
 
-This package is the reference implementation of the [nlon protocol].
-
-[nlon protocol]: https://github.com/elementbound/nlon
+This package is the reference implementation of the [nlon protocol](../../).
 
 ## Install
 
@@ -12,7 +10,7 @@ This package is the reference implementation of the [nlon protocol].
 
 ## Usage
 
-For a more detailed explanation, see the [documentation](#documentation)
+For a more detailed explanation, see the [nlon documentation](../../#documentation)
 
 ### Server
 
@@ -58,12 +56,9 @@ async function getGreeting () {
 
 ## Documentation
 
-- [API docs](https://elementbound.github.io/nlon/nlon/)
-  - Or generate your own with `pnpm doc`
-- Tutorials
-  - [Implementing a server](doc/tutorials/server.md)
-  - [Implementing a peer](doc/tutorials/peer.md)
+- [API docs](https://elementbound.github.io/nlon/reference/nlon/)
+  - Or generate your own with JSDoc: `pnpm doc`
 
 ## License
 
-This package is under the [MIT License](LICENSE).
+This package is under the [MIT License](../../LICENSE).

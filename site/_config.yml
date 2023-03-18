@@ -1,0 +1,48 @@
+title: nlon
+email: ezittgtx@gmail.com
+description: >- # this means to ignore newlines until "baseurl:"
+  nlon is a simple protocol specification and a lightweight reference
+  implementation to provide a convenient layer over arbitrary transports
+baseurl: "/nlon" # the subpath of your site, e.g. /blog
+url: "https://elementbound.github.io/nlon/" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: elementbound
+github_username:  elementbound
+
+# Build settings
+# markdown: CommonMarkGhPages
+markdown: kramdown
+highlighter: rouge
+commonmark:
+  options: ["SMART", "FOOTNOTES", "UNSAFE"]
+  extensions: ["strikethrough", "autolink", "table", "tagfilter"]
+remote_theme: sighingnow/jekyll-gitbook
+plugins:
+  - jekyll-remote-theme
+  - jekyll-readme-index
+
+syntax_highlighter_style: github
+
+# Each collection is prefixed with a number
+# This is to ensure ordering on the menu bar
+collections:
+  10packages:
+    output: true
+    permalink: /packages/:path/
+  20reference:
+    output: true
+    permalink: /reference/:path/
+  30spec:
+    output: true
+    permalink: /doc/spec/:path.md
+  40tutorial:
+    output: true
+    permalink: /doc/tutorial/:path.md
+  50examples:
+    output: true
+    permalink: /examples/:path/
+  60license:
+    output: true
+    permalink: /LICENSE
+  99about:
+    output: true
+    permalink: /about/

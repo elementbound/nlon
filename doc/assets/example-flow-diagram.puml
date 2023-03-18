@@ -1,6 +1,6 @@
 @startuml
 
-title NLON Example sequence
+title nlon Example sequence
 actor Actor 
 
 Actor -> Client ++ : List lobbies

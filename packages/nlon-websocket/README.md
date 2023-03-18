@@ -1,6 +1,6 @@
 # nlon-websocket
 
-WebSocket adapter for [nlon](https://github.com/elementbound/nlon).
+WebSocket adapter for [nlon](../../).
 
 Since nlon by itself is not concerned by the actual method of data transfer,
 adapters can be used to apply the protocol over various media.
@@ -84,9 +84,9 @@ Access the `WebSocket` instance behind the nlon Peer with `nlonPeer.socket`.
 
 ## Documentation
 
-- [API docs](https://elementbound.github.io/nlon/nlon-websocket/)
-  - Or generate your own with `pnpm doc`
+- [API docs](https://elementbound.github.io/nlon/reference/nlon-websocket/)
+  - Or generate your own with JSDoc: `pnpm doc`
 
 ## License
 
-This package is under the [MIT License](LICENSE).
+This package is under the [MIT License](../../LICENSE).

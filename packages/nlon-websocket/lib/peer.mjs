@@ -3,6 +3,24 @@ import * as nlon from '@elementbound/nlon'
 import { WebSocketStream } from './websocket.wrapper.mjs'
 
 /**
+* An nlon Peer.
+* @external "nlon.Peer"
+* @see {@link http://elementbound.github.io/nlon/reference/nlon/#class-Peer}
+*/
+
+/**
+* Options for an nlon Peer.
+* @external "nlon.PeerOptions"
+* @see {@link
+* http://elementbound.github.io/nlon/reference/nlon/#typedef-PeerOptions}
+*/
+
+/**
+* @external "ws.WebSocket"
+* @see {@link https://github.com/websockets/ws/blob/master/doc/ws.md#class-websocket}
+*/
+
+/**
 * @summary A WebSocket-specific extension of {@link nlon.Peer}
 *
 * @description This class is an nlon Peer that wraps and manages a

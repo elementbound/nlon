@@ -1,9 +1,7 @@
-# nlon
-
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/elementbound/nlon/node.js.yml?style=flat-square)
-[![Site](https://img.shields.io/badge/Site-elementbound.github.io%2Fnlon%2F-informational?style=flat-square)](https://elementbound.github.io/nlon/)
-
-*Pronounced neigh-lon.*
+---
+layout: home
+title: nlon
+---
 
 A bidirectional communication protocol that can be used over raw sockets,
 WebSockets or any other method of transmission.
@@ -31,8 +29,8 @@ implementation in JavaScript.
 
 ### Adapters
 
-- [nlon-socket](packages/nlon-socket/) for TCP sockets
-- [nlon-websocket](packages/nlon-websocket/) for the browser
+- [nlon-socket](packages/nlon-socket) for TCP sockets
+- [nlon-websocket](packages/nlon-websocket) for the browser
 
 ## Install
 
@@ -42,19 +40,16 @@ implementation in JavaScript.
 
 ## Usage
 
-See the [reference implementation](packages/nlon/).
+See the [reference implementation](packages/nlon).
 
 ## Documentation
 
-- [Protocol specification](doc/spec/protocol.md)
-- [Example flow](doc/spec/example-flow.md)
+- [Protocol specification](doc/protocol.md)
+- [Example flow](doc/example-flow.md)
 - [API docs](https://elementbound.github.io/nlon/)
-  - Or generate your own with JSDoc: `pnpm -r doc`
-- Tutorials
-  - [Implementing a server](doc/tutorial/server.md)
-  - [Implementing a peer](doc/tutorial/peer.md)
+  - Or generate your own by running `pnpm -r doc`
 - Examples
-  - [WebSocket example](examples/websocket-chat/)
+  - [WebSocket example](examples/websocket-chat)
 
 ## License
 

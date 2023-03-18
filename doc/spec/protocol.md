@@ -1,4 +1,4 @@
-# NLON protocol
+# nlon protocol
 
 Protocol version 1.0.0
 
@@ -9,7 +9,7 @@ NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and
 
 ## Peers
 
-NLON is a bidirectional communication protocol. Each participant has an equal
+nlon is a bidirectional communication protocol. Each participant has an equal
 set of tools to communicate, in contrast to server-client setups for example,
 where the client requests data and the server responds with it.
 
@@ -17,7 +17,7 @@ Participants from here on will be referred to as *Peers*.
 
 > Note: Implementations MAY use other names for specialized concepts, for
 > example a class only responding to incoming data MAY be called `Server`, even
-> though in NLON terms it's still a Peer, albeit with limited functionality.
+> though in nlon terms it's still a Peer, albeit with limited functionality.
 
 ## Stream
 
@@ -247,7 +247,7 @@ For the initial version of the protocol, no versioning mechanism is planned. If
 / when the protocol gets a new release, a versioning mechanism will be
 introduced.
 
-The rationale being that NLON is expected to be used on smaller scales ( at
+The rationale being that nlon is expected to be used on smaller scales ( at
 least initially ), where the used protocol version is well controlled and peers
 implementing different protocol versions don't need to interact.
 

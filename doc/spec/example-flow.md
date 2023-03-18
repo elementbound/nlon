@@ -1,6 +1,6 @@
 # An example flow
 
-To illustrate the NLON protocol, let us take an example of traffic between two
+To illustrate the nlon protocol, let us take an example of traffic between two
 peers. For the sake of this example, consider one of the peers being a server
 managing chat lobbies, and the other peer being a client that wants to join a
 lobby.
@@ -21,7 +21,7 @@ participant of the lobby of its choice.
 ## Connection
 
 To initiate any kind of traffic, a connection must be established between the
-two peers. NLON itself is not tied to any transport protocol, so technically
+two peers. nlon itself is not tied to any transport protocol, so technically
 this could be any kind of connection, as long as there's an implementation for
 it.
 
@@ -45,7 +45,7 @@ To login, the client peer sends the first message:
 ```
 
 This is a JSON object, terminated by a newline. The last newline is very
-important, as that's what marks the end of each message, making NLON fit for
+important, as that's what marks the end of each message, making nlon fit for
 stream-type transports.
 
 For the sake of readability, from here on each message will be formatted as JSON
@@ -152,7 +152,7 @@ correspondence.
 
 ## Listing lobbies
 
-### Request
+### List request
 
 Armed with its session token, the client sends a request to the server to list
 all the available lobbies:
@@ -186,7 +186,7 @@ message in the correspondence - its *type* is `fin`. This is perfectly valid, it
 only means that the initiating peer is not planning to send any more data.
 However, it will accept any data it receives in response.
 
-### Response
+### List response
 
 Upon receiving the request, the server validates the authorization header and
 gathers the list of lobbies visible to the client.
@@ -266,7 +266,7 @@ be freed.
 
 ## Joining a lobby
 
-### Request
+### Join request
 
 Now with a list of lobbies, the client decides to join the Tavern. To this end,
 it sends the following message, initiating a new correspondence:

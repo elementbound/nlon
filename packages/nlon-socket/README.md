@@ -1,6 +1,6 @@
 # nlon-socket
 
-Socket adapter for [nlon](https://github.com/elementbound/nlon).
+Socket adapter for [nlon](../../).
 
 Since nlon by itself is not concerned by the actual method of data transfer,
 adapters can be used to apply the protocol over various media.
@@ -63,9 +63,9 @@ nlonPeer.socket
 
 ## Documentation
 
-- [API docs](https://elementbound.github.io/nlon/nlon-socket/)
-  - Or generate your own with `pnpm doc`
+- [API docs](https://elementbound.github.io/nlon/reference/nlon-socket/)
+  - Or generate your own with JSDoc: `pnpm doc`
 
 ## License
 
-This package is under the [MIT License](LICENSE).
+This package is under the [MIT License](../../LICENSE).
