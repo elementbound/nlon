@@ -1,6 +1,6 @@
 {
   "name": "@elementbound/nlon-websocket-example",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An example app using nlon over WebSockets",
   "private": "true",
   "main": "src/host.mjs",
@@ -17,8 +17,8 @@
   "author": "Tamas Galffy",
   "license": "MIT",
   "dependencies": {
-    "@elementbound/nlon": "workspace:^1.0.0",
-    "@elementbound/nlon-websocket": "workspace:^1.0.0",
+    "@elementbound/nlon": "workspace:^1.0.1",
+    "@elementbound/nlon-websocket": "workspace:^1.0.1",
     "express": "^4.18.2",
     "pino": "^8.8.0"
   },
