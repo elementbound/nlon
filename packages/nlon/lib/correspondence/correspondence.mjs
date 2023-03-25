@@ -149,7 +149,10 @@ export class Correspondence extends events.EventEmitter {
   *
   * Additional validations and other operations to apply on the incoming data
   * can be specified in the form of {@link ReadHandler|ReadHandlers}. Every
-  * handler will be called in order.
+  * handler will be called in order. Note that even if the Correspondence is
+  * finished, the handlers will be invoked - so if you're expecting a message
+  * body, make sure to either include an initial handler validating that, or
+  * explicitly check for a message body in your handlers that require it.
   *
   * > While consuming messages this way, the Correspondence won't emit events.
   *
@@ -163,17 +166,9 @@ export class Correspondence extends events.EventEmitter {
   async next (...handlers) {
     this.#ensureReadable()
     const data = await this.#nextChunk()
+    await this.#applyReadHandlers(data)
 
-    if (data === _CorrespondenceEnd) {
-      return data
-    } else {
-      this.#context = {}
-      for (const handler of handlers) {
-        await handler(data, this.#header, this.#context)
-      }
-
-      return data
-    }
+    return data
   }
 
   /**
@@ -187,6 +182,9 @@ export class Correspondence extends events.EventEmitter {
   * can be specified in the form of {@link ReadHandler|ReadHandlers}. Every
   * handler will be called in order.
   *
+  * Note that the read handlers will *not* be called for the finish message if
+  * it has no body. This differs from `.next()`.
+  *
   * > While consuming messages this way, the Correspondence won't emit events.
   *
   * @param {...ReadHandler} handlers Read handlers
@@ -197,15 +195,19 @@ export class Correspondence extends events.EventEmitter {
   * @throws If any of the handlers throw
   */
   async * all (...handlers) {
-    do {
-      const data = await this.next(...handlers)
+    this.#ensureReadable()
+
+    while (this.readable) {
+      const data = await this.#nextChunk()
+
       if (data !== _CorrespondenceEnd) {
+        this.#applyReadHandlers(data, handlers)
         yield Promise.resolve(data)
         continue
       }
 
       break
-    } while (this.readable)
+    }
   }
 
   /**
@@ -364,6 +366,17 @@ export class Correspondence extends events.EventEmitter {
       Object.entries(handlers).forEach(([name, handler]) =>
         this.#internal.off(name, handler))
     })
+  }
+
+  /**
+  * @param {any|Symbol} chunk
+  * @param {ReadHandler[]} handlers
+  */
+  async #applyReadHandlers (chunk, handlers) {
+    this.#context = {}
+    for (const handler of handlers) {
+      await handler(chunk, this.#header, this.#context)
+    }
   }
 
   #write (message) {
