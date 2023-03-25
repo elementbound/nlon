@@ -166,7 +166,7 @@ export class Correspondence extends events.EventEmitter {
   async next (...handlers) {
     this.#ensureReadable()
     const data = await this.#nextChunk()
-    await this.#applyReadHandlers(data)
+    await this.#applyReadHandlers(data, handlers)
 
     return data
   }
@@ -201,7 +201,7 @@ export class Correspondence extends events.EventEmitter {
       const data = await this.#nextChunk()
 
       if (data !== _CorrespondenceEnd) {
-        this.#applyReadHandlers(data, handlers)
+        await this.#applyReadHandlers(data, handlers)
         yield Promise.resolve(data)
         continue
       }

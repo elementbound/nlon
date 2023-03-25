@@ -189,6 +189,33 @@ describe('ReadableCorrespondence', () => {
     })
   })
 
+  it('should call handlers on finishing', async () => {
+    // Given
+    const message = new Message({
+      header,
+      type: MessageTypes.Finish
+    })
+
+    const handlers = [
+      mock.fn(),
+      mock.fn(),
+      mock.fn()
+    ]
+
+    const expectedArguments = [ReadableCorrespondence.End, header, {}]
+
+    // When
+    const promise = correspondence.next(...handlers)
+    correspondence.handle(message)
+    await promise
+
+    // Then
+    handlers.forEach(handler => {
+      assert.equal(handler.mock.callCount(), 1)
+      assert.deepStrictEqual(handler.mock.calls[0].arguments, expectedArguments)
+    })
+  })
+
   it('should throw on next if handler throws', async () => {
     // Given
     const message = new Message({
