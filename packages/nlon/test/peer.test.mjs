@@ -72,6 +72,19 @@ describe('Peer', () => {
       assert(!corr.writable)
     })
 
+    it('should throw on unknown type', () => {
+      // Given
+      const message = new Message({
+        header: new MessageHeader({ subject: 'test' }),
+        type: '@@$invalid@@$'
+      })
+
+      // When + Then
+      assert.throws(
+        () => peer.send(message)
+      )
+    })
+
     it('should call correspondence', () => {
       // Given
       const message = new Message({
