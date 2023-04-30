@@ -35,6 +35,43 @@ describe('Peer', () => {
         'Message not written to stream!')
     })
 
+    it('should finish', () => {
+      // Given
+      const expected = new Message({
+        header: new MessageHeader({ subject: 'test' }),
+        type: MessageTypes.Finish,
+        body: 'Bye!'
+      })
+
+      // When
+      const corr = peer.send(expected)
+      const actual = stream.fromJSON()
+
+      // Then
+      assert.deepStrictEqual(objectify(actual), objectify(expected))
+      assert(!corr.writable)
+    })
+
+    it('should error', () => {
+      // Given
+      const expected = new Message({
+        header: new MessageHeader({ subject: 'test' }),
+        type: MessageTypes.Error,
+        error: {
+          type: 'Test',
+          message: 'Test error!'
+        }
+      })
+
+      // When
+      const corr = peer.send(expected)
+      const actual = stream.fromJSON()
+
+      // Then
+      assert.deepStrictEqual(objectify(actual), objectify(expected))
+      assert(!corr.writable)
+    })
+
     it('should call correspondence', () => {
       // Given
       const message = new Message({
