@@ -66,6 +66,34 @@ console.log(response) // 'Hello world!'
 The above only waits for the first piece of data. This is good for cases where
 it's known in advance that only a single piece of data will arrive / is needed.
 
+### Initiating without message
+
+If you want to have more control over what messages are sent and when, you can
+also initiate a correspondence *without* sending any data right away, using the
+`.correspond` method.
+
+Contrary to the `.send` method, it only takes the message *header* and returns
+a Correspondence, allowing you to use it however you need. Among others, this
+could be useful when looping over pieces of data to send:
+
+```js
+const primes = [1, 2, 3, 5, 7, 11]
+const corr = peer.correspond({ subject: 'test/primes' })
+primes.forEach(p => corr.write(p))
+corr.finish()
+```
+
+With `.send`, we would either have to treat the first item as a separate branch
+( i.e. create correspondence ), or send an empty starter message before
+looping.
+
+While less exciting, the above example can be rewritten with `.correspond` as such:
+
+```js
+const corr = nlonPeer.correspond({ subject: 'echo' })
+corr.finish('Hello world!')
+```
+
 ### Streaming responses
 
 In case the response is expected to arrive in multiple pieces, for example

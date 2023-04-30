@@ -78,6 +78,20 @@ export class MessageHeader {
     options && Object.assign(this, options)
     this.correspondenceId ??= nanoid()
   }
+
+  /**
+  * Validate a message header.
+  *
+  * @param {MessageHeader} header Header to validate
+  * @throws On invalid headers
+  */
+  static validate (header) {
+    // TODO: UT
+    assert(header, 'Missing header!')
+    assert(header?.correspondenceId?.length > 0,
+      'Missing correspondence id!')
+    assert(header?.subject?.length > 0, 'Missing subject!')
+  }
 }
 
 /**
@@ -178,10 +192,7 @@ export class Message {
   * @throws On invalid messages
   */
   static validate (message) {
-    assert(message?.header, 'Missing header!')
-    assert(message?.header?.correspondenceId?.length > 0,
-      'Missing correspondence id!')
-    assert(message?.header?.subject?.length > 0, 'Missing subject!')
+    MessageHeader.validate(message?.header)
     assert(message?.type, 'Missing message type!')
     assert(Object.values(MessageTypes).includes(message?.type),
       `Unknown message type: ${message?.type}`)

@@ -2,7 +2,7 @@ import events from 'node:events'
 import ndjson from 'ndjson'
 import pino from 'pino'
 import { nanoid } from 'nanoid'
-import { Message, MessageTypes } from './protocol.mjs'
+import { Message, MessageHeader, MessageTypes } from './protocol.mjs'
 import { PeerDisconnectedError, InvalidMessageError, StreamingError } from './error.mjs'
 import { Correspondence } from './correspondence/correspondence.mjs'
 
@@ -153,6 +153,43 @@ export class Peer extends events.EventEmitter {
     this.#correspondences.set(message.header.correspondenceId, result)
 
     return result
+  }
+
+  /**
+  * @summary Initiate a new correspondence, ready to send data.
+  *
+  * @description A new Correspondence instance will be created, but no message
+  * will be sent over it. However, the header itself will be validated, to make
+  * sure that the Correspondence can actually be used to send messages.
+  *
+  * This is the preferred method to start new correspondences.
+  *
+  * The header gets a generated correspondenceId if not set, so you can do the
+  * following and get a valid correspondence:
+  *
+  * ```js
+  * peer.correspond({ subject: 'test' })
+  * ```
+  *
+  * **NOTE:** No message will be sent, you'll need to call the Correspondence's
+  * methods ( e.g. write ) to actually send any data.
+  *
+  * @param {MessageHeader} header Header used for the correspondence
+  * @returns {Correspondence} Correspondence
+  * @throws {PeerDisconnectedError} If disconnected
+  * @throws On invalid header
+  * @since 1.2.0
+  */
+  correspond (header) {
+    this.#requireConnected('Can\'t correspond on already disconnected peer!')
+    header = new MessageHeader(header)
+    MessageHeader.validate(header)
+
+    const stream = this.#stream
+    const correspondence = new Correspondence({ header, stream })
+    this.#correspondences.set(correspondence.header.correspondenceId, correspondence)
+
+    return correspondence
   }
 
   /**
