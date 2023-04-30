@@ -9,7 +9,8 @@
   "author": "Tamas Galffy",
   "license": "MIT",
   "scripts": {
-    "doc": "jsdoc -c .jsdoc.js -R README.md -u doc/ -d jsdoc ."
+    "doc": "jsdoc -c .jsdoc.js -R README.md -u doc/ -d jsdoc .",
+    "site": "node scripts/site.mjs"
   },
   "homepage": "https://elementbound.github.io/nlon/",
   "bugs": {
