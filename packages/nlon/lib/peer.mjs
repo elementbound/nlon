@@ -1,4 +1,5 @@
 import events from 'node:events'
+import assert from 'node:assert'
 import ndjson from 'ndjson'
 import pino from 'pino'
 import { nanoid } from 'nanoid'
@@ -144,15 +145,20 @@ export class Peer extends events.EventEmitter {
     message.type ??= MessageTypes.Data
     Message.validate(message)
 
-    this.#logger.debug({ message }, 'Sending message')
+    this.#logger.trace({ message }, 'Initiating correspondence with message')
 
-    const stream = this.#stream
-    stream.write(JSON.stringify(message) + '\n', 'utf-8')
+    const corr = this.correspond(message.header)
+    if (message.type === MessageTypes.Data) {
+      corr.write(message.body)
+    } else if (message.type === MessageTypes.Finish) {
+      corr.finish(message.body)
+    } else if (message.type === MessageTypes.Error) {
+      corr.error(message.error)
+    } else {
+      assert.fail('Unknown message type: ' + message.type)
+    }
 
-    const result = new Correspondence({ header: message.header, stream })
-    this.#correspondences.set(message.header.correspondenceId, result)
-
-    return result
+    return corr
   }
 
   /**
