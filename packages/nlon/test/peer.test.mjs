@@ -12,160 +12,220 @@ describe('Peer', () => {
   /** @type {Peer} */
   let peer
 
-  beforeEach(() => {
+  function setup () {
     stream = new InspectableStream({ emitOnInject: true })
     peer = new Peer(stream)
-  })
+  }
 
-  it('should write on send', () => {
-    // Given
-    const expected = new Message({
-      header: new MessageHeader({ subject: 'test' })
+  describe('send', () => {
+    beforeEach(setup)
+
+    it('should write', () => {
+      // Given
+      const expected = new Message({
+        header: new MessageHeader({ subject: 'test' })
+      })
+
+      // When
+      peer.send(expected)
+      const actual = stream.fromJSON()
+
+      // Then
+      assert.deepStrictEqual(objectify(actual), objectify(expected),
+        'Message not written to stream!')
     })
 
-    // When
-    peer.send(expected)
-    const actual = stream.fromJSON()
+    it('should call correspondence', () => {
+      // Given
+      const message = new Message({
+        header: new MessageHeader({ subject: 'test' }),
+        type: MessageTypes.Data,
+        body: 'ping'
+      })
 
-    // Then
-    assert.deepStrictEqual(objectify(actual), objectify(expected),
-      'Message not written to stream!')
-  })
+      const reply = new Message({
+        header: new MessageHeader({
+          subject: 'test',
+          correspondenceId: message.header.correspondenceId
+        }),
 
-  it('should call correspondence after send', () => {
-    // Given
-    const message = new Message({
-      header: new MessageHeader({ subject: 'test' }),
-      type: MessageTypes.Data,
-      body: 'ping'
+        type: MessageTypes.Finish,
+        body: 'pong'
+      })
+
+      const correspondence = peer.send(message)
+      correspondence.handle = mock.fn()
+
+      // When
+      send(stream, reply)
+
+      // Then
+      const handleCalls = correspondence.handle.mock.calls
+      assert.equal(handleCalls.length, 1, 'Correspondence wasn\'t called!')
+      assert.deepStrictEqual(
+        objectify(handleCalls[0].arguments), objectify([reply]),
+        'Correspondence called with wrong data!')
     })
 
-    const reply = new Message({
-      header: new MessageHeader({
+    it('should throw after disconnect', () => {
+      // Given
+      const message = new Message({
+        header: new MessageHeader({ subject: 'test' }),
+        type: MessageTypes.Data
+      })
+      peer.disconnect()
+
+      // When + then
+      assert.throws(() => peer.send(message))
+    })
+  })
+
+  describe('correspond', () => {
+    beforeEach(setup)
+
+    it('should create new correspondence', () => {
+      // Given
+      const header = new MessageHeader({
+        correspondenceId: 'test001',
         subject: 'test',
-        correspondenceId: message.header.correspondenceId
-      }),
+        authorization: 'supersecret',
+        customHeader: 'foo'
+      })
 
-      type: MessageTypes.Finish,
-      body: 'pong'
+      // When
+      const correspondence = peer.correspond(header)
+
+      // Then
+      assert(correspondence)
+      assert.deepEqual(correspondence.header, header)
     })
 
-    const correspondence = peer.send(message)
-    correspondence.handle = mock.fn()
+    it('should throw on invalid header', () => {
+      // Given
+      const header = {}
 
-    // When
-    send(stream, reply)
-
-    // Then
-    const handleCalls = correspondence.handle.mock.calls
-    assert.equal(handleCalls.length, 1, 'Correspondence wasn\'t called!')
-    assert.deepStrictEqual(
-      objectify(handleCalls[0].arguments), objectify([reply]),
-      'Correspondence called with wrong data!')
-  })
-
-  it('should throw on send after disconnect', () => {
-    // Given
-    const message = new Message({
-      header: new MessageHeader({ subject: 'test' }),
-      type: MessageTypes.Data
-    })
-    peer.disconnect()
-
-    // When + then
-    assert.throws(() => peer.send(message))
-  })
-
-  it('should receive new', async () => {
-    // Given
-    const expected = new Message({
-      header: new MessageHeader({ subject: 'test' }),
-      type: MessageTypes.Data,
-      body: 'ping'
+      // When + Then
+      assert.throws(
+        () => peer.correspond(header)
+      )
     })
 
-    const promise = peer.receive()
+    it('should throw after disconnect', () => {
+      // Given
+      const header = new MessageHeader({
+        correspondenceId: 'test001',
+        subject: 'test',
+        authorization: 'supersecret',
+        customHeader: 'foo'
+      })
 
-    // When
-    send(stream, expected)
+      peer.disconnect()
 
-    // Then
-    const actual = await promise
-    assert.deepStrictEqual(objectify(actual.header), objectify(expected.header),
-      'Wrong message received!')
+      // When + Then
+      assert.throws(
+        () => peer.correspond(header)
+      )
+    })
   })
 
-  it('should throw on receive after disconnect', () => {
-    // Given
-    peer.disconnect()
+  describe('receive', () => {
+    beforeEach(setup)
 
-    // When + then
-    assert.throws(() => peer.receive())
-  })
+    it('should receive new', async () => {
+      // Given
+      const expected = new Message({
+        header: new MessageHeader({ subject: 'test' }),
+        type: MessageTypes.Data,
+        body: 'ping'
+      })
 
-  it('should emit on unknown correspondence', () => {
-    // Given
-    const message = new Message({
-      header: new MessageHeader({ subject: 'test' }),
-      type: MessageTypes.Data,
-      body: 'ping'
+      const promise = peer.receive()
+
+      // When
+      send(stream, expected)
+
+      // Then
+      const actual = await promise
+      assert.deepStrictEqual(objectify(actual.header), objectify(expected.header),
+        'Wrong message received!')
     })
 
-    const handler = mock.fn()
-    peer.on('correspondence', handler)
+    it('should throw after disconnect', () => {
+      // Given
+      peer.disconnect()
 
-    // When
-    send(stream, message)
-
-    // Then
-    assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
+      // When + then
+      assert.throws(() => peer.receive())
+    })
   })
 
-  it('should emit error on stream error', () => {
-    // Given
-    const handler = mock.fn()
-    peer.on('error', handler)
+  describe('events', () => {
+    beforeEach(setup)
 
-    // When
-    stream.emit('error', new Error('Stream error'))
+    it('should emit on unknown correspondence', () => {
+      // Given
+      const message = new Message({
+        header: new MessageHeader({ subject: 'test' }),
+        type: MessageTypes.Data,
+        body: 'ping'
+      })
 
-    // Then
-    assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
-  })
+      const handler = mock.fn()
+      peer.on('correspondence', handler)
 
-  it('should emit error on invalid message', () => {
-    // Given
-    const handler = mock.fn()
-    peer.on('error', handler)
+      // When
+      send(stream, message)
 
-    // When
-    send(stream, {})
+      // Then
+      assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
+    })
 
-    // Then
-    assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
-  })
+    it('should emit error on stream error', () => {
+      // Given
+      const handler = mock.fn()
+      peer.on('error', handler)
 
-  it('should emit disconnect on stream close', () => {
-    // Given
-    const handler = mock.fn()
-    peer.on('disconnect', handler)
+      // When
+      stream.emit('error', new Error('Stream error'))
 
-    // When
-    stream.emit('close')
+      // Then
+      assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
+    })
 
-    // Then
-    assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
-  })
+    it('should emit error on invalid message', () => {
+      // Given
+      const handler = mock.fn()
+      peer.on('error', handler)
 
-  it('should emit disconnect', () => {
-    // Given
-    const handler = mock.fn()
-    peer.on('disconnect', handler)
+      // When
+      send(stream, {})
 
-    // When
-    peer.disconnect()
+      // Then
+      assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
+    })
 
-    // Then
-    assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
+    it('should emit disconnect on stream close', () => {
+      // Given
+      const handler = mock.fn()
+      peer.on('disconnect', handler)
+
+      // When
+      stream.emit('close')
+
+      // Then
+      assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
+    })
+
+    it('should emit disconnect', () => {
+      // Given
+      const handler = mock.fn()
+      peer.on('disconnect', handler)
+
+      // When
+      peer.disconnect()
+
+      // Then
+      assert.equal(handler.mock.callCount(), 1, 'No event was emitted!')
+    })
   })
 })
