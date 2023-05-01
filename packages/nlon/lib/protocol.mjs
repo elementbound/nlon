@@ -86,7 +86,6 @@ export class MessageHeader {
   * @throws On invalid headers
   */
   static validate (header) {
-    // TODO: UT
     assert(header, 'Missing header!')
     assert(header?.correspondenceId?.length > 0,
       'Missing correspondence id!')
