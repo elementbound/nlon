@@ -20,10 +20,10 @@ importers:
   examples/websocket-chat:
     dependencies:
       '@elementbound/nlon':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.2.1
         version: link:../../packages/nlon
       '@elementbound/nlon-websocket':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.2.1
         version: link:../../packages/nlon-websocket
       express:
         specifier: ^4.18.2
@@ -121,7 +121,7 @@ importers:
   packages/nlon-socket:
     dependencies:
       '@elementbound/nlon':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.2.1
         version: link:../nlon
     devDependencies:
       clean-jsdoc-theme:
@@ -158,7 +158,7 @@ importers:
   packages/nlon-websocket:
     dependencies:
       '@elementbound/nlon':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.2.1
         version: link:../nlon
       isomorphic-ws:
         specifier: ^5.0.0
